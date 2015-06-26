@@ -1,0 +1,11 @@
+* {
+  font-family: Arial, "MS Trebuchet", sans-serif;
+}
+
+.chord {
+  background: orange;
+}
+
+.chord.active {
+  background: blue;
+}
