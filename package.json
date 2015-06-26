@@ -10,10 +10,17 @@
   "author": "Yann Vanhalewyn",
   "license": "ISC",
   "dependencies": {
-    "backbone": "^1.2.1",
     "express": "^4.13.0",
     "express-handlebars": "^2.0.1",
-    "react": "^0.13.3",
-    "react.backbone": "^0.6.0"
+    "node-jsx": "^0.13.3",
+    "react": "^0.13.3"
+  },
+  "devDependencies": {
+    "reactify": "^1.1.1"
+  },
+  "browserify": {
+    "transform": [
+      "reactify"
+    ]
   }
 }
