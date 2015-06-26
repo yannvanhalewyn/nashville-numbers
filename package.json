@@ -1,0 +1,19 @@
+{
+  "name": "react-chordboxes",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "watch": "watchify app.js -o public/js/bundle.js -v",
+    "start": "npm run watch & nodemon server.js"
+  },
+  "author": "Yann Vanhalewyn",
+  "license": "ISC",
+  "dependencies": {
+    "backbone": "^1.2.1",
+    "express": "^4.13.0",
+    "express-handlebars": "^2.0.1",
+    "react": "^0.13.3",
+    "react.backbone": "^0.6.0"
+  }
+}
