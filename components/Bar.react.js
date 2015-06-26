@@ -9,7 +9,7 @@
     render: function() {
       var chordsComponents = this.props.chords.map(function(chord) {
         return (
-          <Chord key={Math.random()} initialRawChord={chord} />
+          <Chord key={Math.random()} initialChord={chord} />
         )
       });
       return (

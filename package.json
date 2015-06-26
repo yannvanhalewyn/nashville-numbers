@@ -4,8 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "watch": "watchify -o public/js/bundle.js -v -d app.js",
-    "browserify": "browserify app.js > public/js/bundle.js",
+    "watch": "watchify -o public/js/bundle.js -v -d src/app.js",
+    "browserify": "browserify src/app.js > public/js/bundle.js",
     "start": "npm run watch & nodemon server.js"
   },
   "author": "Yann Vanhalewyn",

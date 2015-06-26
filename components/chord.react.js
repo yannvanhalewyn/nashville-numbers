@@ -3,23 +3,25 @@
 (function() {
 
   var React = require('react');
+  var Chord = require('../src/chord');
 
-  var Chord = React.createClass({
+  var ChordComponent = React.createClass({
 
     getInitialState: function() {
       return {
-        raw: this.props.initialRawChord,
+        chord: this.props.initialChord,
         active: false
       }
     },
 
     handleInput: function() {
       var newRaw = this.refs.textInput.getDOMNode().value;
-      this.setState({raw: newRaw});
+      this.state.chord.raw = newRaw;
+      this.setState({chord: this.state.chord});
     },
 
     onDoubleClick: function(e) {
-      alert("Double Click! " + this.props.raw);
+      alert("Double Click! " + this.state.chord.raw);
     },
 
     gainedFocus: function() {
@@ -33,7 +35,7 @@
     },
 
     render: function() {
-      console.log("Rendering chord " + this.state.raw);
+      console.log("Rendering chord " + this.state.chord.raw);
       return (
         <input type="text" className={"chord" + (this.state.active ? " active" : "")}
                            onDoubleClick={this.onClick}
@@ -41,12 +43,12 @@
                            onFocus={this.gainedFocus}
                            onBlur={this.lostFocus}
                            ref="textInput"
-                           value={this.state.raw} />
+                           value={this.state.active ? this.state.chord.raw : this.state.chord.musicNotationString} />
       )
     },
 
   });
 
-  module.exports = Chord;
+  module.exports = ChordComponent;
 
 }())

@@ -2,10 +2,19 @@
   font-family: Arial, "MS Trebuchet", sans-serif;
 }
 
+.bar {
+  border: 1px solid #efefef;
+  width: 25%;
+}
+
 .chord {
-  background: orange;
+  height: 20px;
+  width: 25%;
+  margin-right: 3px;
+  border: none;
+  background: #efefef;
 }
 
 .chord.active {
-  background: blue;
+  background: lightblue;
 }
