@@ -25,17 +25,14 @@
     },
 
     gainedFocus: function() {
-      console.log("Gained focus");
       this.setState({active: true});
     },
 
     lostFocus: function() {
-      console.log("Lost focus");
       this.setState({active: false});
     },
 
     render: function() {
-      console.log("Rendering chord " + this.state.chord.raw);
       return (
         <input type="text" className={"chord" + (this.state.active ? " active" : "")}
                            onDoubleClick={this.onClick}
@@ -43,7 +40,8 @@
                            onFocus={this.gainedFocus}
                            onBlur={this.lostFocus}
                            ref="textInput"
-                           value={this.state.active ? this.state.chord.raw : this.state.chord.musicNotationString} />
+                           value={this.state.active ? this.state.chord.raw :
+                             this.state.chord.musicNotationString()} />
       )
     },
 
