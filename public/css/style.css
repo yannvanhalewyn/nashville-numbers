@@ -2,9 +2,14 @@
   font-family: Arial, "MS Trebuchet", sans-serif;
 }
 
+@font-face {
+  font-family: NashvillechordSymbols;
+  src: url(../fonts/NashvilleChordSymbols.ttf)
+}
+
 .bar {
   border: 1px solid #efefef;
-  width: 25%;
+  width: 100%;
 }
 
 .chord {
@@ -13,8 +18,10 @@
   margin-right: 3px;
   border: none;
   background: #efefef;
+  font-family: NashvillechordSymbols;
 }
 
 .chord.active {
   background: lightblue;
+  font-family: inherit;
 }
