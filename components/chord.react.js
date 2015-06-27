@@ -7,6 +7,10 @@
 
   var ChordComponent = React.createClass({
 
+    propTypes: {
+      initialChord: React.PropTypes.object
+    },
+
     getInitialState: function() {
       return {
         chord: this.props.initialChord,

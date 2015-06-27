@@ -7,21 +7,13 @@
   var ChordModel = require('../src/chord');
 
   Bar = React.createClass({
-    getInitialState: function() {
-      return {chords: this.props.chords}
+
+    propTypes: {
+      initialChords: React.PropTypes.array
     },
 
-    render: function() {
-      var chordsComponents = this.state.chords.map(function(chord) {
-        return (
-          <Chord key={Math.random()} initialChord={chord} />
-        )
-      });
-      return (
-        <div onKeyDown={this.keyPressed} className="bar">
-          {chordsComponents}
-        </div>
-      );
+    getInitialState: function() {
+      return {chords: this.props.initialChords}
     },
 
     // Intercept space key
@@ -36,7 +28,20 @@
     appendNewChord: function() {
       var newChords = this.state.chords.concat([ new ChordModel() ]);
       this.setState({chords: newChords});
-    }
+    },
+
+    renderChord: function(chord) {
+      return <Chord key={Math.floor(Math.random() * 300)} initialChord={chord} />
+    },
+
+    render: function() {
+      return (
+        <div onKeyDown={this.keyPressed} className="bar">
+          {this.state.chords.map(this.renderChord)}
+        </div>
+      );
+    },
+
   });
 
   module.exports = Bar;
