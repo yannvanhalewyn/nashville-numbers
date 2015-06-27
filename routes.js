@@ -1,8 +1,13 @@
 (function() {
 
+  var fs = require('fs');
+
   var Routes = {
     index: function(req, res) {
-      res.render('sheet')
+      fs.readFile('./src/dummyState.json', function(err, data) {
+        if (err) throw err;
+        res.render('sheet', {state: JSON.stringify(JSON.parse(data))});
+      });
     }
   };
 
