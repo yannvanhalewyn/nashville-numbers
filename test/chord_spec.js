@@ -80,9 +80,9 @@ describe ('Chord', function() {
       });
 
       context("when b", function() {
-        it.skip('prints it out correctly', function() {
+        it('prints it out correctly', function() {
           var c = new Chord("b7");
-          expect(c.musicNotationString()).to.equal("w7");
+          expect(c.musicNotationString()).to.equal("@7");
         });
       });
     });
@@ -95,6 +95,11 @@ describe ('Chord', function() {
     it('replaces m with -', function() {
       var c = new Chord("em");
       expect(c.musicNotationString()).to.equal("E-");
+    });
+
+    it('replaces aug with +', function() {
+      var c = new Chord("bbaug");
+      expect(c.musicNotationString()).to.equal("B@+");
     });
 
     it('replaces maj with y', function() {

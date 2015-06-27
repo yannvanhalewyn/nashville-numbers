@@ -73,6 +73,17 @@ describe('ChordDataFactory', function() {
           var data = Factory.fromRawString("B-");
           expect(data.triad).to.equal("-");
         });
+
+        it("understands a '+'", function() {
+          var data = Factory.fromRawString("B+");
+          expect(data.triad).to.equal("+");
+        });
+
+        it("understands 'aug'", function() {
+          var data = Factory.fromRawString("Baug");
+          console.log(data);
+          expect(data.triad).to.equal("aug");
+        });
       });
 
       describe('sevenths', function() {

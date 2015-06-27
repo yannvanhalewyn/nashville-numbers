@@ -9,7 +9,8 @@
     this.musicNotationString = function() {
       this.interpolate();
       var root = this.getRootAsMusicNotationString();
-      var triad = this.data.triad.replace(/min|m/i, "-");
+      var triad = this.data.triad.replace(/min|m/i, "-")
+                                 .replace(/aug/i, "+");
       var seventh = this.data.seventh.replace(/maj/, "y");
       return root + triad + seventh;
     };

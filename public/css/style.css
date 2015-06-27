@@ -20,10 +20,21 @@
   src: url(../fonts/NashvilleChordSymbols-regular.ttf)
 }
 
+.sheet {
+  background: #efefef;
+}
+
+.sheet-title {
+  text-align: center;
+  margin-bottom: 50px;
+  padding-top: 20px;
+}
+
 .bar {
+  display: inline-block;
   border: 1px solid #efefef;
-  margin-left: 10px;
-  width: 400px;
+  margin-right: 3%;
+  width: 22%;
 }
 
 .chord {
