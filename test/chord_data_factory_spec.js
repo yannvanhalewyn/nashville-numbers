@@ -62,6 +62,11 @@ describe('ChordDataFactory', function() {
         });
 
         it("understands maj", function() {
+          var data = Factory.fromRawString("cmaj");
+          expect(data.seventh).to.equal("maj");
+        });
+
+        it("understands maj after a -", function() {
           var data = Factory.fromRawString("c-maj");
           expect(data.seventh).to.equal("maj");
         });
