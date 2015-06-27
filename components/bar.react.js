@@ -19,7 +19,6 @@
       });
       return (
         <div onKeyDown={this.keyPressed} className="bar">
-          <h1>Bar</h1>
           {chordsComponents}
         </div>
       );
