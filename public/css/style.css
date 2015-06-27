@@ -9,12 +9,13 @@
 
 .bar {
   border: 1px solid #efefef;
-  width: 100%;
+  margin-left: 10px;
+  width: 25%;
 }
 
 .chord {
   height: 50px;
-  width: 25%;
+  width: 22%;
   margin-right: 3px;
   border: none;
   background: #efefef;
