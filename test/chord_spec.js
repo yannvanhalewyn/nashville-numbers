@@ -71,6 +71,22 @@ describe ('Chord', function() {
       expect(c.musicNotationString()).to.equal("E");
     });
 
+    context("when an accidental is before the root", function() {
+      context("when #", function() {
+        it('prints it out correctly', function() {
+          var c = new Chord("#7");
+          expect(c.musicNotationString()).to.equal("#7");
+        });
+      });
+
+      context("when b", function() {
+        it.skip('prints it out correctly', function() {
+          var c = new Chord("b7");
+          expect(c.musicNotationString()).to.equal("w7");
+        });
+      });
+    });
+
     it('replaces min with -', function() {
       var c = new Chord("emin");
       expect(c.musicNotationString()).to.equal("E-");
@@ -81,9 +97,60 @@ describe ('Chord', function() {
       expect(c.musicNotationString()).to.equal("E-");
     });
 
-    it('replaces maj with caret', function() {
+    it('replaces maj with y', function() {
       var c = new Chord("emaj7");
-      expect(c.musicNotationString()).to.equal("E^");
+      expect(c.musicNotationString()).to.equal("Ey");
+    });
+  });
+
+  describe("#getRootAsMusicString()", function() {
+    beforeEach(function() {
+      this.chord = new Chord();
+    });
+
+    context("when length is < 2", function() {
+      it("returns an uppercased root", function() {
+        this.chord.data = {root: "e"};
+        expect(this.chord.getRootAsMusicNotationString()).to.equal("E");
+      });
+    });
+
+    context("when root contains #", function() {
+      it("returns an uppercased root too", function() {
+        this.chord.data = {root: "e#"};
+        expect(this.chord.getRootAsMusicNotationString()).to.equal("E#");
+      });
+    });
+
+    context("when root is flat", function() {
+      context("and accidental is before key", function() {
+        it("replaces the first char by correct symbol", function() {
+          this.chord.data = {root: "b7"};
+          expect(this.chord.getRootAsMusicNotationString()).to.equal("@7");
+        });
+      });
+
+      context("and accidental is after key", function() {
+        it("replaces the second char by correct symbol", function() {
+          this.chord.data = {root: "ab"};
+          expect(this.chord.getRootAsMusicNotationString()).to.equal("A@");
+        });
+      });
+    });
+
+    it("handles bb", function() {
+      this.chord.data = {root: "bb"};
+      expect(this.chord.getRootAsMusicNotationString()).to.equal("B@");
+    });
+
+    it("handles b7", function() {
+      this.chord.data = {root: "b7"};
+      expect(this.chord.getRootAsMusicNotationString()).to.equal("@7");
+    });
+
+    it("handles B7", function() {
+      this.chord.data = {root: "B7"};
+      expect(this.chord.getRootAsMusicNotationString()).to.equal("B7");
     });
   });
 
