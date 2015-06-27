@@ -8,22 +8,50 @@ var source     = require('vinyl-source-stream');
 var gutil      = require('gulp-util');
 var assign     = require('lodash.assign');
 
-// add custom browserify options here
-var customOpts = {
-  entries: ['./src/app.js'],
-  debug: true
-};
-var opts = assign({}, watchify.args, customOpts);
-var b = watchify(browserify(opts));
-b.transform(reactify);
+var nodemon = require('gulp-nodemon');
+var path = require('path');
 
-gulp.task('js', bundle);
-b.on('update', bundle); // on any dep update, runs the bundler
-b.on('log', gutil.log); // output build logs to terminal
+// TASK start
+// Starts server and listens for changes
+gulp.task('start', function() {
+  nodemon({
+    script: 'server.js',
+    ext: 'js handlebars',
+    ignore: 'gulpfile.js',
+    tasks: function(changedFiles) {
+      var tasks = [];
+      changedFiles.forEach(function(file) {
+        if (path.extname(file) === ".js" && !~tasks.indexOf('bundle')) tasks.push('bundle');
+      });
+      return tasks;
+    },
+    env: { 'NODE_ENV': 'development' }
+  });
+});
 
-function bundle() {
+var browserifyOpts = {entries: './src/app.js', debug: true};
+
+// TASK Bundle
+// browserify's the javascript
+gulp.task('bundle', function() {
+  var b = browserify(browserifyOpts);
+  b.transform(reactify);
   return b.bundle()
-    .on('error', gutil.log.bind(gutil, 'Browserify Error'))
     .pipe(source('bundle.js'))
-    .pipe(gulp.dest('./public/js'));
-}
+    .pipe(gulp.dest('./public/js/'));
+});
+
+// TASK watch
+// uses watchify to update small parts of bundle if needed
+gulp.task('watch', function() {
+  var opts = assign({}, watchify.args, browserifyOpts);
+  var b = watchify(browserify(opts));
+  b.transform(reactify);
+  b.on('update', function() {
+    return b.bundle()
+      .on('error', gutil.log.bind(gutil, 'Browserify Error'))
+      .pipe(source('bundle.js'))
+      .pipe(gulp.dest('./public/js'));
+  });
+  b.on('log', gutil.log);
+});
