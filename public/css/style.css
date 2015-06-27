@@ -2,13 +2,25 @@
   font-family: Arial, "MS Trebuchet", sans-serif;
 }
 
+/* Sticky footer styles
+-------------------------------------------------- */
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+
 .footer {
   position: absolute;
   bottom: 0;
   width: 100%;
+  /* Set the fixed height of the footer here */
   height: 60px;
   background-color: rgb(34, 34, 34);
   padding: 20px 0 0 0;
+}
+
+body > .container {
+  padding-top: 60px;
 }
 
 .footer p {
@@ -28,6 +40,10 @@
   text-align: center;
   margin-bottom: 50px;
   padding-top: 20px;
+}
+
+.section-name {
+  text-decoration: underline;
 }
 
 .bar {

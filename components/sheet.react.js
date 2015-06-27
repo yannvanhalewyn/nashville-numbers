@@ -3,30 +3,35 @@
   /** @jsx React.DOM */
 
   var React = require('react');
-  var Bar = require('./bar.react')
+  var Section = require('./section.react')
 
   Sheet = React.createClass({
 
+    propTypes: {
+      initialTitle: React.PropTypes.string,
+      initialArtist: React.PropTypes.string,
+      initialSections: React.PropTypes.array
+    },
+
     getInitialState: function() {
       return {
-        bars: this.props.bars,
-        title: this.props.title,
-        artist: this.props.artist
+        sections: this.props.initialSections,
+        title: this.props.initialTitle,
+        artist: this.props.initialArtist
       }
     },
 
+    renderSection: function(section) {
+      return <Section key={section.id} initialRows={section.rows} initialName={section.name} />
+    },
+
     render: function() {
-      var barComponents = this.state.bars.map(function(bar) {
-        return (
-          <Bar key={Math.random()} chords={bar} />
-        )
-      });
       return (
         <div className="sheet">
           <h1 className="sheet-title">
             {this.state.title} <small>{this.state.artist}</small>
           </h1>
-          {barComponents}
+          {this.state.sections.map(this.renderSection)}
         </div>
       )
     }

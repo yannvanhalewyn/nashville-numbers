@@ -11,9 +11,9 @@ var assign     = require('lodash.assign');
 var nodemon = require('gulp-nodemon');
 var path = require('path');
 
-// TASK start
+// TASK server
 // Starts server and listens for changes
-gulp.task('start', function() {
+gulp.task('server', function() {
   nodemon({
     script: 'server.js',
     ext: 'js handlebars',
@@ -28,6 +28,10 @@ gulp.task('start', function() {
     env: { 'NODE_ENV': 'development' }
   });
 });
+
+// TASK start
+// Runs bundle and server
+gulp.task('start', ['bundle', 'server']);
 
 var browserifyOpts = {entries: './src/app.js', debug: true};
 
