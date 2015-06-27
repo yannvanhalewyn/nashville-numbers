@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var ChordData = require('../src/chordData');
+var ChordData = require('../src/chord-data');
 
 describe('ChordData', function() {
   describe ('#init()', function() {
@@ -36,10 +36,5 @@ describe('ChordData', function() {
      *   });
      * });
      */
-
-    it('capitalises the root', function() {
-      var c = new ChordData("e");
-      expect(c.root).to.equal("E");
-    });
   });
 });

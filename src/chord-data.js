@@ -5,7 +5,6 @@
     this.triad = triad || "";
     this.seventh = seventh || "";
     this.extension = extension || "";
-    this.root = this.root.toUpperCase();
   };
 
   module.exports = ChordData;
