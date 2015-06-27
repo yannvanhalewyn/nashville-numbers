@@ -4,9 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "watch": "watchify -o public/js/bundle.js -v -d src/app.js",
-    "browserify": "browserify src/app.js -o public/js/bundle.js",
-    "start": "npm run watch & nodemon server.js"
+    "start": "nodemon server.js"
   },
   "author": "Yann Vanhalewyn",
   "license": "ISC",
@@ -17,14 +15,15 @@
     "react": "^0.13.3"
   },
   "devDependencies": {
+    "browserify": "^10.2.4",
     "chai": "^3.0.0",
+    "gulp": "^3.9.0",
+    "gulp-util": "^3.0.6",
+    "lodash.assign": "^3.2.0",
     "reactify": "^1.1.1",
     "sinon": "^1.15.3",
-    "sinon-chai": "^2.8.0"
-  },
-  "browserify": {
-    "transform": [
-      "reactify"
-    ]
+    "sinon-chai": "^2.8.0",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.2.3"
   }
 }
