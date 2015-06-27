@@ -36,6 +36,26 @@ describe('ChordDataFactory', function() {
           var data = Factory.fromRawString("8");
           expect(data.root).to.equal("");
         });
+
+        it('understands a flat after the root', function() {
+          var data = Factory.fromRawString("Ab");
+          expect(data.root).to.equal("Ab");
+        });
+
+        it('understands a sharp after the root', function() {
+          var data = Factory.fromRawString("A#");
+          expect(data.root).to.equal("A#");
+        });
+
+        it('understands a flat before the root', function() {
+          var data = Factory.fromRawString("b5");
+          expect(data.root).to.equal("b5");
+        });
+
+        it('understands a sharp before the root', function() {
+          var data = Factory.fromRawString("#4");
+          expect(data.root).to.equal("#4");
+        });
       });
 
       describe('triads', function() {

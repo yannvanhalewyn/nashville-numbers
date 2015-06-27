@@ -6,7 +6,7 @@
     // TODO: Recognize accidentals
     // TODO: Recognize extensions
     fromRawString: function(string) {
-      var rootReg = "([a-g1-7])";
+      var rootReg = "([#b]?[a-g1-7][#b]?)";
       var triadReg = "(min|m(?!aj)|-)?";  // A negative lookahead for finding 'm' that is not part of 'maj'
       var seventhReg = "(7|maj|\\^)?"
       var regex = rootReg + triadReg +  seventhReg;
