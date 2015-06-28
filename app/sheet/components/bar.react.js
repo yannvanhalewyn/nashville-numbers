@@ -4,6 +4,7 @@
 
   var React = require('react');
   var Chord = require('./chord.react');
+  var ChordModel = require('../chord.js');
 
   Bar = React.createClass({
 

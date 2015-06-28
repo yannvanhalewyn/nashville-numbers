@@ -17,13 +17,6 @@ gulp.task('server', function() {
     script: 'server.js',
     ext: 'js handlebars',
     ignore: 'gulpfile.js',
-    tasks: function(changedFiles) {
-      var tasks = [];
-      changedFiles.forEach(function(file) {
-        if (path.extname(file) === ".js" && !~tasks.indexOf('bundle')) tasks.push('bundle');
-      });
-      return tasks;
-    },
     env: { 'NODE_ENV': 'development' }
   });
 });
@@ -33,7 +26,7 @@ gulp.task('server', function() {
 gulp.task('start', ['watch', 'server']);
 
 var browserifyOpts = {
-  entries: './src/app.js',
+  entries: './app/app.js',
   transform: ['reactify'],
   debug: true,
   cache: {}, packageCache: {}, fullPaths: true // Watchify
