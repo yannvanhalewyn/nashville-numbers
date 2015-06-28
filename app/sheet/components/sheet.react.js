@@ -4,6 +4,8 @@
 
   var React = require('react');
   var Section = require('./section.react')
+  var SheetActions = require('../actions/sheetActions');
+  var SheetStore = require('../stores/sheetStore');
 
   Sheet = React.createClass({
 
@@ -27,14 +29,25 @@
 
     render: function() {
       return (
-        <div className="sheet">
-          <h1 className="sheet-title">
-            {this.state.title} <small>{this.state.artist}</small>
-          </h1>
-          {this.state.sections.map(this.renderSection)}
+        <div onClick={this._handleClick}>
+          <h1>kaka</h1>
+          <p>popo</p>
         </div>
       )
+      // return (
+      //   <div className="sheet">
+      //     <h1 className="sheet-title">
+      //       {this.state.title} <small>{this.state.artist}</small>
+      //     </h1>
+      //     {this.state.sections.map(this.renderSection)}
+      //   </div>
+      // )
+    },
+
+    _handleClick: function() {
+      SheetActions.updateChordText(1, "kaka");
     }
+
   });
 
   module.exports = Sheet;
