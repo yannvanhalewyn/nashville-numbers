@@ -21,10 +21,11 @@ gulp.task('server', function() {
   });
 });
 
-// TASK start
-// Runs bundle and server
-gulp.task('start', ['watch', 'server']);
-
+/*
+ * ========
+ * BUNDLING
+ * ========
+ */
 var browserifyOpts = {
   entries: './app/app.js',
   transform: ['reactify'],
@@ -41,12 +42,6 @@ gulp.task('bundle', function() {
     .pipe(gulp.dest('./public/js/'));
 });
 
-// TASK watch
-// uses gulp.watch to hard reset bundle.js
-gulp.task('watch', function() {
-  gulp.watch(['src/**/*.js', 'components/**/*.js'], ['bundle']);
-});
-
 // TASK watchify
 // uses watchify to update small parts of bundle if needed
 gulp.task('watchify', function() {
@@ -60,6 +55,8 @@ gulp.task('watchify', function() {
       .pipe(gulp.dest('./public/js'));
   }
   bundle();
-  gulp.watch(['./components/**/*.js', './src/**/*.js'], bundle);
+  b.on('update', bundle);
   b.on('log', gutil.log);
 });
+
+gulp.task('default', ['watchify', 'server']);
