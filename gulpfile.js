@@ -49,8 +49,14 @@ gulp.task('bundle', function() {
 });
 
 // TASK watch
-// uses watchify to update small parts of bundle if needed
+// uses gulp.watch to hard reset bundle.js
 gulp.task('watch', function() {
+  gulp.watch(['src/**/*.js', 'components/**/*.js'], ['bundle']);
+});
+
+// TASK watchify
+// uses watchify to update small parts of bundle if needed
+gulp.task('watchify', function() {
   var b = watchify(browserify(browserifyOpts));
   b.transform(reactify);
   function bundle() {

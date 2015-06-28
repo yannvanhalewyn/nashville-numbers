@@ -24,7 +24,6 @@
     },
 
     render: function() {
-      console.log("Render section");
       return (
         <div className="section">
           <h2 className="section-name">{this.state.name}</h2>

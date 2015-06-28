@@ -4,7 +4,6 @@
 
   var React = require('react');
   var Chord = require('./chord.react');
-  var ChordModel = require('../src/chord');
 
   Bar = React.createClass({
 
@@ -13,11 +12,8 @@
     },
 
     getInitialState: function() {
-      chords = this.props.initialChords.map(function(chord) {
-        return new ChordModel(chord.raw);
-      });
       return {
-        chords: chords
+        chords: this.props.initialChords
       }
     },
 

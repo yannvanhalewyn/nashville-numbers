@@ -4,6 +4,7 @@
 
   var React = require('react');
   var Chord = require('../src/chord');
+  var ChordModel = require('../src/chord');
   var classNames = require('classnames');
 
   var ChordComponent = React.createClass({
@@ -14,7 +15,7 @@
 
     getInitialState: function() {
       return {
-        chord: this.props.initialChord,
+        chord: new ChordModel(this.props.initialChord.raw),
         active: false
       }
     },
@@ -35,6 +36,16 @@
 
     lostFocus: function() {
       this.setState({active: false});
+    },
+
+    clearAndFocusInput: function() {
+      this.setState({userInput: ''}, function() {
+        React.findDOMNode(this.refs.textInput).focus();
+      });
+    },
+
+    componentDidMount: function() {
+      React.findDOMNode(this.refs.textInput).focus();
     },
 
     render: function() {

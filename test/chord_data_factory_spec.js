@@ -81,7 +81,6 @@ describe('ChordDataFactory', function() {
 
         it("understands 'aug'", function() {
           var data = Factory.fromRawString("Baug");
-          console.log(data);
           expect(data.triad).to.equal("aug");
         });
       });
