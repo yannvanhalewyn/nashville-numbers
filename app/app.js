@@ -1,7 +1,7 @@
 /** @jsx React.DOM */
 
 var React = require('react');
-var Sheet = require('../Components/sheet.react');
+var Sheet = require('./sheet/components/sheet.react');
 
 data = JSON.parse(document.getElementById('initial-state').innerHTML);
 

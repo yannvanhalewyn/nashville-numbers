@@ -3,8 +3,7 @@
 (function() {
 
   var React = require('react');
-  var Chord = require('../src/chord');
-  var ChordModel = require('../src/chord');
+  var Chord = require('../chord');
   var classNames = require('classnames');
 
   var ChordComponent = React.createClass({
@@ -15,7 +14,7 @@
 
     getInitialState: function() {
       return {
-        chord: new ChordModel(this.props.initialChord.raw),
+        chord: new Chord(this.props.initialChord.raw),
         active: false
       }
     },

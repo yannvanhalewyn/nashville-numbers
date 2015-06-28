@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var ChordData = require('../src/chord-data');
+var ChordData = require('../app/sheet/chord-data');
 
 describe('ChordData', function() {
   describe ('#init()', function() {
