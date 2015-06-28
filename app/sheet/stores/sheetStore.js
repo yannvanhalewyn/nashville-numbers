@@ -15,10 +15,23 @@
 
   var SheetStore = assign({}, EventEmitter.prototype, {
 
+    emitChange: function() {
+      this.emit(CHANGE_EVENT);
+    },
+
+    addEventListener: function(callback) {
+      this.on(CHANGE_EVENT, callback);
+    },
+
+    removeEventListener: function(callback) {
+      this.removeListene(CHANGE_EVENT, callback);
+    }
+
   });
 
   SheetDispatcher.register(function(action) {
     console.log("Action received!");
+    SheetStore.emitChange();
   });
 
   module.exports = SheetStore;

@@ -23,6 +23,10 @@
       }
     },
 
+    componentDidMount: function() {
+      SheetStore.addEventListener(this._onChange)
+    },
+
     renderSection: function(section) {
       return <Section key={section.id} initialRows={section.rows} initialName={section.name} />
     },
@@ -42,6 +46,10 @@
       //     {this.state.sections.map(this.renderSection)}
       //   </div>
       // )
+    },
+
+    _onChange: function() {
+      console.log("on change in SHEET !!!");
     },
 
     _handleClick: function() {
