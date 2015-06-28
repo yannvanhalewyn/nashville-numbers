@@ -4,7 +4,7 @@
 
   var React = require('react');
   var Chord = require('../chord');
-  var classNames = require('classnames');
+  var classNames = require('react/lib/cx');
 
   var ChordComponent = React.createClass({
 
