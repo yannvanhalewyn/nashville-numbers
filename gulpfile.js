@@ -6,7 +6,6 @@ var reactify   = require('reactify');
 var gulp       = require('gulp');
 var source     = require('vinyl-source-stream');
 var gutil      = require('gulp-util');
-var assign     = require('lodash.assign');
 
 var nodemon = require('gulp-nodemon');
 var path = require('path');
@@ -31,15 +30,19 @@ gulp.task('server', function() {
 
 // TASK start
 // Runs bundle and server
-gulp.task('start', ['bundle', 'server']);
+gulp.task('start', ['watch', 'server']);
 
-var browserifyOpts = {entries: './src/app.js', debug: true};
+var browserifyOpts = {
+  entries: './src/app.js',
+  transform: ['reactify'],
+  debug: true,
+  cache: {}, packageCache: {}, fullPaths: true // Watchify
+};
 
 // TASK Bundle
 // browserify's the javascript
 gulp.task('bundle', function() {
   var b = browserify(browserifyOpts);
-  b.transform(reactify);
   return b.bundle()
     .pipe(source('bundle.js'))
     .pipe(gulp.dest('./public/js/'));
@@ -48,14 +51,16 @@ gulp.task('bundle', function() {
 // TASK watch
 // uses watchify to update small parts of bundle if needed
 gulp.task('watch', function() {
-  var opts = assign({}, watchify.args, browserifyOpts);
-  var b = watchify(browserify(opts));
+  var b = watchify(browserify(browserifyOpts));
   b.transform(reactify);
-  b.on('update', function() {
+  function bundle() {
+    console.log("Bundling");
     return b.bundle()
       .on('error', gutil.log.bind(gutil, 'Browserify Error'))
       .pipe(source('bundle.js'))
       .pipe(gulp.dest('./public/js'));
-  });
+  }
+  bundle();
+  gulp.watch(['./components/**/*.js', './src/**/*.js'], bundle);
   b.on('log', gutil.log);
 });

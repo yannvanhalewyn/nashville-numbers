@@ -4,6 +4,7 @@
 
   var React = require('react');
   var Chord = require('../src/chord');
+  var classNames = require('classnames');
 
   var ChordComponent = React.createClass({
 
@@ -37,8 +38,12 @@
     },
 
     render: function() {
+      var classes = {
+        'chord': true,
+        'chord-active': this.state.active
+      };
       return (
-        <input type="text" className={"chord" + (this.state.active ? " active" : "")}
+        <input type="text" className={classNames(classes)}
                            onDoubleClick={this.onClick}
                            onChange={this.handleInput}
                            onFocus={this.gainedFocus}

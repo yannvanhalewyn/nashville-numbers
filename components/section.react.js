@@ -20,11 +20,11 @@
     },
 
     renderRow: function(row) {
-      console.log(row);
       return <Row key={row.id} initialBars={row.bars} />
     },
 
     render: function() {
+      console.log("Render section");
       return (
         <div className="section">
           <h2 className="section-name">{this.state.name}</h2>

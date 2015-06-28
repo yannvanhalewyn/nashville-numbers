@@ -10,7 +10,6 @@
     },
 
     getInitialState: function() {
-      console.log(this.props);
       return {bars: this.props.initialBars}
     },
 

@@ -64,7 +64,7 @@ body > .container {
   cursor: pointer;
 }
 
-.chord.active {
+.chord-active {
   background: lightblue;
   font-family: inherit;
   cursor: auto;

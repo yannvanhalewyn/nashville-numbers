@@ -16,8 +16,6 @@
       chords = this.props.initialChords.map(function(chord) {
         return new ChordModel(chord.raw);
       });
-      console.log("Chords: ");
-      console.log(chords);
       return {
         chords: chords
       }
