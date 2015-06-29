@@ -6,7 +6,11 @@
   var SheetActions = {
 
     updateChordText: function(id, text) {
-      SheetDispatcher.dispatch({});
+      SheetDispatcher.dispatch({
+        actionType: SheetConstants.UPDATE_CHORD_TEXT,
+        text: text,
+        id: id
+      });
     }
 
   };

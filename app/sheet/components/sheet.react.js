@@ -10,7 +10,7 @@
   Sheet = React.createClass({
 
     getInitialState: function() {
-      return SheetStore.getEntireState();
+      return SheetStore.getState();
     },
 
     componentDidMount: function() {
@@ -33,11 +33,11 @@
           </h1>
           {this.state.sections.map(this.renderSection)}
         </div>
-      )
+      );
     },
 
     _onChange: function() {
-      console.log("on change in SHEET !!!");
+      this.setState(SheetStore.getState());
     },
 
   });

@@ -1,80 +1,101 @@
+
 (function() {
 
   var SheetDispatcher = require('../dispatcher/sheetDispatcher');
   var EventEmitter = require('events').EventEmitter;
   var SheetConstants = require('../sheetConstants');
   var assign = require('object-assign');
+  var Immutable = require('immutable');
 
   var CHANGE_EVENT = 'change';
-  var SHEET_DATA = {};
+  var SHEET_DATA = Immutable.Map();
 
-  function updateChordText(id, text) {
-    console.log("In updateChordText raw function");
-  }
+  /*
+   * The store is usefull with normalized data, e.g.:
 
+   * result:
+   *   title: "Baby"
+   *   artist: "Justin Bieber"
+   *   sections: [array of sectionIDS]
+
+   * entities:
+   *   sections:
+   *     {someId}:
+   *       id: {sameID}
+   *       name: "intro"
+   *       rows: [array of row IDS]
+   *  rows:
+   *    {someID}:
+   *      id: {sameID}
+   *      bars: [array of bar IDS]
+
+   *  etc..
+
+   *  While my react tree works great with nested objects, like so:
+
+   *  title: "baby"
+   *  artist: "Justin Bieber"
+   *  sections: [
+   *    {
+   *      name: "intro"
+   *      rows: [ array of bars ]
+   *    },
+   *    {{ other rows }}
+   *  ]
+
+   *  The deNormalize function takes in a normalized format and makes it into a
+   *  nested format, ready to be insert at the top level of the React sheet
+   *  components
+   */
   function deNormalize(data) {
-
-    var result = {
-      title: data.result.title,
-      artist: data.result.artist,
+    var result = data.get('result').toJS();
+    var entities = data.get('entities').toJS();
+    var ret = {
+      title: result.title,
+      artist: result.artist,
       sections: []
     };
 
     // Loop over all sections
-    for (var iii in data.result.sections) {
-      var SID = data.result.sections[iii];
-      var s = data.entities.sections[SID];
-      result.sections[iii] = s;
+    result.sections.forEach(function(sectionID, iii) {
+      var section = entities.sections[sectionID];
+      ret.sections[iii] = section;
+
       // Loop over all rows
-      for (var jjj in s.rows) {
-        var RID = s.rows[jjj];
-        var r = data.entities.rows[RID];
-        result.sections[iii].rows[jjj] = r;
+      section.rows.forEach(function(rowID, jjj) {
+        var row = entities.rows[rowID];
+        ret.sections[iii].rows[jjj] = row;
+
         // Loop over all bars
-        for (var kkk in r.bars) {
-          var BID = r.bars[kkk];
-          var b = data.entities.bars[BID];
-          result.sections[iii].rows[jjj].bars[kkk] = b;
+        row.bars.forEach(function(barID, kkk) {
+          var bar = entities.bars[barID];
+          ret.sections[iii].rows[jjj].bars[kkk] = bar;
+
           // Loop over all chords
-          for (var lll in b.chords) {
-            var CID = b.chords[lll];
-            var c = data.entities.chords[CID];
-            result.sections[iii].rows[jjj].bars[kkk].chords[lll] = c;
-          }
-        }
-      }
-    }
-    return result;
+          bar.chords.forEach(function(chordID, lll) {
+            var chord = entities.chords[chordID];
+            ret.sections[iii].rows[jjj].bars[kkk].chords[lll] = chord;
+          });
+        });
+      });
+    });
+    return ret;
+  }
+
+  function updateChordText(id, text) {
+    var tmp = SHEET_DATA.toJS();
+    tmp.entities.chords[id].raw = text;
+    SHEET_DATA = Immutable.fromJS(tmp);
   }
 
   var SheetStore = assign({}, EventEmitter.prototype, {
 
-    getEntireState: function() {
+    getState: function() {
       return deNormalize(SHEET_DATA);
     },
 
-    getSection: function(id) {
-      return SHEET_DATA.entities.sections[id];
-    },
-
-    getRow: function(id) {
-      return SHEET_DATA.entities.rows[id];
-    },
-
-    getBar: function(id) {
-      return SHEET_DATA.entities.bars[id];
-    },
-
-    getChord: function(id) {
-      return SHEET_DATA.entities.chords[id];
-    },
-
     setInitialData: function(data) {
-      SHEET_DATA = data;
-    },
-
-    getAllData: function() {
-      return SHEET_DATA;
+      SHEET_DATA = Immutable.fromJS(data);
     },
 
     emitChange: function() {
@@ -92,8 +113,16 @@
   });
 
   SheetDispatcher.register(function(action) {
-    console.log("Action received!");
-    SheetStore.emitChange();
+    switch(action.actionType) {
+      case SheetConstants.UPDATE_CHORD_TEXT:
+        updateChordText(action.id, action.text);
+        SheetStore.emitChange();
+        break;
+
+      default:
+        console.log("No such task - " + action.actionType);
+        break;
+    }
   });
 
   module.exports = SheetStore;
