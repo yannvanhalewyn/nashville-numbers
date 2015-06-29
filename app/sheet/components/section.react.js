@@ -9,8 +9,9 @@
   var Section = React.createClass({
 
     propTypes: {
-      rows: React.PropTypes.array,
-      name: React.PropTypes.string
+      section: React.PropTypes.array,
+      name: React.PropTypes.string,
+      id: React.PropTypes.string.isRequired
     },
 
     renderRow: function(row) {
@@ -18,6 +19,7 @@
     },
 
     render: function() {
+      console.log(this.props.id);
       return (
         <div className="section">
           <h2 className="section-name">{this.props.name}</h2>

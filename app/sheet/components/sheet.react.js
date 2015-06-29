@@ -10,18 +10,7 @@
   Sheet = React.createClass({
 
     propTypes: {
-      initialTitle: React.PropTypes.string,
-      initialArtist: React.PropTypes.string,
-      initialSections: React.PropTypes.array
-    },
-
-    getInitialState: function() {
-      var DATA = SheetStore.getAllData();
-      return {
-        sections: DATA.sheet.sections.map(SheetStore.getSection),
-        title: DATA.sheet.title,
-        artist: DATA.sheet.artist
-      }
+      sheet: React.PropTypes.object.isRequired
     },
 
     componentDidMount: function() {
@@ -32,17 +21,19 @@
       SheetStore.removeEventListener(this._onChange);
     },
 
-    renderSection: function(section) {
-      return <Section key={section.id} rows={section.rows.map(SheetStore.getRow)} name={section.name} />
+    renderSection: function(sectionID) {
+      var section = SheetStore.getSection(sectionID);
+      return <Section key={section.id} rows={section.rows.map(SheetStore.getRow)} name={section.name} id={section.id} />
     },
 
     render: function() {
+      var sheet = this.props.sheet;
       return (
         <div className="sheet">
           <h1 className="sheet-title">
-            {this.state.title} <small>{this.state.artist}</small>
+            {sheet.title} <small>{sheet.artist}</small>
           </h1>
-          {this.state.sections.map(this.renderSection)}
+          {sheet.sections.map(this.renderSection)}
         </div>
       )
     },

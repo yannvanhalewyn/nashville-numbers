@@ -8,7 +8,7 @@ data = JSON.parse(document.getElementById('initial-state').innerHTML);
 SheetStore.setInitialData(data);
 
 React.render(
-  <Sheet />,
+  <Sheet sheet={data.sheet} />,
   document.getElementById('sheet-container')
 );
 
