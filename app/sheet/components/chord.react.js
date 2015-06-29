@@ -17,7 +17,7 @@
     getInitialState: function() {
       return {
         value: this.props.rawString,
-        active: false
+        editing: false
       }
     },
 
@@ -34,7 +34,7 @@
     render: function() {
       var classes = {
         'chord': true,
-        'chord-active': this.state.active
+        'chord-editing': this.state.editing
       };
       return (
         <input type="text" className={classNames(classes)}
@@ -43,7 +43,7 @@
                            onFocus={this._gainedFocus}
                            onBlur={this._lostFocus}
                            ref="textInput"
-                           value={this.state.active ? this.state.value :
+                           value={this.state.editing ? this.state.value :
                              this._musicNotationString()} />
       )
     },
@@ -61,12 +61,12 @@
     },
 
     _gainedFocus: function() {
-      this.setState({active: true});
+      this.setState({editing: true});
     },
 
     _lostFocus: function() {
       SheetActions.updateChordText(this.props.id, this.state.value);
-      this.setState({active: false});
+      this.setState({editing: false});
     },
 
 
