@@ -2,12 +2,12 @@
 
   var React = require('react');
   var Bar = require('./bar.react');
-  var SheetStore = require('../stores/sheetStore');
 
   var Row = React.createClass({
 
     propTypes: {
-      initialBars: React.PropTypes.array
+      bars: React.PropTypes.array,
+      id: React.PropTypes.string.isRequired
     },
 
     getInitialState: function() {
@@ -15,7 +15,7 @@
     },
 
     renderBar: function(bar) {
-      return <Bar key={bar.id} chords={bar.chords.map(SheetStore.getChord)} />;
+      return <Bar key={bar.id} chords={bar.chords} id={bar.id}/>;
     },
 
     render: function() {

@@ -9,8 +9,8 @@
 
   Sheet = React.createClass({
 
-    propTypes: {
-      sheet: React.PropTypes.object.isRequired
+    getInitialState: function() {
+      return SheetStore.getEntireState();
     },
 
     componentDidMount: function() {
@@ -21,19 +21,17 @@
       SheetStore.removeEventListener(this._onChange);
     },
 
-    renderSection: function(sectionID) {
-      var section = SheetStore.getSection(sectionID);
-      return <Section key={section.id} rows={section.rows.map(SheetStore.getRow)} name={section.name} id={section.id} />
+    renderSection: function(section) {
+      return <Section key={section.id} rows={section.rows} name={section.name} id={section.id} />
     },
 
     render: function() {
-      var sheet = this.props.sheet;
       return (
         <div className="sheet">
           <h1 className="sheet-title">
-            {sheet.title} <small>{sheet.artist}</small>
+            {this.state.title} <small>{this.state.artist}</small>
           </h1>
-          {sheet.sections.map(this.renderSection)}
+          {this.state.sections.map(this.renderSection)}
         </div>
       )
     },

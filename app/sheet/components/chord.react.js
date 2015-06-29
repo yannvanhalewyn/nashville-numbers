@@ -9,12 +9,13 @@
   var ChordComponent = React.createClass({
 
     propTypes: {
-      initialChord: React.PropTypes.object
+      rawString: React.PropTypes.string,
+      id: React.PropTypes.string.isRequired
     },
 
     getInitialState: function() {
       return {
-        chord: new Chord(this.props.initialRaw),
+        chord: new Chord(this.props.rawString),
         active: false
       }
     },

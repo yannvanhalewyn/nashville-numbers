@@ -4,7 +4,6 @@
 
   var React = require('react');
   var Row = require('./row.react')
-  var SheetStore = require('../stores/sheetStore');
 
   var Section = React.createClass({
 
@@ -15,11 +14,10 @@
     },
 
     renderRow: function(row) {
-      return <Row key={row.id} bars={row.bars.map(SheetStore.getBar)} />
+      return <Row key={row.id} bars={row.bars} id={row.id}/>
     },
 
     render: function() {
-      console.log(this.props.id);
       return (
         <div className="section">
           <h2 className="section-name">{this.props.name}</h2>

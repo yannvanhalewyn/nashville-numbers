@@ -12,7 +12,46 @@
     console.log("In updateChordText raw function");
   }
 
+  function deNormalize(data) {
+
+    var result = {
+      title: data.result.title,
+      artist: data.result.artist,
+      sections: []
+    };
+
+    // Loop over all sections
+    for (var iii in data.result.sections) {
+      var SID = data.result.sections[iii];
+      var s = data.entities.sections[SID];
+      result.sections[iii] = s;
+      // Loop over all rows
+      for (var jjj in s.rows) {
+        var RID = s.rows[jjj];
+        var r = data.entities.rows[RID];
+        result.sections[iii].rows[jjj] = r;
+        // Loop over all bars
+        for (var kkk in r.bars) {
+          var BID = r.bars[kkk];
+          var b = data.entities.bars[BID];
+          result.sections[iii].rows[jjj].bars[kkk] = b;
+          // Loop over all chords
+          for (var lll in b.chords) {
+            var CID = b.chords[lll];
+            var c = data.entities.chords[CID];
+            result.sections[iii].rows[jjj].bars[kkk].chords[lll] = c;
+          }
+        }
+      }
+    }
+    return result;
+  }
+
   var SheetStore = assign({}, EventEmitter.prototype, {
+
+    getEntireState: function() {
+      return deNormalize(SHEET_DATA);
+    },
 
     getSection: function(id) {
       return SHEET_DATA.entities.sections[id];
