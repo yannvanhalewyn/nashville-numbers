@@ -12,8 +12,31 @@
     console.log("In updateChordText raw function");
   }
 
-
   var SheetStore = assign({}, EventEmitter.prototype, {
+
+    getSection: function(id) {
+      return SHEET_DATA.entities.sections[id];
+    },
+
+    getRow: function(id) {
+      return SHEET_DATA.entities.rows[id];
+    },
+
+    getBar: function(id) {
+      return SHEET_DATA.entities.bars[id];
+    },
+
+    getChord: function(id) {
+      return SHEET_DATA.entities.chords[id];
+    },
+
+    setInitialData: function(data) {
+      SHEET_DATA = data;
+    },
+
+    getAllData: function() {
+      return SHEET_DATA;
+    },
 
     emitChange: function() {
       this.emit(CHANGE_EVENT);

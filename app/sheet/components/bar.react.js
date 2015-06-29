@@ -5,17 +5,12 @@
   var React = require('react');
   var Chord = require('./chord.react');
   var ChordModel = require('../chord.js');
+  var SheetStore = require('../stores/sheetStore');
 
   Bar = React.createClass({
 
     propTypes: {
-      initialChords: React.PropTypes.array
-    },
-
-    getInitialState: function() {
-      return {
-        chords: this.props.initialChords
-      }
+      chords: React.PropTypes.array
     },
 
     // Intercept space key
@@ -33,13 +28,13 @@
     },
 
     renderChord: function(chord) {
-      return <Chord key={Math.floor(Math.random() * 300)} initialChord={chord} />
+      return <Chord key={chord.id} initialRaw={chord.raw} />
     },
 
     render: function() {
       return (
         <div onKeyDown={this.keyPressed} className="bar">
-          {this.state.chords.map(this.renderChord)}
+          {this.props.chords.map(this.renderChord)}
         </div>
       );
     },

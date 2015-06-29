@@ -2,6 +2,7 @@
 
   var React = require('react');
   var Bar = require('./bar.react');
+  var SheetStore = require('../stores/sheetStore');
 
   var Row = React.createClass({
 
@@ -14,13 +15,13 @@
     },
 
     renderBar: function(bar) {
-      return <Bar key={bar.id} initialChords={bar.chords} />;
+      return <Bar key={bar.id} chords={bar.chords.map(SheetStore.getChord)} />;
     },
 
     render: function() {
       return (
         <div className="musicRow" >
-          {this.state.bars.map(this.renderBar)}
+          {this.props.bars.map(this.renderBar)}
         </div>
       );
     }

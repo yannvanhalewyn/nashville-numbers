@@ -16,10 +16,11 @@
     },
 
     getInitialState: function() {
+      var DATA = SheetStore.getAllData();
       return {
-        sections: this.props.initialSections,
-        title: this.props.initialTitle,
-        artist: this.props.initialArtist
+        sections: DATA.sheet.sections.map(SheetStore.getSection),
+        title: DATA.sheet.title,
+        artist: DATA.sheet.artist
       }
     },
 
@@ -27,34 +28,28 @@
       SheetStore.addEventListener(this._onChange)
     },
 
+    compnentWillUnmount: function() {
+      SheetStore.removeEventListener(this._onChange);
+    },
+
     renderSection: function(section) {
-      return <Section key={section.id} initialRows={section.rows} initialName={section.name} />
+      return <Section key={section.id} rows={section.rows.map(SheetStore.getRow)} name={section.name} />
     },
 
     render: function() {
       return (
-        <div onClick={this._handleClick}>
-          <h1>kaka</h1>
-          <p>popo</p>
+        <div className="sheet">
+          <h1 className="sheet-title">
+            {this.state.title} <small>{this.state.artist}</small>
+          </h1>
+          {this.state.sections.map(this.renderSection)}
         </div>
       )
-      // return (
-      //   <div className="sheet">
-      //     <h1 className="sheet-title">
-      //       {this.state.title} <small>{this.state.artist}</small>
-      //     </h1>
-      //     {this.state.sections.map(this.renderSection)}
-      //   </div>
-      // )
     },
 
     _onChange: function() {
       console.log("on change in SHEET !!!");
     },
-
-    _handleClick: function() {
-      SheetActions.updateChordText(1, "kaka");
-    }
 
   });
 
