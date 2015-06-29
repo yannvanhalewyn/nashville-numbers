@@ -13,22 +13,18 @@
       id: React.PropTypes.string.isRequired
     },
 
-    // Intercept space key
-    keyPressed: function(e) {
-      // Space
-      if(e.keyCode == 32) {
-        e.preventDefault();
-        this.appendNewChord();
-      }
-    },
-
     appendNewChord: function() {
       var newChords = this.state.chords.concat([ new ChordModel() ]);
       this.setState({chords: newChords});
     },
 
     renderChord: function(chord) {
-      return <Chord key={chord.id} rawString={chord.raw} id={chord.id}/>
+      return <Chord
+                key={chord.id}
+                rawString={chord.raw}
+                id={chord.id}
+                barID={this.props.id}
+                />
     },
 
     render: function() {

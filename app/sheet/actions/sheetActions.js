@@ -11,6 +11,14 @@
         text: text,
         id: id
       });
+    },
+
+    appendNewChord: function(id, barID) {
+      SheetDispatcher.dispatch({
+        actionType: SheetConstants.APPEND_NEW_CHORD,
+        id: id,
+        barID: barID
+      });
     }
 
   };

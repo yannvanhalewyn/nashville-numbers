@@ -82,9 +82,26 @@
     return ret;
   }
 
+  function randomID() {
+    return (+new Date() + Math.floor(Math.random() * 999999).toString(36));
+  }
+
   function updateChordText(id, text) {
     var tmp = SHEET_DATA.toJS();
     tmp.entities.chords[id].raw = text;
+    SHEET_DATA = Immutable.fromJS(tmp);
+  }
+
+  function appendNewChord(id, barID) {
+    // handles
+    var tmp = SHEET_DATA.toJS();
+    var newID = randomID();
+    // Create new Entity
+    tmp.entities.chords[newID] = {id: newID, raw: ""};
+    // Give parent bar a ref to that chord
+    var barIDX = tmp.entities.bars[barID].chords.indexOf(id);
+    tmp.entities.bars[barID].chords.splice(barIDX+1, 0, newID);
+    // Update store
     SHEET_DATA = Immutable.fromJS(tmp);
   }
 
@@ -116,6 +133,11 @@
     switch(action.actionType) {
       case SheetConstants.UPDATE_CHORD_TEXT:
         updateChordText(action.id, action.text);
+        SheetStore.emitChange();
+        break;
+
+      case SheetConstants.APPEND_NEW_CHORD:
+        appendNewChord(action.id, action.barID);
         SheetStore.emitChange();
         break;
 

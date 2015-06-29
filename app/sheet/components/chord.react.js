@@ -7,11 +7,14 @@
   var SheetActions = require('../actions/sheetActions');
   var classNames = require('classnames');
 
+  var SPACE_BAR_KEY_CODE = 32;
+
   var ChordComponent = React.createClass({
 
     propTypes: {
       rawString: React.PropTypes.string,
-      id: React.PropTypes.string.isRequired
+      id: React.PropTypes.string.isRequired,
+      barID: React.PropTypes.string.isRequired
     },
 
     getInitialState: function() {
@@ -27,9 +30,9 @@
     //   });
     // },
     //
-    // componentDidMount: function() {
-    //   React.findDOMNode(this.refs.textInput).focus();
-    // },
+    componentDidMount: function() {
+      React.findDOMNode(this.refs.textInput).focus();
+    },
 
     render: function() {
       var classes = {
@@ -42,6 +45,7 @@
                            onChange={this._onChange}
                            onFocus={this._gainedFocus}
                            onBlur={this._lostFocus}
+                           onKeyDown={this._onKeyDown}
                            ref="textInput"
                            value={this.state.editing ? this.state.value :
                              this._musicNotationString()} />
@@ -54,6 +58,13 @@
 
     _onChange: function(e) {
       this.setState({value: e.target.value});
+    },
+
+    _onKeyDown: function(e) {
+      if(e.keyCode === SPACE_BAR_KEY_CODE) {
+        e.preventDefault();
+        SheetActions.appendNewChord(this.props.id, this.props.barID);
+      }
     },
 
     _onDoubleClick: function(e) {
