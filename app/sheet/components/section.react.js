@@ -4,6 +4,7 @@
 
   var React = require('react');
   var Row = require('./row.react')
+  var Immutable = require('immutable');
 
   var Section = React.createClass({
 
@@ -14,7 +15,12 @@
     },
 
     renderRow: function(row) {
-      return <Row key={row.id} bars={row.bars} id={row.id}/>
+      return <Row
+                key={row.id}
+                bars={row.bars}
+                id={row.id}
+                parentIDs={Immutable.Map({ sectionID: this.props.id })}
+              />
     },
 
     render: function() {

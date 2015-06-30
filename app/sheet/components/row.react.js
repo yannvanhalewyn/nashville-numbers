@@ -7,7 +7,8 @@
 
     propTypes: {
       bars: React.PropTypes.array,
-      id: React.PropTypes.string.isRequired
+      id: React.PropTypes.string.isRequired,
+      parentIDs: React.PropTypes.object.isRequired
     },
 
     getInitialState: function() {
@@ -16,11 +17,11 @@
 
     renderBar: function(bar) {
       return <Bar
-               key={bar.id}
-               chords={bar.chords}
-               id={bar.id}
-               parentID={this.props.id}
-             />;
+             key={bar.id}
+             chords={bar.chords}
+             id={bar.id}
+             parentIDs={this.props.parentIDs.set('rowID', this.props.id)}
+           />;
     },
 
     render: function() {
@@ -29,7 +30,7 @@
           {this.props.bars.map(this.renderBar)}
         </div>
       );
-    }
+    },
 
   });
 

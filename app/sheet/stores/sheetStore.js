@@ -30,10 +30,10 @@
       this.removeListene(CHANGE_EVENT, callback);
     },
 
-    storeRefToSelectedChord: function(chordID, barID) {
+    storeRefToSelectedChord: function(chordID, parentIDs) {
       this.selectedChordRef = {
         chordID: chordID,
-        barID: barID
+        parentIDs: parentIDs
       }
     },
 

@@ -16,7 +16,7 @@
     propTypes: {
       chords: React.PropTypes.array,
       id: React.PropTypes.string.isRequired,
-      parentID: React.PropTypes.string.isRequired
+      parentIDs: React.PropTypes.object.isRequired
     },
 
     renderChord: function(chord) {
@@ -24,7 +24,7 @@
                 key={chord.id}
                 rawString={chord.raw}
                 id={chord.id}
-                parentID={this.props.id}
+                parentIDs={this.props.parentIDs.set('barID', this.props.id)}
               />
     },
 
@@ -44,7 +44,7 @@
     _onKeyDown: function(e) {
       if (e.keyCode == RETURN_KEYCODE) {
         e.preventDefault();
-        SheetActions.appendNewBar(this.props.id, this.props.parentID);
+        SheetActions.appendNewBar(this.props.id, this.props.parentIDs.rowID);
       }
     }
 

@@ -14,7 +14,7 @@
     propTypes: {
       rawString: React.PropTypes.string,
       id: React.PropTypes.string.isRequired,
-      parentID: React.PropTypes.string.isRequired
+      parentIDs: React.PropTypes.object.isRequired
     },
 
     // TODO maybe handle undefined rawstrings (don't want to have to give it an
@@ -66,7 +66,7 @@
     _onKeyDown: function(e) {
       if(e.keyCode === SPACE_BAR_KEY_CODE) {
         e.preventDefault();
-        SheetActions.appendNewChord(this.props.id, this.props.parentID);
+        SheetActions.appendNewChord(this.props.id, this.props.parentIDs.get('barID'));
       }
     },
 
@@ -75,7 +75,7 @@
     },
 
     _gainedFocus: function() {
-      SheetActions.storeChordRefAsSelected(this.props.id, this.props.parentID);
+      SheetActions.storeChordRefAsSelected(this.props.id, this.props.parentIDs.toJS());
       this.setState({editing: true});
     },
 

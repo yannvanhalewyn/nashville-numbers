@@ -91,7 +91,6 @@
     var parentID;
     SHEET_DATA.getIn(['entities', parentName]).forEach(function(entity) {
       entity.get(childName).some(function(id) {
-        console.log("Freach" + id);
         if(id === childID) {
           parentID = entity.get('id');
           return true; // Break out of 'some' loop

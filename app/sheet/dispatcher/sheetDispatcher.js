@@ -24,7 +24,8 @@
         break;
 
       case Actions.DELETE_SELECTED_BAR:
-        SheetStoreDataManager.deleteBar(SheetStore.getRefToSelectedChord().barID);
+        var selectedChordRef = SheetStore.getRefToSelectedChord();
+        SheetStoreDataManager.deleteBar(selectedChordRef.parentIDs.barID);
         SheetStore.emitChange();
         break;
 
