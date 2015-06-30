@@ -1,24 +1,15 @@
 (function() {
 
+  "use strict";
   /** @jsx React.DOM */
 
   var React = require('react');
   var Section = require('./section.react')
-  var SheetActions = require('../actions/sheetActions');
-  var SheetStore = require('../stores/sheetStore');
 
-  Sheet = React.createClass({
+  var Sheet = React.createClass({
 
-    getInitialState: function() {
-      return SheetStore.getState();
-    },
-
-    componentDidMount: function() {
-      SheetStore.addEventListener(this._onChange)
-    },
-
-    compnentWillUnmount: function() {
-      SheetStore.removeEventListener(this._onChange);
+    propTypes: {
+      sections: React.PropTypes.array
     },
 
     renderSection: function(section) {
@@ -28,17 +19,10 @@
     render: function() {
       return (
         <div className="sheet">
-          <h1 className="sheet-title">
-            {this.state.title} <small>{this.state.artist}</small>
-          </h1>
-          {this.state.sections.map(this.renderSection)}
+          {this.props.sections.map(this.renderSection)}
         </div>
       );
-    },
-
-    _onChange: function() {
-      this.setState(SheetStore.getState());
-    },
+    }
 
   });
 
