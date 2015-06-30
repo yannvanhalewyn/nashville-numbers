@@ -6,6 +6,7 @@ var reactify   = require('reactify');
 var gulp       = require('gulp');
 var source     = require('vinyl-source-stream');
 var gutil      = require('gulp-util');
+var livereload = require('gulp-livereload');
 
 var nodemon = require('gulp-nodemon');
 var path = require('path');
@@ -57,6 +58,16 @@ gulp.task('watchify', function() {
   bundle();
   b.on('update', bundle);
   b.on('log', gutil.log);
+});
+
+// TASK live
+// uses livereload to reload the page upon css change
+gulp.task('live', function() {
+  livereload.listen();
+  gulp.watch('./public/css/style.css', function() {
+    gulp.src('./public/css/style.css')
+      .pipe(livereload());
+  });
 });
 
 gulp.task('default', ['watchify', 'server']);

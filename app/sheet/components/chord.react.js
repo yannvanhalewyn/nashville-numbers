@@ -39,7 +39,8 @@
     render: function() {
       var classes = {
         'chord': true,
-        'chord-editing': this.state.editing
+        'chord-editing': this.state.editing,
+        'chord-empty': !this.state.value
       };
       return (
         <input type="text" className={classNames(classes)}
