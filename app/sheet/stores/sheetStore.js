@@ -87,22 +87,28 @@
   }
 
   function updateChordText(id, text) {
+    // TODO use setIn()
     var tmp = SHEET_DATA.toJS();
     tmp.entities.chords[id].raw = text;
     SHEET_DATA = Immutable.fromJS(tmp);
   }
 
-  function appendNewChord(id, barID) {
-    // handles
-    var tmp = SHEET_DATA.toJS();
+  function insertNewChildInParentAtIndex(childName, parentName, parentID, index) {
     var newID = randomID();
-    // Create new Entity
-    tmp.entities.chords[newID] = {id: newID, raw: ""};
-    // Give parent bar a ref to that chord
-    var barIDX = tmp.entities.bars[barID].chords.indexOf(id);
-    tmp.entities.bars[barID].chords.splice(barIDX+1, 0, newID);
-    // Update store
-    SHEET_DATA = Immutable.fromJS(tmp);
+    SHEET_DATA = SHEET_DATA.withMutations(function(data) {
+      data
+        // insert new entity
+        .setIn(['entities', childName, newID], {id: newID, raw: ""})
+        // Give parent a ref to that entity at index
+        .updateIn(['entities', parentName, parentID, childName], function(chordRefs) {
+          return chordRefs.splice(index, 0, newID);
+        });
+    });
+  }
+
+  function appendNewChord(id, barID) {
+    var chordIndex = SHEET_DATA.getIn(['entities', 'bars', barID, 'chords']).indexOf(id);
+    insertNewChildInParentAtIndex("chords", "bars", barID, chordIndex+1);
   }
 
   var SheetStore = assign({}, EventEmitter.prototype, {
