@@ -8,7 +8,7 @@
   var Immutable = require('immutable');
 
   var CHANGE_EVENT = 'change';
-  var SHEET_DATA = Immutable.Map();
+  window.SHEET_DATA = Immutable.Map();
 
   /*
    * The store is usefull with normalized data, e.g.:
@@ -93,22 +93,43 @@
     SHEET_DATA = Immutable.fromJS(tmp);
   }
 
+  function getIndexOfChildInParent(childName, parentName, childID, parentID) {
+    var tmp =  SHEET_DATA.getIn(['entities', parentName, parentID, childName]).indexOf(childID);
+    return tmp;
+  }
+
+  // TODO append at end if no index given (simple if statement in updateIN callback)
   function insertNewChildInParentAtIndex(childName, parentName, parentID, index) {
+    // Lazy init Children array
+    if (!SHEET_DATA.getIn(['entities', parentName, parentID, childName])) {
+      SHEET_DATA = SHEET_DATA.setIn(['entities', parentName, parentID, childName],Immutable.List());
+    }
     var newID = randomID();
     SHEET_DATA = SHEET_DATA.withMutations(function(data) {
       data
         // insert new entity
-        .setIn(['entities', childName, newID], {id: newID, raw: ""})
+        .setIn(['entities', childName, newID], Immutable.Map({id: newID}))
         // Give parent a ref to that entity at index
-        .updateIn(['entities', parentName, parentID, childName], function(chordRefs) {
-          return chordRefs.splice(index, 0, newID);
+        .updateIn(['entities', parentName, parentID, childName], function(childRefs) {
+          if (index) {
+            return childRefs.splice(index, 0, newID);
+          } else {
+            return childRefs.push(newID);
+          }
         });
     });
+    return newID;
   }
 
   function appendNewChord(id, barID) {
     var chordIndex = SHEET_DATA.getIn(['entities', 'bars', barID, 'chords']).indexOf(id);
     insertNewChildInParentAtIndex("chords", "bars", barID, chordIndex+1);
+  }
+
+  function appendNewBar(id, rowID) {
+    var barIndex = getIndexOfChildInParent('bars', 'rows', id, rowID);
+    var newID = insertNewChildInParentAtIndex('bars', 'rows', rowID, barIndex+1);
+    insertNewChildInParentAtIndex('chords', 'bars', newID);
   }
 
   var SheetStore = assign({}, EventEmitter.prototype, {
@@ -147,8 +168,13 @@
         SheetStore.emitChange();
         break;
 
+      case SheetConstants.APPEND_NEW_BAR:
+        appendNewBar(action.id, action.rowID);
+        SheetStore.emitChange();
+        break;
+
       default:
-        console.log("No such task - " + action.actionType);
+        console.error("No such task - " + action.actionType);
         break;
     }
   });

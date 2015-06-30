@@ -19,6 +19,14 @@
         id: id,
         barID: barID
       });
+    },
+
+    appendNewBar: function(id, rowID) {
+      SheetDispatcher.dispatch({
+        actionType: SheetConstants.APPEND_NEW_BAR,
+        id: id,
+        rowID: rowID
+      })
     }
 
   };

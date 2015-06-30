@@ -14,9 +14,11 @@
     propTypes: {
       rawString: React.PropTypes.string,
       id: React.PropTypes.string.isRequired,
-      barID: React.PropTypes.string.isRequired
+      parentID: React.PropTypes.string.isRequired
     },
 
+    // TODO maybe handle undefined rawstrings (don't want to have to give it an
+    // empty one on setup || defaultProps?
     getInitialState: function() {
       return {
         value: this.props.rawString,
@@ -63,7 +65,7 @@
     _onKeyDown: function(e) {
       if(e.keyCode === SPACE_BAR_KEY_CODE) {
         e.preventDefault();
-        SheetActions.appendNewChord(this.props.id, this.props.barID);
+        SheetActions.appendNewChord(this.props.id, this.props.parentID);
       }
     },
 

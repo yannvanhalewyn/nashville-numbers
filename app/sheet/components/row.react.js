@@ -15,7 +15,12 @@
     },
 
     renderBar: function(bar) {
-      return <Bar key={bar.id} chords={bar.chords} id={bar.id}/>;
+      return <Bar
+               key={bar.id}
+               chords={bar.chords}
+               id={bar.id}
+               parentID={this.props.id}
+             />;
     },
 
     render: function() {
