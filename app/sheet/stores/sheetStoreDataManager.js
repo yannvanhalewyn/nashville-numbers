@@ -16,14 +16,11 @@
     },
 
     updateChordText: function(id, text) {
-      // TODO use setIn()
-      var tmp = SHEET_DATA.toJS();
-      tmp.entities.chords[id].raw = text;
-      SHEET_DATA = Immutable.fromJS(tmp);
+      SHEET_DATA = SHEET_DATA.setIn(['entities', 'chords', id, 'raw'], text);
     },
 
     appendNewChord: function(id, barID) {
-      var chordIndex = SHEET_DATA.getIn(['entities', 'bars', barID, 'chords']).indexOf(id);
+      var chordIndex = _getIndexOfChildInParent('chords', 'bars', id, barID);
       _insertNewChildInParentAtIndex("chords", "bars", barID, chordIndex+1);
     },
 
@@ -49,6 +46,7 @@
                                     Immutable.List());
     }
 
+    // Insert entity as pleased
     var newID = _randomID();
     SHEET_DATA = SHEET_DATA.withMutations(function(data) {
       data
@@ -67,8 +65,7 @@
   }
 
   function _getIndexOfChildInParent(childName, parentName, childID, parentID) {
-    var tmp =  SHEET_DATA.getIn(['entities', parentName, parentID, childName]).indexOf(childID);
-    return tmp;
+    return SHEET_DATA.getIn(['entities', parentName, parentID, childName]).indexOf(childID);
   }
 
   function _randomID() {

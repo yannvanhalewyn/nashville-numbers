@@ -37,7 +37,7 @@
     switch(action.actionType) {
       case SheetConstants.UPDATE_CHORD_TEXT:
         SheetStoreDataManager.updateChordText(action.id, action.text);
-        SheetStore.emitChange();
+        // SheetStore.emitChange();
         break;
 
       case SheetConstants.APPEND_NEW_CHORD:
