@@ -9,6 +9,7 @@
   var Chord = require('./chord.react');
   var ChordModel = require('../chord.js');
   var SheetActions = require('../actions/sheetActions');
+  var classNames = require('classnames');
 
   Bar = React.createClass({
 
@@ -27,9 +28,14 @@
               />
     },
 
+    // TODO auto delete bars when emptied
     render: function() {
+      var classes = classNames({
+        bar: true,
+        "bar-with-multiple-chords": this.props.chords.length > 1
+      });
       return (
-        <div onKeyDown={this._onKeyDown} className="bar">
+        <div onKeyDown={this._onKeyDown} className={classes}>
           {this.props.chords.map(this.renderChord)}
         </div>
       );

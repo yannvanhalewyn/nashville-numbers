@@ -1,5 +1,5 @@
 * {
-  font-family: Arial, "MS Trebuchet", sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
 ::selection {
@@ -46,8 +46,7 @@ body > .container {
 }
 
 .section-name {
-  text-decoration: underline;
-  rotation: 90º;
+  color: #999;
 }
 
 .bar {
@@ -55,6 +54,10 @@ body > .container {
   /* border: 1px solid #efefef; */
   margin-right: 2%;
   width: 23%;
+}
+
+.bar-with-multiple-chords {
+  border-bottom: 3px solid black;
 }
 
 .chord {
