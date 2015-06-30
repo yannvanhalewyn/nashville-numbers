@@ -1,0 +1,2 @@
+TODO Make tabbing through append new bars if needed
+TODO Chord spacing (should be straight forward)

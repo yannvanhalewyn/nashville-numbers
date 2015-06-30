@@ -31,22 +31,7 @@
     },
 
     deleteBar: function(barID) {
-      var rowID;
-      // Find parent
-      SHEET_DATA.getIn(['entities', 'rows']).forEach(function(row) {
-        row.get('bars').forEach(function(barID) {
-          if(barID == barID) {
-            rowID = row.get('id');
-          }
-        });
-      });
-      if (!rowID) {
-        console.error("Could not find row containing bar " + barID);
-      }
-      SHEET_DATA = SHEET_DATA.deleteIn(['entities', 'bars', barID]);
-      SHEET_DATA = SHEET_DATA.updateIn(['entities', 'rows', rowID, 'bars'], function(list) {
-        return list.splice(list.indexOf(barID), 1);
-      });
+      _deleteEntityAndUpdateParent('bars', 'rows', barID);
     }
 
   };
@@ -86,6 +71,34 @@
 
   function _getIndexOfChildInParent(childName, parentName, childID, parentID) {
     return SHEET_DATA.getIn(['entities', parentName, parentID, childName]).indexOf(childID);
+  }
+
+  function _deleteEntityAndUpdateParent(entityName, parentName, entityID) {
+    var parentID = _getParentID(parentName, entityName, entityID);
+    if (!parentID) {
+      console.error("Could not find " + parentName + " containing " + entityName +
+                    " with id: " + entityID);
+      return;
+    }
+    SHEET_DATA = SHEET_DATA.deleteIn(['entities', entityName, entityID]);
+    SHEET_DATA = SHEET_DATA.updateIn(['entities', parentName, parentID, entityName], function(list) {
+      return list.splice(list.indexOf(entityID), 1);
+    });
+  }
+
+  function _getParentID(parentName, childName, childID) {
+    // Find parent
+    var parentID;
+    SHEET_DATA.getIn(['entities', parentName]).forEach(function(entity) {
+      entity.get(childName).some(function(id) {
+        console.log("Freach" + id);
+        if(id === childID) {
+          parentID = entity.get('id');
+          return true; // Break out of 'some' loop
+        }
+      });
+    });
+    return parentID;
   }
 
   function _randomID() {
