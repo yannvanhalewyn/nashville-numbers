@@ -26,6 +26,20 @@
         actionType: SheetConstants.APPEND_NEW_BAR,
         id: id,
         rowID: rowID
+      });
+    },
+
+    deleteSelectedBar: function() {
+      SheetDispatcher.dispatch({
+        actionType: SheetConstants.DELETE_SELECTED_BAR,
+      });
+    },
+
+    storeChordRefAsSelected: function(chordID, barID) {
+      SheetDispatcher.dispatch({
+        actionType: SheetConstants.STORE_CHORD_REF_AS_SELECTED,
+        chordID: chordID,
+        barID: barID
       })
     }
 

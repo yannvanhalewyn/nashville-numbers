@@ -24,7 +24,6 @@
     },
 
     render: function() {
-      console.log(this.state);
       return (
         <div className="sheet-editor">
           <button className="btn btn-primary">Add Sections</button>

@@ -75,6 +75,7 @@
     },
 
     _gainedFocus: function() {
+      SheetActions.storeChordRefAsSelected(this.props.id, this.props.parentID);
       this.setState({editing: true});
     },
 

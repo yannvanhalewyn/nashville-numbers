@@ -29,6 +29,26 @@
       var newID = _insertNewChildInParentAtIndex('bars', 'rows', rowID, barIndex+1);
       _insertNewChildInParentAtIndex('chords', 'bars', newID);
     },
+
+    deleteBar: function(barID) {
+      var rowID;
+      // Find parent
+      SHEET_DATA.getIn(['entities', 'rows']).forEach(function(row) {
+        row.get('bars').forEach(function(barID) {
+          if(barID == barID) {
+            rowID = row.get('id');
+          }
+        });
+      });
+      if (!rowID) {
+        console.error("Could not find row containing bar " + barID);
+      }
+      SHEET_DATA = SHEET_DATA.deleteIn(['entities', 'bars', barID]);
+      SHEET_DATA = SHEET_DATA.updateIn(['entities', 'rows', rowID, 'bars'], function(list) {
+        return list.splice(list.indexOf(barID), 1);
+      });
+    }
+
   };
 
   module.exports = SheetStoreDataManager;

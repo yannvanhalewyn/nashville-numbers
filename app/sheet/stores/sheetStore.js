@@ -28,6 +28,17 @@
 
     removeEventListener: function(callback) {
       this.removeListene(CHANGE_EVENT, callback);
+    },
+
+    storeRefToSelectedChord: function(chordID, barID) {
+      this.selectedChordRef = {
+        chordID: chordID,
+        barID: barID
+      }
+    },
+
+    getRefToSelectedChord: function() {
+      return this.selectedChordRef;
     }
 
   });
