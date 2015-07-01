@@ -91,7 +91,76 @@ describe('SheetStoreDataManager', function() {
           });
         });
       });
+    });
 
+    describe('#addBar()', function() {
+      context('when no barID is given', function() {
+        context('when existing rowID is given', function() {
+          beforeEach(function() {
+            DataManager.addBar('row1');
+          });
+
+          it ('adds a bar to the entities', function() {
+            var barCount = _.size(data().entities.bars);
+            var originalBarCount = _.size(originalData().entities.bars);
+            expect(barCount).to.eql(originalBarCount + 1);
+          });
+
+          it('inserts a bar at the end of the given row', function() {
+            newID = _.last(data().entities.rows['row1'].bars);
+            expect(data().entities.rows['row1'].bars).to.eql(
+                                        ['bar1', 'bar2', newID])
+          });
+
+          it('adds a new chord', function() {
+            var chordCount = _.size(data().entities.chords);
+            var originalChordCount = _.size(originalData().entities.chords);
+            expect(chordCount).to.eql(originalChordCount + 1);
+          });
+
+          it('adds that chord to the new bar', function() {
+            newID = _.last(data().entities.rows['row1'].bars);
+            expect(data().entities.bars[newID].chords.length).to.eql(1);
+          });
+        });
+
+        context('when invalid rowID is given', function() {
+          beforeEach(function() {
+            DataManager.addBar('invalid');
+          });
+
+          it("doesn't add a bar entity", function() {
+            var barCount = _.size(data().entities.bars);
+            var originalBarCount = _.size(originalData().entities.bars);
+            console.log(data());
+            expect(barCount).to.eql(originalBarCount);
+          });
+
+          it("doesn't create the missing row", function() {
+            expect(data().entities.rows['invalid']).to.be.undefined;
+          });
+        });
+      });
+
+      context('when barID is given', function() {
+        context('when barID is valid', function() {
+          it('inserts a new bar in row at the correct index', function() {
+            DataManager.addBar('row1', 'bar1');
+            addedBarID = _.last(_.keys(data().entities.bars));
+            var index = data().entities.rows['row1'].bars.indexOf(addedBarID);
+            expect(index).to.eql(1);
+          });
+        })
+
+        context('when barID is invalid', function() {
+          it('appends a new bar at the end of the row', function() {
+            DataManager.addBar('row1', 'invalid');
+            addedBarID = _.last(_.keys(data().entities.bars));
+            expect(data().entities.rows['row1'].bars).to.eql(
+                        ['bar1', 'bar2', addedBarID]);
+          });
+        });
+      });
     });
 
   });

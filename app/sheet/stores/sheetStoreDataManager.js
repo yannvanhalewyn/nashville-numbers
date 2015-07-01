@@ -38,9 +38,17 @@
       _insertNewChildInParentAtIndex('chords', 'bars', newID);
     },
 
-    appendBar: function(rowID) {
-      var newID = _insertNewChildInParentAtIndex('bars', 'rows', rowID);
-      _insertNewChildInParentAtIndex('chords', 'bars', newID);
+    /*
+     * Inserts a bar into the data in the row with rowID. If barID is given, it
+     * inserts the new bar after the given one. Else the new bar will be appended at
+     * the end.
+     */
+    addBar: function(rowID, barID) {
+      if (SHEET_DATA.getIn(['entities', 'rows', rowID])) {
+        var barIndex = _getIndexOfChildInParent('bars', 'rows', barID, rowID);
+        var newID = _insertNewChildInParentAtIndex('bars', 'rows', rowID, barIndex+1);
+        _insertNewChildInParentAtIndex('chords', 'bars', newID);
+      }
     },
 
     deleteBar: function(barID, rowID) {
