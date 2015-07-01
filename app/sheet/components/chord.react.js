@@ -33,7 +33,7 @@
     // },
     //
     componentDidMount: function() {
-      React.findDOMNode(this.refs.textInput).focus();
+      this.getDOMNode().focus();
     },
 
     render: function() {
@@ -44,14 +44,14 @@
       };
       return (
         <input type="text" className={classNames(classes)}
-                           onDoubleClick={this._onDoubleClick}
-                           onChange={this._onChange}
-                           onFocus={this._gainedFocus}
-                           onBlur={this._lostFocus}
-                           onKeyDown={this._onKeyDown}
-                           ref="textInput"
-                           value={this.state.editing ? this.state.value :
-                             this._musicNotationString()} />
+          className={classNames(classes)}
+          onChange={this._onChange}
+          onFocus={this._gainedFocus}
+          onBlur={this._lostFocus}
+          onKeyDown={this._onKeyDown}
+          value={this.state.editing ? this.state.value :
+            this._musicNotationString()}
+        />
       )
     },
 

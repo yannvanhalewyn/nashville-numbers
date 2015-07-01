@@ -1,3 +1,12 @@
+/*
+ * Great colors from https://color.adobe.com/Campfire-color-theme-2528696/
+ * green - #588C7E
+ * yellow - #F2E394
+ * orange - #F2AE72
+ * red - #D96459
+ * darkred - #8C4646
+ */
+
 * {
   font-family: 'Montserrat', sans-serif;
 }
@@ -34,9 +43,49 @@ body > .container {
   text-align: center;
 }
 
+/*
+ * =====
+ * SHEET
+ * =====
+ */
+
 @font-face {
   font-family: NashvillechordSymbols;
   src: url(../fonts/NashvilleChordSymbols-regular.ttf)
+}
+
+.add-or-remove-buttons {
+  display: inline-block;
+}
+
+.add-or-remove-buttons
+.button {
+  margin: 4px;
+  border-radius: 50%;
+  border: none;
+}
+
+
+.add-or-remove-buttons
+.button.button-add {
+  background: #58AC7E;
+}
+
+.add-or-remove-buttons
+.button.button-add:hover {
+  box-shadow: 0px 0px 4px #588C7E;
+  transition: box-shadow 300ms;
+}
+
+.add-or-remove-buttons
+.button.button-remove {
+  background: #D96459;
+}
+
+.add-or-remove-buttons
+.button.button-remove:hover {
+  box-shadow: 0px 0px 6px #D96459;
+  transition: box-shadow 300ms;
 }
 
 .sheet-title {
@@ -85,5 +134,5 @@ body > .container {
   background: #66779b;
   font-family: inherit;
   cursor: auto;
-  transition: background linear 1s
+  transition: background linear 300ms;
 }

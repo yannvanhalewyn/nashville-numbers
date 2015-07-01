@@ -19,27 +19,42 @@
       SHEET_DATA = SHEET_DATA.setIn(['entities', 'chords', id, 'raw'], text);
     },
 
-    appendNewChord: function(id, barID) {
+    insertChordAfter: function(id, barID) {
       var chordIndex = _getIndexOfChildInParent('chords', 'bars', id, barID);
       _insertNewChildInParentAtIndex("chords", "bars", barID, chordIndex+1);
     },
 
-    appendNewBar: function(id, rowID) {
+    appendChord: function(barID) {
+      _insertNewChildInParentAtIndex("chords", "bars", barID);
+    },
+
+    insertBarAfter: function(id, rowID) {
       var barIndex = _getIndexOfChildInParent('bars', 'rows', id, rowID);
       var newID = _insertNewChildInParentAtIndex('bars', 'rows', rowID, barIndex+1);
       _insertNewChildInParentAtIndex('chords', 'bars', newID);
     },
 
-    appendNewRow: function(rowID, sectionID) {
+    appendBar: function(rowID) {
+      var newID = _insertNewChildInParentAtIndex('bars', 'rows', rowID);
+      _insertNewChildInParentAtIndex('chords', 'bars', newID);
+    },
+
+    insertRowAfter: function(rowID, sectionID) {
       var rowIndex = _getIndexOfChildInParent('rows', 'sections', rowID, sectionID);
       var newID = _insertNewChildInParentAtIndex('rows', 'sections', sectionID, rowIndex+1);
       for (var i = 0; i < 4; i++) {
-        var newBarID = _insertNewChildInParentAtIndex('bars', 'rows', newID);
-        _insertNewChildInParentAtIndex('chords', 'bars', newBarID);
+        this.appendBar(newID);
       }
     },
 
-    appendNewSection: function(id) {
+    appendRow: function(sectionID) {
+      var newID = _insertNewChildInParentAtIndex('rows', 'sections', sectionID);
+      for (var i = 0; i < 4; i++) {
+        this.appendBar(newID);
+      }
+    },
+
+    insertSectionAfter: function(id) {
       var newID = _randomID();
       SHEET_DATA = SHEET_DATA.withMutations(function(data) {
         data
@@ -48,6 +63,7 @@
             return list.push(newID);
           });
       });
+      this.appendRow(newID);
     },
 
     deleteBar: function(barID) {

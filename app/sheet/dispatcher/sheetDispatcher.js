@@ -14,27 +14,27 @@
         break;
 
       case Actions.APPEND_NEW_CHORD:
-        SheetStoreDataManager.appendNewChord(action.id, action.barID);
+        SheetStoreDataManager.insertChordAfter(action.id, action.barID);
         SheetStore.emitChange();
         break;
 
       case Actions.APPEND_NEW_BAR:
         var selectedChordRef = SheetStore.getRefToSelectedChord();
-        SheetStoreDataManager.appendNewBar(selectedChordRef.parentIDs.barID,
+        SheetStoreDataManager.insertBarAfter(selectedChordRef.parentIDs.barID,
                                            selectedChordRef.parentIDs.rowID);
         SheetStore.emitChange();
         break;
 
       case Actions.APPEND_NEW_ROW:
         var selectedChordRef = SheetStore.getRefToSelectedChord();
-        SheetStoreDataManager.appendNewRow(selectedChordRef.parentIDs.rowID,
+        SheetStoreDataManager.insertRowAfter(selectedChordRef.parentIDs.rowID,
                                            selectedChordRef.parentIDs.sectionID);
         SheetStore.emitChange();
         break;
 
       case Actions.APPEND_NEW_SECTION:
         var selectedChordRef = SheetStore.getRefToSelectedChord();
-        SheetStoreDataManager.appendNewSection(selectedChordRef.parentIDs.sectionID);
+        SheetStoreDataManager.insertSectionAfter(selectedChordRef.parentIDs.sectionID);
         SheetStore.emitChange();
         break;
 
