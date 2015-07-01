@@ -26,7 +26,7 @@
     render: function() {
       return (
         <div className="sheet-editor">
-          <button className="btn btn-primary">Add Sections</button>
+          <button className="btn btn-primary" onClick={this._onAddSection}>Add Sections</button>
           <button className="btn btn-danger" onClick={this._onDeleteBar}>Delete Bar</button>
           <h1 className="sheet-title">
             {this.state.title} <small>{this.state.artist}</small>
@@ -42,6 +42,10 @@
 
     _onDeleteBar: function() {
       SheetActions.deleteSelectedBar();
+    },
+
+    _onAddSection: function() {
+      SheetActions.appendSection();
     }
 
   });

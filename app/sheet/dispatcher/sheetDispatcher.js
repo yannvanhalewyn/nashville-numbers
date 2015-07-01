@@ -19,7 +19,15 @@
         break;
 
       case Actions.APPEND_NEW_BAR:
-        SheetStoreDataManager.appendNewBar(action.id, action.rowID);
+        var selectedChordRef = SheetStore.getRefToSelectedChord();
+        SheetStoreDataManager.appendNewBar(selectedChordRef.parentIDs.barID, 
+                                           selectedChordRef.parentIDs.rowID);
+        SheetStore.emitChange();
+        break;
+
+      case Actions.APPEND_NEW_SECTION:
+        var selectedChordRef = SheetStore.getRefToSelectedChord();
+        SheetStoreDataManager.appendNewSection(selectedChordRef.parentIDs.sectionID);
         SheetStore.emitChange();
         break;
 

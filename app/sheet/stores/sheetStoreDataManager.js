@@ -30,6 +30,18 @@
       _insertNewChildInParentAtIndex('chords', 'bars', newID);
     },
 
+    appendNewSection: function(id) {
+      var newID = _randomID();
+      SHEET_DATA = SHEET_DATA.withMutations(function(data) {
+        data
+          .setIn(['entities', 'sections', newID], Immutable.fromJS({name: "section", id: newID, rows: []}))
+          .updateIn(['result', 'sections'], function(list) {
+            return list.push(newID);
+          });
+      });
+      console.log(SHEET_DATA);
+    },
+
     deleteBar: function(barID) {
       _deleteEntityAndUpdateParent('bars', 'rows', barID);
     }
