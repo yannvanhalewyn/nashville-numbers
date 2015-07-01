@@ -61,8 +61,8 @@ body > .container {
 .add-or-remove-buttons
 .button {
   margin: 4px;
-  border-radius: 50%;
   border: none;
+  padding: 4px 8px;
 }
 
 

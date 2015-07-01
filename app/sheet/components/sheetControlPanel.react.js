@@ -4,19 +4,20 @@
   /** @jsx React.DOM */
 
   var React = require('react');
+  var SheetActions = require('../actions/sheetActions');
 
   var SheetControlPanel = React.createClass({
 
     renderAddOrRemoveButton: function(element, addHandler, removeHandler) {
       return (
         <div className="add-or-remove-buttons">
-          <button className="button button-add" onClick={addHandler}>
+          <div className="btn button button-add" onClick={addHandler}>
             <span className="glyphicon glyphicon-plus"></span>
-          </button>
+          </div>
           {element}
-          <button className="button button-remove" onClick={removeHandler}>
+          <div className="btn button button-remove" onClick={removeHandler}>
             <span className="glyphicon glyphicon-minus"></span>
-          </button>
+          </div>
         </div>
       )
     },
@@ -24,13 +25,17 @@
     render: function() {
       return (
         <div className="sheet-control-panel">
-          {this.renderAddOrRemoveButton("Section", this._onAddSection, this._onRemoveSection)}
-          {this.renderAddOrRemoveButton("Row", this._onAddRow, this._onRemoveRow)}
-          {this.renderAddOrRemoveButton("Bar", this._onAddBar, this._onRemoveBar)}
+          {this.renderAddOrRemoveButton("Section", SheetActions.appendSection,
+                                                   SheetActions.removeSection)}
+          {this.renderAddOrRemoveButton("Row", SheetActions.appendRow,
+                                               SheetActions.removeRow)}
+          {this.renderAddOrRemoveButton("Bar", SheetActions.appendBar,
+                                               SheetActions.removeBar)}
+          {this.renderAddOrRemoveButton("Chord", SheetActions.appendChord,
+                                                 SheetActions.removeChord)}
         </div>
       )
     },
-
 
   });
 

@@ -8,7 +8,10 @@
     APPEND_NEW_BAR: null,
     APPEND_NEW_ROW: null,
     APPEND_NEW_SECTION: null,
+    DELETE_SELECTED_CHORD: null,
     DELETE_SELECTED_BAR: null,
+    DELETE_SELECTED_ROW: null,
+    DELETE_SELECTED_SECTION: null,
     DELETE_CHORD: null,
     STORE_CHORD_REF_AS_SELECTED: null
   });

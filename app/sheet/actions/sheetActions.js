@@ -13,36 +13,36 @@
       });
     },
 
-    appendNewChord: function(id, barID) {
-      SheetDispatcher.dispatch({
-        actionType: SheetConstants.APPEND_NEW_CHORD,
-        id: id,
-        barID: barID
-      });
+    appendChord: function() {
+      SheetDispatcher.dispatch({actionType: SheetConstants.APPEND_NEW_CHORD});
     },
 
-    appendNewBar: function(id, rowID) {
-      SheetDispatcher.dispatch({
-        actionType: SheetConstants.APPEND_NEW_BAR,
-        id: id,
-        rowID: rowID
-      });
+    appendBar: function() {
+      SheetDispatcher.dispatch({actionType: SheetConstants.APPEND_NEW_BAR});
     },
 
-    appendNewRow: function() {
+    appendRow: function() {
       SheetDispatcher.dispatch({actionType: SheetConstants.APPEND_NEW_ROW});
     },
 
-    deleteSelectedBar: function() {
-      SheetDispatcher.dispatch({
-        actionType: SheetConstants.DELETE_SELECTED_BAR,
-      });
+    appendSection: function() {
+      SheetDispatcher.dispatch({actionType: SheetConstants.APPEND_NEW_SECTION});
     },
 
-    appendSection: function() {
-      SheetDispatcher.dispatch({
-        actionType: SheetConstants.APPEND_NEW_SECTION
-      });
+    removeChord: function() {
+      SheetDispatcher.dispatch({actionType: SheetConstants.DELETE_SELECTED_CHORD});
+    },
+
+    removeBar: function() {
+      SheetDispatcher.dispatch({actionType: SheetConstants.DELETE_SELECTED_BAR});
+    },
+
+    removeRow: function() {
+      SheetDispatcher.dispatch({actionType: SheetConstants.DELETE_SELECTED_ROW});
+    },
+
+    removeSection: function() {
+      SheetDispatcher.dispatch({actionType: SheetConstants.DELETE_SELECTED_SECTION});
     },
 
     storeChordRefAsSelected: function(chordID, barID) {

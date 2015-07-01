@@ -28,6 +28,10 @@
       _insertNewChildInParentAtIndex("chords", "bars", barID);
     },
 
+    deleteChord: function(chordID, barID) {
+      _deleteEntityAndUpdateParent("chords", "bars", chordID, barID);
+    },
+
     insertBarAfter: function(id, rowID) {
       var barIndex = _getIndexOfChildInParent('bars', 'rows', id, rowID);
       var newID = _insertNewChildInParentAtIndex('bars', 'rows', rowID, barIndex+1);
@@ -37,6 +41,10 @@
     appendBar: function(rowID) {
       var newID = _insertNewChildInParentAtIndex('bars', 'rows', rowID);
       _insertNewChildInParentAtIndex('chords', 'bars', newID);
+    },
+
+    deleteBar: function(barID, rowID) {
+      _deleteEntityAndUpdateParent('bars', 'rows', barID, rowID);
     },
 
     insertRowAfter: function(rowID, sectionID) {
@@ -54,6 +62,10 @@
       }
     },
 
+    deleteRow: function(rowID, sectionID) {
+      _deleteEntityAndUpdateParent('rows', 'sections', rowID, sectionID);
+    },
+
     insertSectionAfter: function(id) {
       var newID = _randomID();
       SHEET_DATA = SHEET_DATA.withMutations(function(data) {
@@ -66,8 +78,15 @@
       this.appendRow(newID);
     },
 
-    deleteBar: function(barID) {
-      _deleteEntityAndUpdateParent('bars', 'rows', barID);
+    deleteSection: function(sectionID) {
+      SHEET_DATA = SHEET_DATA.withMutations(function(data) {
+        data
+          .deleteIn(['entities', 'section', sectionID])
+          .updateIn(['result', 'sections'], function(list) {
+            console.log(list);
+            return list.splice(list.indexOf(sectionID), 1);
+          });
+      })
     }
 
   };
@@ -109,31 +128,12 @@
     return SHEET_DATA.getIn(['entities', parentName, parentID, childName]).indexOf(childID);
   }
 
-  function _deleteEntityAndUpdateParent(entityName, parentName, entityID) {
-    var parentID = _getParentID(parentName, entityName, entityID);
-    if (!parentID) {
-      console.error("Could not find " + parentName + " containing " + entityName +
-                    " with id: " + entityID);
-      return;
-    }
+  function _deleteEntityAndUpdateParent(entityName, parentName, entityID, parentID) {
     SHEET_DATA = SHEET_DATA.deleteIn(['entities', entityName, entityID]);
-    SHEET_DATA = SHEET_DATA.updateIn(['entities', parentName, parentID, entityName], function(list) {
+    SHEET_DATA = SHEET_DATA.updateIn(['entities', parentName, parentID, entityName],
+                                     function(list) {
       return list.splice(list.indexOf(entityID), 1);
     });
-  }
-
-  function _getParentID(parentName, childName, childID) {
-    // Find parent
-    var parentID;
-    SHEET_DATA.getIn(['entities', parentName]).forEach(function(entity) {
-      entity.get(childName).some(function(id) {
-        if(id === childID) {
-          parentID = entity.get('id');
-          return true; // Break out of 'some' loop
-        }
-      });
-    });
-    return parentID;
   }
 
   function _randomID() {

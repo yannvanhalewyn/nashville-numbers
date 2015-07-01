@@ -3,11 +3,9 @@
   "use strict";
   /** @jsx React.DOM */
 
+  var React = require('react');
   var SheetControlPanel = require('./sheetControlPanel.react');
   var Sheet = require('./sheet.react');
-  var React = require('react');
-  console.log(SheetControlPanel);
-  var SheetActions = require('../actions/sheetActions');
   var SheetStore = require('../stores/sheetStore');
 
   var SheetEditor = React.createClass({
@@ -39,18 +37,6 @@
     _onChange: function() {
       this.setState(SheetStore.getState());
     },
-
-    _onDeleteBar: function() {
-      SheetActions.deleteSelectedBar();
-    },
-
-    _onAddSection: function() {
-      SheetActions.appendSection();
-    },
-
-    _onAddRow: function() {
-      SheetActions.appendNewRow();
-    }
 
   });
 
