@@ -16,16 +16,16 @@
     },
 
     updateChordText: function(id, text) {
-      SHEET_DATA = SHEET_DATA.setIn(['entities', 'chords', id, 'raw'], text);
+      if (SHEET_DATA.getIn(['entities', 'chords', id])) {
+        SHEET_DATA = SHEET_DATA.setIn(['entities', 'chords', id, 'raw'], text);
+      }
     },
 
-    insertChordAfter: function(id, barID) {
-      var chordIndex = _getIndexOfChildInParent('chords', 'bars', id, barID);
-      _insertNewChildInParentAtIndex("chords", "bars", barID, chordIndex+1);
-    },
-
-    appendChord: function(barID) {
-      _insertNewChildInParentAtIndex("chords", "bars", barID);
+    addChord: function(barID, chordID) {
+      if (SHEET_DATA.getIn(['entities', 'bars', barID])) {
+        var chordIndex = _getIndexOfChildInParent('chords', 'bars', chordID, barID);
+        _insertNewChildInParentAtIndex("chords", "bars", barID, chordIndex+1);
+      }
     },
 
     deleteChord: function(chordID, barID) {
