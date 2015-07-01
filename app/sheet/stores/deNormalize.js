@@ -39,38 +39,38 @@
   */
 
   module.exports = function(data) {
-      var result = data.get('result').toJS();
-      var entities = data.get('entities').toJS();
-      var ret = {
-        title: result.title,
-        artist: result.artist,
-        sections: []
-      };
+    var result = data.get('result').toJS();
+    var entities = data.get('entities').toJS();
+    var ret = {
+      title: result.title,
+      artist: result.artist,
+      sections: []
+    };
 
-      // Loop over all sections
-      result.sections.forEach(function(sectionID, iii) {
-        var section = entities.sections[sectionID];
-        ret.sections[iii] = section;
+    // Loop over all sections
+    result.sections.forEach(function(sectionID, iii) {
+      var section = entities.sections[sectionID];
+      ret.sections[iii] = section;
 
-        // Loop over all rows
-        section.rows.forEach(function(rowID, jjj) {
-          var row = entities.rows[rowID];
-          ret.sections[iii].rows[jjj] = row;
+      // Loop over all rows
+      section.rows.forEach(function(rowID, jjj) {
+        var row = entities.rows[rowID];
+        ret.sections[iii].rows[jjj] = row;
 
-          // Loop over all bars
-          row.bars.forEach(function(barID, kkk) {
-            var bar = entities.bars[barID];
-            ret.sections[iii].rows[jjj].bars[kkk] = bar;
+        // Loop over all bars
+        row.bars.forEach(function(barID, kkk) {
+          var bar = entities.bars[barID];
+          ret.sections[iii].rows[jjj].bars[kkk] = bar;
 
-            // Loop over all chords
-            bar.chords.forEach(function(chordID, lll) {
-              var chord = entities.chords[chordID];
-              ret.sections[iii].rows[jjj].bars[kkk].chords[lll] = chord;
-            });
+          // Loop over all chords
+          bar.chords.forEach(function(chordID, lll) {
+            var chord = entities.chords[chordID];
+            ret.sections[iii].rows[jjj].bars[kkk].chords[lll] = chord;
           });
         });
       });
-      return ret;
+    });
+    return ret;
     }
 
 }())

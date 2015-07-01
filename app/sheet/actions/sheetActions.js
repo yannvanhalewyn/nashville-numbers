@@ -29,6 +29,10 @@
       });
     },
 
+    appendNewRow: function() {
+      SheetDispatcher.dispatch({actionType: SheetConstants.APPEND_NEW_ROW});
+    },
+
     deleteSelectedBar: function() {
       SheetDispatcher.dispatch({
         actionType: SheetConstants.DELETE_SELECTED_BAR,

@@ -30,6 +30,15 @@
       _insertNewChildInParentAtIndex('chords', 'bars', newID);
     },
 
+    appendNewRow: function(rowID, sectionID) {
+      var rowIndex = _getIndexOfChildInParent('rows', 'sections', rowID, sectionID);
+      var newID = _insertNewChildInParentAtIndex('rows', 'sections', sectionID, rowIndex+1);
+      for (var i = 0; i < 4; i++) {
+        var newBarID = _insertNewChildInParentAtIndex('bars', 'rows', newID);
+        _insertNewChildInParentAtIndex('chords', 'bars', newBarID);
+      }
+    },
+
     appendNewSection: function(id) {
       var newID = _randomID();
       SHEET_DATA = SHEET_DATA.withMutations(function(data) {
@@ -39,7 +48,6 @@
             return list.push(newID);
           });
       });
-      console.log(SHEET_DATA);
     },
 
     deleteBar: function(barID) {
