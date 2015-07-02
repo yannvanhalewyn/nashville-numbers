@@ -32,3 +32,6 @@ h1 {
     background: #3286a7; }
   .btn:focus {
     outline: none; }
+  .btn.btn-orange {
+    background: rgba(255, 152, 0, 0.75);
+    color: white; }

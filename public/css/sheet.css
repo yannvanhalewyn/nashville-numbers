@@ -28,6 +28,23 @@
       .add-or-remove-buttons .btn.control-remove:hover {
         box-shadow: 0px 0px 6px #D96459; }
 
+#save-button {
+  font-weight: 800;
+  float: right;
+  margin-right: 50px; }
+
+#play-mode-toggle {
+  cursor: pointer;
+  position: absolute;
+  top: 40px;
+  right: 50px;
+  border: 2px solid #66aa33;
+  padding: 7px;
+  border-radius: 10%; }
+  #play-mode-toggle:hover {
+    color: white;
+    background: #66aa33; }
+
 /* TITLE
 ------------------*/
 .sheet-title {

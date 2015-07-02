@@ -39,6 +39,29 @@
   }
 }
 
+#save-button {
+  font-weight: 800;
+  float: right;
+  margin-right: 50px;
+}
+
+$TOGGLE_COLOR: #66aa33;
+
+#play-mode-toggle {
+  cursor: pointer;
+  position: absolute;
+  top: 40px;
+  right: 50px;
+  border: 2px solid $TOGGLE_COLOR;
+  padding: 7px;
+  border-radius: 10%;
+
+  &:hover {
+    color: white;
+    background: $TOGGLE_COLOR;
+  }
+}
+
 /* TITLE
 ------------------*/
 .sheet-title {

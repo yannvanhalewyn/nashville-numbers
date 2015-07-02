@@ -26,6 +26,8 @@
       return (
         <div className="sheet-editor">
           <SheetControlPanel />
+          <span className="fa fa-expand" id="play-mode-toggle"></span>
+          <div className="btn btn-orange" id="save-button">Save!</div>
           <h1 className="sheet-title">
             {this.state.title} <small className="artist">{this.state.artist}</small>
           </h1>

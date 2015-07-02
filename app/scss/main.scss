@@ -43,4 +43,9 @@ h1 {
     &:focus {
         outline: none;
     }
+
+    &.btn-orange {
+        background: rgba(255,152,0,.75);
+        color: white;
+    }
 }
