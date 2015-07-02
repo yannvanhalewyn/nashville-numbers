@@ -13,19 +13,19 @@
       });
     },
 
-    appendChord: function() {
+    addChord: function() {
       SheetDispatcher.dispatch({actionType: SheetConstants.APPEND_NEW_CHORD});
     },
 
-    appendBar: function() {
+    addBar: function() {
       SheetDispatcher.dispatch({actionType: SheetConstants.APPEND_NEW_BAR});
     },
 
-    appendRow: function() {
+    addRow: function() {
       SheetDispatcher.dispatch({actionType: SheetConstants.APPEND_NEW_ROW});
     },
 
-    appendSection: function() {
+    addSection: function() {
       SheetDispatcher.dispatch({actionType: SheetConstants.APPEND_NEW_SECTION});
     },
 

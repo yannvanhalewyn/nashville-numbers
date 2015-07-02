@@ -16,23 +16,22 @@
         break;
 
       case Actions.APPEND_NEW_CHORD:
-        SheetStoreDataManager.insertChordAfter(selected.id, selected.parentIDs.barID);
+        SheetStoreDataManager.addChord(selected.parentIDs.barID, selected.chordID);
         SheetStore.emitChange();
         break;
 
       case Actions.APPEND_NEW_BAR:
-        SheetStoreDataManager.insertBarAfter(selected.parentIDs.barID, selected.parentIDs.rowID);
+        SheetStoreDataManager.addBar(selected.parentIDs.rowID, selected.parentIDs.barID);
         SheetStore.emitChange();
         break;
 
       case Actions.APPEND_NEW_ROW:
-        SheetStoreDataManager.insertRowAfter(selected.parentIDs.rowID,
-                                             selected.parentIDs.sectionID);
+        SheetStoreDataManager.addRow(selected.parentIDs.sectionID, selected.parentIDs.rowID);
         SheetStore.emitChange();
         break;
 
       case Actions.APPEND_NEW_SECTION:
-        SheetStoreDataManager.insertSectionAfter(selected.parentIDs.sectionID);
+        SheetStoreDataManager.addSection(selected.parentIDs.sectionID);
         SheetStore.emitChange();
         break;
 

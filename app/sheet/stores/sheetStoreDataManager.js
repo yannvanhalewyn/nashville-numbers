@@ -4,6 +4,7 @@
   var Immutable = require('immutable');
 
   var SHEET_DATA = Immutable.Map();
+  var DEFAULT_NUM_BARS_IN_ROW = 4;
 
   var SheetStoreDataManager = {
 
@@ -21,6 +22,17 @@
       }
     },
 
+    /*
+     * ===============
+     * Adding entities
+     * ===============
+     *
+     * All of these functions take in an optional ID of the entity after which a
+     * new one wishes to be appended. If none is supplied, or the given entity
+     * was not found, a new one will be created at the end of the parent.
+     * e.g. addRow will append a row at the end of the section.
+     *
+     */
     addChord: function(barID, chordID) {
       if (SHEET_DATA.getIn(['entities', 'bars', barID])) {
         var chordIndex = _getIndexOfChildInParent('chords', 'bars', chordID, barID);
@@ -28,70 +40,64 @@
       }
     },
 
-    deleteChord: function(chordID, barID) {
-      _deleteEntityAndUpdateParent("chords", "bars", chordID, barID);
-    },
-
-    insertBarAfter: function(id, rowID) {
-      var barIndex = _getIndexOfChildInParent('bars', 'rows', id, rowID);
-      var newID = _insertNewChildInParentAtIndex('bars', 'rows', rowID, barIndex+1);
-      _insertNewChildInParentAtIndex('chords', 'bars', newID);
-    },
-
-    /*
-     * Inserts a bar into the data in the row with rowID. If barID is given, it
-     * inserts the new bar after the given one. Else the new bar will be appended at
-     * the end.
-     */
     addBar: function(rowID, barID) {
       if (SHEET_DATA.getIn(['entities', 'rows', rowID])) {
         var barIndex = _getIndexOfChildInParent('bars', 'rows', barID, rowID);
         var newID = _insertNewChildInParentAtIndex('bars', 'rows', rowID, barIndex+1);
-        _insertNewChildInParentAtIndex('chords', 'bars', newID);
+        this.addChord(newID);
       }
+    },
+
+    addRow: function(sectionID, rowID) {
+      if (SHEET_DATA.getIn(['entities', 'sections', sectionID])) {
+        var rowIndex = _getIndexOfChildInParent('rows', 'sections', rowID, sectionID);
+        var newID = _insertNewChildInParentAtIndex('rows', 'sections', sectionID, rowIndex + 1);
+        for (var i = 0; i < DEFAULT_NUM_BARS_IN_ROW; i++) {
+          this.addBar(newID);
+        }
+      }
+    },
+
+    addSection: function(sectionID) {
+      var newID = _randomID();
+      var index = SHEET_DATA.getIn(['result', 'sections']).indexOf(sectionID)
+      SHEET_DATA = SHEET_DATA.withMutations(function(data) {
+        data
+          .setIn(['entities', 'sections', newID], Immutable.fromJS({name: "section", rows: []}))
+          .updateIn(['result', 'sections'], function(list) {
+            if (index === -1) {
+              return list.push(newID);
+            } else {
+              return list.splice(index+1, 0, newID);
+            }
+          })
+      });
+      this.addRow(newID);
+    },
+
+/*
+ * =================
+ * Removing Entities
+ * =================
+ */
+    deleteChord: function(chordID, barID) {
+      _deleteEntityAndUpdateParent("chords", "bars", chordID, barID);
     },
 
     deleteBar: function(barID, rowID) {
       _deleteEntityAndUpdateParent('bars', 'rows', barID, rowID);
     },
 
-    insertRowAfter: function(rowID, sectionID) {
-      var rowIndex = _getIndexOfChildInParent('rows', 'sections', rowID, sectionID);
-      var newID = _insertNewChildInParentAtIndex('rows', 'sections', sectionID, rowIndex+1);
-      for (var i = 0; i < 4; i++) {
-        this.appendBar(newID);
-      }
-    },
-
-    appendRow: function(sectionID) {
-      var newID = _insertNewChildInParentAtIndex('rows', 'sections', sectionID);
-      for (var i = 0; i < 4; i++) {
-        this.appendBar(newID);
-      }
-    },
-
     deleteRow: function(rowID, sectionID) {
       _deleteEntityAndUpdateParent('rows', 'sections', rowID, sectionID);
     },
 
-    insertSectionAfter: function(id) {
-      var newID = _randomID();
-      SHEET_DATA = SHEET_DATA.withMutations(function(data) {
-        data
-          .setIn(['entities', 'sections', newID], Immutable.fromJS({name: "section", id: newID, rows: []}))
-          .updateIn(['result', 'sections'], function(list) {
-            return list.push(newID);
-          });
-      });
-      this.appendRow(newID);
-    },
 
     deleteSection: function(sectionID) {
       SHEET_DATA = SHEET_DATA.withMutations(function(data) {
         data
           .deleteIn(['entities', 'section', sectionID])
           .updateIn(['result', 'sections'], function(list) {
-            console.log(list);
             return list.splice(list.indexOf(sectionID), 1);
           });
       })
@@ -107,7 +113,6 @@
  * =========
  */
   function _insertNewChildInParentAtIndex(childName, parentName, parentID, index) {
-
     // Lazy init Children array
     if (!SHEET_DATA.getIn(['entities', parentName, parentID, childName])) {
       SHEET_DATA = SHEET_DATA.setIn(['entities', parentName, parentID, childName],
@@ -133,7 +138,9 @@
   }
 
   function _getIndexOfChildInParent(childName, parentName, childID, parentID) {
-    return SHEET_DATA.getIn(['entities', parentName, parentID, childName]).indexOf(childID);
+    if (SHEET_DATA.getIn(['entities', parentName, parentID, childName])) {
+      return SHEET_DATA.getIn(['entities', parentName, parentID, childName]).indexOf(childID);
+    }
   }
 
   function _deleteEntityAndUpdateParent(entityName, parentName, entityID, parentID) {

@@ -55,7 +55,10 @@ body > .container {
 }
 
 .add-or-remove-buttons {
-  display: inline-block;
+  /* display: inline-block; */
+  width: 150px;
+  text-align: center;
+  clear: both;
 }
 
 .add-or-remove-buttons
@@ -65,10 +68,10 @@ body > .container {
   padding: 4px 8px;
 }
 
-
 .add-or-remove-buttons
 .button.button-add {
   background: #58AC7E;
+  float: left;
 }
 
 .add-or-remove-buttons
@@ -80,6 +83,7 @@ body > .container {
 .add-or-remove-buttons
 .button.button-remove {
   background: #D96459;
+  float: right;
 }
 
 .add-or-remove-buttons

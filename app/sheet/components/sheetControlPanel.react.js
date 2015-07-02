@@ -25,13 +25,13 @@
     render: function() {
       return (
         <div className="sheet-control-panel">
-          {this.renderAddOrRemoveButton("Section", SheetActions.appendSection,
+          {this.renderAddOrRemoveButton("Section", SheetActions.addSection,
                                                    SheetActions.removeSection)}
-          {this.renderAddOrRemoveButton("Row", SheetActions.appendRow,
+          {this.renderAddOrRemoveButton("Row", SheetActions.addRow,
                                                SheetActions.removeRow)}
-          {this.renderAddOrRemoveButton("Bar", SheetActions.appendBar,
+          {this.renderAddOrRemoveButton("Bar", SheetActions.addBar,
                                                SheetActions.removeBar)}
-          {this.renderAddOrRemoveButton("Chord", SheetActions.appendChord,
+          {this.renderAddOrRemoveButton("Chord", SheetActions.addChord,
                                                  SheetActions.removeChord)}
         </div>
       )
