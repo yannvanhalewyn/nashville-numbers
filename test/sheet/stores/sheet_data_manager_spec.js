@@ -416,7 +416,7 @@ describe('SheetStoreDataManager', function() {
           expect(data()).to.eql(originalData());
         });
       });
-    }); // End of #deleteChord()
+    }); // End of #deleteBar()
 
 /*
  * ===========
@@ -453,7 +453,38 @@ describe('SheetStoreDataManager', function() {
           expect(data()).to.eql(originalData());
         });
       });
-    }); // End of #deleteChord()
+    }); // End of #deleteRow()
+
+
+/*
+ * ===============
+ * deleteSection()
+ * ===============
+ */
+    describe ('#deleteSection()', function() {
+      context('when sectionID is valid', function() {
+        beforeEach(function() {
+          DataManager.deleteSection('section1');
+        });
+
+        it('deletes a section entity', function() {
+          var sectionCount = _.size(_.keys(data().entities.sections));
+          var originalSectionCount = _.size(_.keys(originalData().entities.sections));
+          expect(sectionCount).to.eql(originalSectionCount - 1);
+        });
+
+        it('removes the section ref from sections list', function() {
+          expect(data().result.sections).to.eql(['section2']);
+        });
+      });
+
+      context('when sectionID is invalid', function() {
+        it("doesn't affect the data", function() {
+          DataManager.deleteSection('invalid');
+          expect(data()).to.eql(originalData());
+        });
+      });
+    }); // End of #deleteSection()
   }); // End of 'data management'
 }); // End of specs in this file
 

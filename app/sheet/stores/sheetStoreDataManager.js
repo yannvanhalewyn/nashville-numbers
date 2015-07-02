@@ -93,11 +93,13 @@
       _deleteEntityAndUpdateParent('rows', 'sections', rowID, sectionID);
     },
 
-
     deleteSection: function(sectionID) {
+      if (!SHEET_DATA.getIn(['entities', 'sections', sectionID])) {
+        return;
+      }
       SHEET_DATA = SHEET_DATA.withMutations(function(data) {
         data
-          .deleteIn(['entities', 'section', sectionID])
+          .deleteIn(['entities', 'sections', sectionID])
           .updateIn(['result', 'sections'], function(list) {
             return list.splice(list.indexOf(sectionID), 1);
           });
