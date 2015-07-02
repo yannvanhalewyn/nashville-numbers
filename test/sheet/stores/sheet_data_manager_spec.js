@@ -24,6 +24,11 @@ describe('SheetStoreDataManager', function() {
       DataManager.setData(originalData());
     });
 
+/*
+ * =====================
+ *     updateChordText()
+ * =====================
+ */
     describe('#updateChordText()', function() {
       it('stores the new text in the correct chord', function() {
         DataManager.updateChordText('chord3', "popo");
@@ -55,11 +60,16 @@ describe('SheetStoreDataManager', function() {
           });
 
           it('inserts a chord at the end of the given bar', function() {
-            var chordsInBar = data().entities.bars['bar2'].chords;
-            var newID = chordsInBar[chordsInBar.length - 1];
+            var newID = _.last(_.keys(data().entities.chords));
             expect(data().entities.bars['bar2'].chords).to.eql(
                                         ['chord3', 'chord4', newID])
           });
+
+          it('sets the ID param on the chord entity', function() {
+            var newID = _.last(_.keys(data().entities.chords));
+            expect(data().entities.chords[newID].id).to.eql(newID);
+          });
+
         });
 
         context('when chordID is given', function() {
@@ -124,6 +134,12 @@ describe('SheetStoreDataManager', function() {
             expect(data().entities.rows['row1'].bars).to.eql(
                                         ['bar1', 'bar2', newID])
           });
+
+          it('sets the ID param on the bar entity', function() {
+            var newID = _.last(_.keys(data().entities.bars));
+            expect(data().entities.bars[newID].id).to.eql(newID);
+          });
+
 
           it('adds a new chord', function() {
             var chordCount = _.size(data().entities.chords);
@@ -199,6 +215,13 @@ describe('SheetStoreDataManager', function() {
                                         ['row1', 'row2', newID])
           });
 
+          it('sets the ID param on the row entity', function() {
+            var newID = _.last(_.keys(data().entities.rows));
+            expect(data().entities.rows[newID].id).to.eql(newID);
+          });
+
+
+
           it('adds DEFAULT_NUM_BARS_IN_ROW bar entities ', function() {
             var barCount = _.size(data().entities.bars);
             var originalBarCount = _.size(originalData().entities.bars);
@@ -269,6 +292,11 @@ describe('SheetStoreDataManager', function() {
         it('adds the sections at the end of the sheet', function() {
           var newSectionID = _.last(_.keys(data().entities.sections));
           expect(data().result.sections).to.eql(['section1', 'section2', newSectionID])
+        });
+
+        it('sets the ID param on the section entity', function() {
+          var newID = _.last(_.keys(data().entities.sections));
+          expect(data().entities.sections[newID].id).to.eql(newID);
         });
 
         it('creates a new row entity', function() {

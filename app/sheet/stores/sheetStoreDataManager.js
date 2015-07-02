@@ -63,7 +63,8 @@
       var index = SHEET_DATA.getIn(['result', 'sections']).indexOf(sectionID)
       SHEET_DATA = SHEET_DATA.withMutations(function(data) {
         data
-          .setIn(['entities', 'sections', newID], Immutable.fromJS({name: "section", rows: []}))
+          .setIn(['entities', 'sections', newID], Immutable.fromJS({
+            id: newID, name: "section", rows: []}))
           .updateIn(['result', 'sections'], function(list) {
             if (index === -1) {
               return list.push(newID);
