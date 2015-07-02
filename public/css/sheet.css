@@ -48,8 +48,9 @@
 ------------------*/
 .bar {
   display: inline-block;
+  margin-right: 2%;
   width: 23%; }
-  .bar .multi-chords {
+  .bar.multi-chords {
     border-bottom: 3px solid black; }
 
 /* CHORD
@@ -69,7 +70,7 @@
   .chord:focus {
     outline: none; }
   .chord.chord-empty {
-    box-shadow: 0px 0px 7px #888; }
+    box-shadow: 0px 0px 7px #999; }
   .chord.chord-editing {
     background: #66779b;
     font-family: inherit;

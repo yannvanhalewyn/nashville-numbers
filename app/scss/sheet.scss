@@ -64,11 +64,9 @@
 ------------------*/
 .bar {
   display: inline-block;
-  // border: 1px solid #efefef;
-  // background-color: inherit;
-  // margin-right: 2%;
+  margin-right: 2%;
   width: 23%;
-  .multi-chords {
+  &.multi-chords {
     border-bottom: 3px solid black;
   }
 }
@@ -95,7 +93,7 @@
   &.chord-empty {
     // background: #9977ae;
     // border: 1px solid #666;
-    box-shadow: 0px 0px 7px #888;
+    box-shadow: 0px 0px 7px #999;
   }
 
   &.chord-editing {
