@@ -248,8 +248,74 @@ describe('SheetStoreDataManager', function() {
         });
       });
     });
-  });
-});
+
+/*
+ * ================
+ *     addSection()
+ * ================
+ */
+    describe('#addSection()', function() {
+      context('when no sectionID is given to append after', function() {
+        beforeEach(function() {
+          DataManager.addSection();
+        });
+
+        it('creates a new section entity', function() {
+          var sectionCount = _.size(data().entities.sections);
+          var originalSectionCount = _.size(originalData().entities.sections);
+          expect(sectionCount).to.eql(originalSectionCount + 1)
+        });
+
+        it('adds the sections at the end of the sheet', function() {
+          var newSectionID = _.last(_.keys(data().entities.sections));
+          expect(data().result.sections).to.eql(['section1', 'section2', newSectionID])
+        });
+
+        it('creates a new row entity', function() {
+          var rowCount = _.size(data().entities.rows);
+          var originalRowCount = _.size(originalData().entities.rows);
+          expect(rowCount).to.eql(originalRowCount + 1);
+        });
+
+        it('adds that row to the new section', function() {
+          var newSectionID = _.last(_.keys(data().entities.sections));
+          var lastRowID = _.last(_.keys(data().entities.sections));
+          expect(data().entities.sections[newSectionID].rows.length).to.eql(1);
+          expect(data().entities.sections[newSectionID].rows.indexOf(lastRowID))
+            .to.not.be.undefined;
+        });
+
+      });
+
+      context('when sectionID is given', function() {
+        context('when sectionID is valid', function() {
+          it('adds the new section at the correct index', function() {
+            DataManager.addSection('section1');
+            var addedSectionID = _.last(_.keys(data().entities.sections));
+            var index = data().result.sections.indexOf(addedSectionID);
+            expect(index).to.eql(1);
+          });
+        });
+
+        context('when sectionID is invalid', function() {
+          beforeEach(function() {
+            DataManager.addSection('invalid');
+          });
+
+          it('adds the new section at the end of the sheet', function() {
+            var addedSectionID = _.last(_.keys(data().entities.sections));
+            var index = data().result.sections.indexOf(addedSectionID);
+            expect(index).to.eql(2);
+          });
+
+          it("doesn't create the missing section", function() {
+            expect(data().entities.sections['invalid']).to.be.undefined;
+          })
+        });
+      });
+    }); // End of #addSection()
+  }); // End of 'data management'
+}); // End of specs in this file
 
 function data() {
   return DataManager.getData().toJS();
@@ -355,7 +421,8 @@ function originalData() {
       title: "theTitle",
       artist: "theArtist",
       sections: [
-        "section1"
+        "section1",
+        "section2"
       ]
     }
   }
