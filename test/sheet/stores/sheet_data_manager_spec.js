@@ -369,23 +369,56 @@ describe('SheetStoreDataManager', function() {
       context('when chordID is invalid', function() {
         it("doesn't delete any entity", function() {
           DataManager.deleteChord('invalid', 'bar1');
-          var chordCount = _.size(_.keys(data().entities.chords));
-          var originalChordCount = _.size(_.keys(originalData().entities.chords));
-          expect(chordCount).to.eql(originalChordCount);
+          expect(data()).to.eql(originalData());
         });
       });
 
       context('when barID is invalid', function() {
         it("doesn't delete any entity", function() {
           DataManager.deleteChord('chord1', 'invalid');
-          var chordCount = _.size(_.keys(data().entities.chords));
-          var originalChordCount = _.size(_.keys(originalData().entities.chords));
-          expect(chordCount).to.eql(originalChordCount);
+          expect(data()).to.eql(originalData());
         });
       });
     }); // End of #deleteChord()
-  });
-});
+
+/*
+ * ===========
+ * deleteBar()
+ * ===========
+ */
+    describe ('#deleteBar()', function() {
+      context('when barID and rowID are valid', function() {
+        beforeEach(function() {
+          DataManager.deleteBar('bar1', 'row1');
+        });
+
+        it('deletes a bar entity', function() {
+          var barCount = _.size(_.keys(data().entities.bars));
+          var originalBarCount = _.size(_.keys(originalData().entities.bars));
+          expect(barCount).to.eql(originalBarCount - 1);
+        });
+
+        it('removes the bar ref from parent row', function() {
+          expect(data().entities.rows['row1'].bars).to.eql(['bar2']);
+        });
+      });
+
+      context('when barID is invalid', function() {
+        it("doesn't affect the data", function() {
+          DataManager.deleteBar('invalid', 'row1');
+          expect(data()).to.eql(originalData());
+        });
+      });
+
+      context('when rowID is invalid', function() {
+        it("doesn't affect the data", function() {
+          DataManager.deleteBar('bar1', 'invalid');
+          expect(data()).to.eql(originalData());
+        });
+      });
+    }); // End of #deleteChord()
+  }); // End of 'data management'
+}); // End of specs in this file
 
 function data() {
   return DataManager.getData().toJS();
