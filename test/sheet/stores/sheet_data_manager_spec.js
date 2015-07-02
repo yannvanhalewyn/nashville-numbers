@@ -342,8 +342,50 @@ describe('SheetStoreDataManager', function() {
         });
       });
     }); // End of #addSection()
-  }); // End of 'data management'
-}); // End of specs in this file
+
+
+/*
+ * =============
+ * deleteChord()
+ * =============
+ */
+    describe ('#deleteChord()', function() {
+      context('when chordID and barID are valid', function() {
+        beforeEach(function() {
+          DataManager.deleteChord('chord2', 'bar1');
+        });
+
+        it('deletes a chord entity', function() {
+          var chordCount = _.size(_.keys(data().entities.chords));
+          var originalChordCount = _.size(_.keys(originalData().entities.chords));
+          expect(chordCount).to.eql(originalChordCount - 1);
+        });
+
+        it('removes the ref from parent', function() {
+          expect(data().entities.bars['bar1'].chords).to.eql(['chord1']);
+        });
+      });
+
+      context('when chordID is invalid', function() {
+        it("doesn't delete any entity", function() {
+          DataManager.deleteChord('invalid', 'bar1');
+          var chordCount = _.size(_.keys(data().entities.chords));
+          var originalChordCount = _.size(_.keys(originalData().entities.chords));
+          expect(chordCount).to.eql(originalChordCount);
+        });
+      });
+
+      context('when barID is invalid', function() {
+        it("doesn't delete any entity", function() {
+          DataManager.deleteChord('chord1', 'invalid');
+          var chordCount = _.size(_.keys(data().entities.chords));
+          var originalChordCount = _.size(_.keys(originalData().entities.chords));
+          expect(chordCount).to.eql(originalChordCount);
+        });
+      });
+    }); // End of #deleteChord()
+  });
+});
 
 function data() {
   return DataManager.getData().toJS();

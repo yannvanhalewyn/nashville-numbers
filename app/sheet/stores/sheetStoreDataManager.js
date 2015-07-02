@@ -145,6 +145,9 @@
   }
 
   function _deleteEntityAndUpdateParent(entityName, parentName, entityID, parentID) {
+    if (!SHEET_DATA.getIn(['entities', parentName, parentID, entityName])) {
+      return;
+    }
     SHEET_DATA = SHEET_DATA.deleteIn(['entities', entityName, entityID]);
     SHEET_DATA = SHEET_DATA.updateIn(['entities', parentName, parentID, entityName],
                                      function(list) {
