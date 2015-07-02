@@ -417,6 +417,43 @@ describe('SheetStoreDataManager', function() {
         });
       });
     }); // End of #deleteChord()
+
+/*
+ * ===========
+ * deleteRow()
+ * ===========
+ */
+    describe ('#deleteRow()', function() {
+      context('when rowID and sectionID are valid', function() {
+        beforeEach(function() {
+          DataManager.deleteRow('row1', 'section1');
+        });
+
+        it('deletes a row entity', function() {
+          var rowCount = _.size(_.keys(data().entities.rows));
+          var originalRowCount = _.size(_.keys(originalData().entities.rows));
+          expect(rowCount).to.eql(originalRowCount - 1);
+        });
+
+        it('removes the row ref from parent section', function() {
+          expect(data().entities.sections['section1'].rows).to.eql(['row2']);
+        });
+      });
+
+      context('when rowID is invalid', function() {
+        it("doesn't affect the data", function() {
+          DataManager.deleteRow('invalid', 'section1');
+          expect(data()).to.eql(originalData());
+        });
+      });
+
+      context('when sectionID is invalid', function() {
+        it("doesn't affect the data", function() {
+          DataManager.deleteRow('row1', 'invalid');
+          expect(data()).to.eql(originalData());
+        });
+      });
+    }); // End of #deleteChord()
   }); // End of 'data management'
 }); // End of specs in this file
 
