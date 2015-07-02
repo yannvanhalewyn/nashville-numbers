@@ -1,0 +1,40 @@
+/* SHEETLIST
+ ----------------- */
+.sheets-listing {
+  padding: 75px 10px;
+  list-style: none; }
+  .sheets-listing .sheet-list-entry {
+    border-bottom: 1px solid #d5d5d5;
+    padding: 20px 0 0;
+    cursor: pointer; }
+    .sheets-listing .sheet-list-entry:hover {
+      background: #d5d5d5; }
+    .sheets-listing .sheet-list-entry .block-thumb {
+      width: 10%;
+      text-align: center;
+      font-size: 50px;
+      height: 100%;
+      margin-top: 30px;
+      display: inline-block;
+      vertical-align: top; }
+    .sheets-listing .sheet-list-entry .block-info {
+      display: inline-block; }
+      .sheets-listing .sheet-list-entry .block-info .title {
+        margin: 20px 0;
+        font-size: 1.2em; }
+      .sheets-listing .sheet-list-entry .block-info .artist {
+        margin-bottom: 20px;
+        color: #555; }
+      .sheets-listing .sheet-list-entry .block-info .info {
+        margin-bottom: 40px;
+        color: #CCC; }
+    .sheets-listing .sheet-list-entry .actions {
+      display: inline-block;
+      color: grey;
+      float: right;
+      font-size: 1.5em;
+      cursor: pointer; }
+      .sheets-listing .sheet-list-entry .actions span {
+        margin: 20px 10px; }
+      .sheets-listing .sheet-list-entry .actions :hover {
+        color: black; }

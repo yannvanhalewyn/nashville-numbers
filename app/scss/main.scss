@@ -1,0 +1,46 @@
+body {
+    margin: 0px;
+    background: #f6f6f6;
+    font-family: 'Raleway', sans-serif;
+}
+
+h1 {
+    font-weight: 300;
+    color: rgb(70, 70, 70);
+}
+
+.main-content {
+  padding-left: 120px;
+}
+
+/* UTILITY
+ ----------------- */
+
+.clearFloats {
+    clear: both;
+}
+
+.btn {
+    display: inline-block;
+    padding: 8px 30px;
+    border-radius: 2px;
+    background: #247794;
+    color: rgba(255,255,255,.84);
+    border: none;
+    font-size: 12px;
+    transition: box-shadow .2s;
+
+    &:hover {
+        box-shadow: -4px 4px 10px #c4c4c4;
+        background: #2780a0;
+        cursor: pointer;
+    }
+
+    &:active {
+        background: #3286a7;
+    }
+
+    &:focus {
+        outline: none;
+    }
+}

@@ -1,0 +1,53 @@
+/* SHEETLIST
+ ----------------- */
+
+ .sheets-listing {
+    padding: 75px 10px;
+    list-style: none;
+
+    .sheet-list-entry {
+        border-bottom: 1px solid #d5d5d5;
+        padding: 20px 0 0;
+        cursor: pointer;
+        &:hover {
+            background: #d5d5d5;
+        }
+        .block-thumb {
+            width: 10%;
+            text-align: center;
+            font-size: 50px;
+            height: 100%;
+            margin-top: 30px;
+            display: inline-block;
+            vertical-align:top;
+        }
+        .block-info {
+            display: inline-block;
+            .title {
+                margin: 20px 0;
+                font-size: 1.2em;
+            }
+            .artist {
+                margin-bottom: 20px;
+                color: #555;
+            }
+            .info {
+                margin-bottom: 40px;
+                color: #CCC;
+            }
+        }
+        .actions {
+            display: inline-block;
+            color: grey;
+            float: right;
+            font-size: 1.5em;
+            cursor: pointer;
+            span {
+                margin: 20px 10px;
+            }
+            :hover {
+                color: black;
+            }
+        }
+    }
+ }

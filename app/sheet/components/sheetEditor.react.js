@@ -27,7 +27,7 @@
         <div className="sheet-editor">
           <SheetControlPanel />
           <h1 className="sheet-title">
-            {this.state.title} <small>{this.state.artist}</small>
+            {this.state.title} <small className="artist">{this.state.artist}</small>
           </h1>
           <Sheet sections={this.state.sections}/>
         </div>

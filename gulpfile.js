@@ -7,6 +7,7 @@ var gulp       = require('gulp');
 var source     = require('vinyl-source-stream');
 var gutil      = require('gulp-util');
 var livereload = require('gulp-livereload');
+var sass       = require('gulp-sass');
 
 var nodemon = require('gulp-nodemon');
 var path = require('path');
@@ -64,10 +65,25 @@ gulp.task('watchify', function() {
 // uses livereload to reload the page upon css change
 gulp.task('live', function() {
   livereload.listen();
-  gulp.watch('./public/css/style.css', function() {
-    gulp.src('./public/css/style.css')
+  gulp.watch('./public/css/*.css', function(file) {
+    gulp.src(file.path)
       .pipe(livereload());
   });
 });
 
-gulp.task('default', ['watchify', 'server']);
+// TASK sass
+// Converts compiles files into css
+gulp.task('sass', function() {
+  gulp.src('app/scss/**/*.scss')
+    .pipe(sass())
+    .pipe(gulp.dest('public/css/'));
+});
+
+// TASK sass:watch
+// watches over my scss files and calls task sass on change
+gulp.task('sass:watch', function() {
+  gulp.watch('app/scss/**/*.scss', ['sass']);
+});
+
+gulp.task('code', ['watchify', 'server', 'sass']);
+gulp.task('design', ['live', 'sass:watch']);

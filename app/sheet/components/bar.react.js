@@ -32,7 +32,7 @@
     render: function() {
       var classes = classNames({
         bar: true,
-        "bar-with-multiple-chords": this.props.chords.length > 1
+        "multi-chords": this.props.chords.length > 1
       });
       return (
         <div onKeyDown={this._onKeyDown} className={classes}>

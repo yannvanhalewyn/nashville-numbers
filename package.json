@@ -24,6 +24,7 @@
     "gulp": "^3.9.0",
     "gulp-livereload": "^3.8.0",
     "gulp-nodemon": "^2.0.3",
+    "gulp-sass": "^2.0.3",
     "gulp-util": "^3.0.6",
     "reactify": "^1.1.1",
     "sinon": "^1.15.3",
