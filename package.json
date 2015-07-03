@@ -9,6 +9,7 @@
   "author": "Yann Vanhalewyn",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.13.1",
     "classnames": "^2.1.2",
     "express": "^4.13.0",
     "express-handlebars": "^2.0.1",
