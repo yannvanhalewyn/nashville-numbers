@@ -82,7 +82,11 @@
  * =================
  */
     deleteChord: function(chordID, barID) {
-      _deleteEntityAndUpdateParent("chords", "bars", chordID, barID);
+      var deleted = _deleteEntityAndUpdateParent("chords", "bars", chordID, barID);
+      if(deleted && SHEET_DATA.getIn(['entities', 'bars', barID, 'chords']).size === 0) {
+        var rowID = _getParentID(barID, "bars", "rows");
+        this.deleteBar(barID, rowID);
+      }
     },
 
     deleteBar: function(barID, rowID) {
@@ -150,7 +154,7 @@
     if (!SHEET_DATA.getIn(['entities', parentName, parentID, entityName]) ||
         SHEET_DATA.getIn(['entities', parentName, parentID, entityName]).
           indexOf(entityID) === -1) {
-      return;
+      return false;
     }
 
     SHEET_DATA = SHEET_DATA.deleteIn(['entities', entityName, entityID]);
@@ -158,6 +162,18 @@
                                      function(list) {
       return list.splice(list.indexOf(entityID), 1);
     });
+    return true;
+  }
+
+  function _getParentID(childID, childName, parentName) {
+    var parentID;
+    var found = SHEET_DATA.getIn(['entities', parentName]).some(function(parent) {
+      parentID = parent.get('id');
+      return parent.get('bars').indexOf(childID) !== -1
+    });
+    if (found) {
+      return parentID;
+    }
   }
 
   function _randomID() {

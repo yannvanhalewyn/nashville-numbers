@@ -69,7 +69,6 @@ describe('SheetStoreDataManager', function() {
             var newID = _.last(_.keys(data().entities.chords));
             expect(data().entities.chords[newID].id).to.eql(newID);
           });
-
         });
 
         context('when chordID is given', function() {
@@ -363,6 +362,18 @@ describe('SheetStoreDataManager', function() {
 
         it('removes the ref from parent', function() {
           expect(data().entities.bars['bar1'].chords).to.eql(['chord1']);
+        });
+
+        context('when parent bar has no chords left', function() {
+          it('removes that bar from the entities', function() {
+            DataManager.deleteChord('chord1', 'bar1');
+            expect(data().entities.bars['bar1']).to.be.undefined;
+          });
+
+          it('removes that bar from the parent row', function() {
+            DataManager.deleteChord('chord1', 'bar1');
+            expect(data().entities.rows['row1'].bars.indexOf('bar1')).to.eql(-1);
+          });
         });
       });
 
