@@ -23,7 +23,7 @@
 
     &.control-add {
       background: #58AC7E;
-      float: left;
+      float: right;
       &:hover {
         box-shadow: 0px 0px 4px #588C7E;
       }
@@ -31,7 +31,7 @@
 
     &.control-remove {
       background: #D96459;
-      float: right;
+      float: left;
       &:hover {
         box-shadow: 0px 0px 6px #D96459;
       }

@@ -19,12 +19,12 @@
     padding: 4px 8px; }
     .add-or-remove-buttons .btn.control-add {
       background: #58AC7E;
-      float: left; }
+      float: right; }
       .add-or-remove-buttons .btn.control-add:hover {
         box-shadow: 0px 0px 4px #588C7E; }
     .add-or-remove-buttons .btn.control-remove {
       background: #D96459;
-      float: right; }
+      float: left; }
       .add-or-remove-buttons .btn.control-remove:hover {
         box-shadow: 0px 0px 6px #D96459; }
 

@@ -10,14 +10,15 @@
 
     renderAddOrRemoveButton: function(element, addHandler, removeHandler) {
       return (
+        <div className="btn control-remove" onClick={removeHandler}>
+            <span className="fa fa-minus"></span>
+          </div>
+        <span className="control-target">{element}</span>
         <div className="add-or-remove-buttons">
           <div className="btn control-add" onClick={addHandler}>
             <span className="fa fa-plus"></span>
           </div>
-          <span className="control-target">{element}</span>
-          <div className="btn control-remove" onClick={removeHandler}>
-            <span className="fa fa-minus"></span>
-          </div>
+          
         </div>
       )
     },
