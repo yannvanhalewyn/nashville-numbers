@@ -1,44 +1,44 @@
 <div class="dock">
-        <div class="user-avatar">
-            <img class="avatar" src="https://avatars3.githubusercontent.com/u/11170603?v=3&s=70" alt="">
-        </div>
+    <div class="user-avatar">
+        <img class="avatar" src="https://avatars3.githubusercontent.com/u/11170603?v=3&s=70" alt="">
+    </div>
 
-        <div class="dock-elem active">
-            <div class="pointer-left"></div>
-            <i class="fa fa-dashboard"></i>
-            <div href="#">Dashboard</div>
-        </div>
-        <div class="dock-elem">
-            <div class="pointer"></div>
-            <i class="fa fa-music fa-NN-sheets"></i>
-            <div href="#">Sheets</div>
-        </div>
-        <div class="dock-elem">
-            <div class="pointer-left"></div>
-            <i class="fa fa-github fa-NN-hubs"></i>
-            <div href="#">Hubs</div>
-        </div>
-        <div class="dock-elem">
-            <div class="pointer-left"></div>
-            <i class="fa fa-compass fa-NN-explore"></i>
-            <div href="#">Explore</div>
-        </div>
+    <div class="dock-elem {{#if active_dashboard}}active{{/if}}">
+        <div class="pointer-left"></div>
+        <i class="fa fa-dashboard"></i>
+        <div href="#">Dashboard</div>
+    </div>
+    <div class="dock-elem {{#if active_sheets}}active{{/if}}">
+        <div class="pointer-left"></div>
+        <i class="fa fa-music fa-NN-sheets"></i>
+        <div href="#">Sheets</div>
+    </div>
+    <div class="dock-elem {{#if active_hubs}}active{{/if}}">
+        <div class="pointer-left"></div>
+        <i class="fa fa-github fa-NN-hubs"></i>
+        <div href="#">Hubs</div>
+    </div>
+    <div class="dock-elem {{#if active_explore}}active{{/if}}">
+        <div class="pointer-left"></div>
+        <i class="fa fa-compass fa-NN-explore"></i>
+        <div href="#">Explore</div>
+    </div>
 
-        <div class="floor-wrap">
-            <div class="dock-elem">
-                <div class="pointer-left"></div>
-                <i class="fa fa-thumbs-up"></i>
-                <div href="#">Friends</div>
-            </div>
-            <div class="dock-elem">
-                <div class="pointer-left"></div>
-                <i class="fa fa-user"></i>
-                <div href="#">Account</div>
-            </div>
-            <div class="dock-elem">
-                <div class="pointer-left"></div>
-                <i class="fa fa-heart fa-NN-love"></i>
-                <div href="#">Love Me</div>
-            </div>
+    <div class="floor-wrap">
+        <div class="dock-elem {{#if active_friends}}active{{/if}}">
+            <div class="pointer-left"></div>
+            <i class="fa fa-thumbs-up"></i>
+            <div href="#">Friends</div>
+        </div>
+        <div class="dock-elem {{#if active_account}}active{{/if}}">
+            <div class="pointer-left"></div>
+            <i class="fa fa-user"></i>
+            <div href="#">Account</div>
+        </div>
+        <div class="dock-elem {{#if active_love}}active{{/if}}">
+            <div class="pointer-left"></div>
+            <i class="fa fa-heart fa-NN-love"></i>
+            <div href="#">Love Me</div>
         </div>
     </div>
+</div>
