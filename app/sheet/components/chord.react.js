@@ -1,13 +1,18 @@
-/** @jsx React.DOM */
-
 (function() {
+
+  /** @jsx React.DOM */
+  "use strict";
 
   var React = require('react');
   var Chord = require('../chord');
   var SheetActions = require('../actions/sheetActions');
   var classNames = require('classnames');
 
-  var SPACE_BAR_KEY_CODE = 32;
+  var KEYCODES = {
+    SPACE: 32,
+    RETURN: 13,
+    B: 66
+  }
 
   var ChordComponent = React.createClass({
 
@@ -43,7 +48,8 @@
         'chord-empty': !this.state.value
       };
       return (
-        <input type="text" className={classNames(classes)}
+        <input
+          type="text"
           className={classNames(classes)}
           onChange={this._onChange}
           onFocus={this._gainedFocus}
@@ -64,9 +70,48 @@
     },
 
     _onKeyDown: function(e) {
-      if(e.keyCode === SPACE_BAR_KEY_CODE) {
-        e.preventDefault();
-        SheetActions.appendNewChord(this.props.id, this.props.parentIDs.get('barID'));
+      var shift = e.shiftKey;
+      var meta = e.metaKey;
+
+      switch(e.keyCode) {
+        case KEYCODES.SPACE:
+          if(shift) {
+            SheetActions.removeChord();
+          } else {
+            SheetActions.addChord();
+          }
+          e.preventDefault();
+          break;
+
+        case KEYCODES.B:
+          if (meta) {
+            if (shift) {
+              SheetActions.removeBar();
+            } else {
+              SheetActions.addBar();
+            }
+          }
+          break;
+
+        case KEYCODES.RETURN:
+          if (shift) {
+            if(meta) {
+              SheetActions.removeSection();
+            } else {
+              SheetActions.removeRow();
+            }
+          } else {
+            if(meta) {
+              SheetActions.addSection();
+            } else {
+              SheetActions.addRow();
+            }
+          }
+          e.preventDefault();
+          break;
+
+        default:
+          break;
       }
     },
 

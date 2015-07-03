@@ -35,17 +35,10 @@
         "multi-chords": this.props.chords.length > 1
       });
       return (
-        <div onKeyDown={this._onKeyDown} className={classes}>
+        <div className={classes}>
           {this.props.chords.map(this.renderChord)}
         </div>
       );
-    },
-
-    _onKeyDown: function(e) {
-      if (e.keyCode == RETURN_KEYCODE) {
-        e.preventDefault();
-        SheetActions.appendNewBar(this.props.id, this.props.parentIDs.rowID);
-      }
     }
 
   });
