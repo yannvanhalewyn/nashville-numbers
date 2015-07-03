@@ -8,18 +8,25 @@
   src: url(../fonts/NashvilleChordSymbols-regular.ttf)
 }
 
+.sheet {
+  padding: 0 20px;
+}
 
 /* CONTROL PANEL
 ------------------*/
 .sheet-control-panel {
   background: #eee;
   box-shadow: 0px 2px 10px #999;
-  padding: 8px 10px;
+  min-height: 36px;
+  padding: 0px 10px;
+  margin-bottom: 40px;
 
   .SC-icon {
+    cursor: pointer;
     display: inline-block;
     margin: 0px 10px;
     font-size: 1.2em;
+    margin-top: 7px;
 
     &#SC-fav-icon:hover {
       $STAR_YELLOW: #FcAf08;
@@ -50,10 +57,27 @@
     }
   }
 
-  #expand-operations-panel-icon {
-    background: orange;
-    vertical-align: middle;
-    text-align: center;
+  #save-button {
+    margin-top: 3px;
+    font-weight: 800;
+    float: right;
+    margin-right: 50px;
+  }
+
+  #play-mode-toggle {
+    $TOGGLE_COLOR: #66aa33;
+    margin-top: 2px;
+    cursor: pointer;
+    float: right;
+    font-size: 0.8em;
+    border: 2px solid $TOGGLE_COLOR;
+    padding: 7px;
+    border-radius: 10%;
+
+    &:hover {
+      color: white;
+      background: $TOGGLE_COLOR;
+    }
   }
 }
 
@@ -87,36 +111,11 @@
   }
 }
 
-#save-button {
-  font-weight: 800;
-  float: right;
-  margin-right: 50px;
-}
-
-$TOGGLE_COLOR: #66aa33;
-
-#play-mode-toggle {
-  cursor: pointer;
-  position: absolute;
-  top: 40px;
-  right: 50px;
-  border: 2px solid $TOGGLE_COLOR;
-  padding: 7px;
-  border-radius: 10%;
-
-  &:hover {
-    color: white;
-    background: $TOGGLE_COLOR;
-  }
-}
-
 /* TITLE
 ------------------*/
 .sheet-title {
   text-align: center;
   text-transform: uppercase;
-//   margin-bottom: 50px;
-//   padding-top: 20px;
   .artist {
     color: #bbb;
     font-size: 0.7em;
@@ -129,6 +128,7 @@ $TOGGLE_COLOR: #66aa33;
 .section-name {
   color: #999;
   text-transform: uppercase;
+  margin-bottom: 0;
 }
 
 /* BAR

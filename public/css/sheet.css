@@ -7,16 +7,23 @@
   font-family: NashvillechordSymbols;
   src: url(../fonts/NashvilleChordSymbols-regular.ttf); }
 
+.sheet {
+  padding: 0 20px; }
+
 /* CONTROL PANEL
 ------------------*/
 .sheet-control-panel {
   background: #eee;
   box-shadow: 0px 2px 10px #999;
-  padding: 8px 10px; }
+  min-height: 36px;
+  padding: 0px 10px;
+  margin-bottom: 40px; }
   .sheet-control-panel .SC-icon {
+    cursor: pointer;
     display: inline-block;
     margin: 0px 10px;
-    font-size: 1.2em; }
+    font-size: 1.2em;
+    margin-top: 7px; }
     .sheet-control-panel .SC-icon#SC-fav-icon:hover {
       color: #FcAf08;
       text-shadow: 0px 0px 5px #FcAf08; }
@@ -36,10 +43,22 @@
       .sheet-control-panel .SC-edit-actions .sheet-operations-popup .pointer-up {
         left: 68px;
         border-bottom-color: #103542; }
-  .sheet-control-panel #expand-operations-panel-icon {
-    background: orange;
-    vertical-align: middle;
-    text-align: center; }
+  .sheet-control-panel #save-button {
+    margin-top: 3px;
+    font-weight: 800;
+    float: right;
+    margin-right: 50px; }
+  .sheet-control-panel #play-mode-toggle {
+    margin-top: 2px;
+    cursor: pointer;
+    float: right;
+    font-size: 0.8em;
+    border: 2px solid #66aa33;
+    padding: 7px;
+    border-radius: 10%; }
+    .sheet-control-panel #play-mode-toggle:hover {
+      color: white;
+      background: #66aa33; }
 
 /* EDIT-OP-POPUP
 -------------------*/
@@ -62,23 +81,6 @@
       .add-or-remove-buttons .btn.control-remove:hover {
         box-shadow: 0px 0px 6px #D96459; }
 
-#save-button {
-  font-weight: 800;
-  float: right;
-  margin-right: 50px; }
-
-#play-mode-toggle {
-  cursor: pointer;
-  position: absolute;
-  top: 40px;
-  right: 50px;
-  border: 2px solid #66aa33;
-  padding: 7px;
-  border-radius: 10%; }
-  #play-mode-toggle:hover {
-    color: white;
-    background: #66aa33; }
-
 /* TITLE
 ------------------*/
 .sheet-title {
@@ -93,7 +95,8 @@
 ------------------*/
 .section-name {
   color: #999;
-  text-transform: uppercase; }
+  text-transform: uppercase;
+  margin-bottom: 0; }
 
 /* BAR
 ------------------*/

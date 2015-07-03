@@ -6,7 +6,7 @@
   var SheetControlEditActions = React.createClass({
 
     getInitialState: function() {
-      return {visible: true}
+      return {visible: false}
     },
 
     renderAddOrRemoveButton: function(element, addHandler, removeHandler) {

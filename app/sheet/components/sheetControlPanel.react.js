@@ -17,7 +17,7 @@
           <span className="SC-icon fa fa-star-o" id="SC-fav-icon"></span>
           <SheetControlEditActions />
           <span className="fa fa-expand" id="play-mode-toggle"></span>
-          <div className="btn btn-orange" id="save-button">Save!</div>
+          <div className="btn" id="save-button">Save!</div>
         </div>
       )
     },
