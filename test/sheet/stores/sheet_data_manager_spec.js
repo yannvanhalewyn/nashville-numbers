@@ -461,6 +461,18 @@ describe('SheetStoreDataManager', function() {
         it('removes the row ref from parent section', function() {
           expect(data().entities.sections['section1'].rows).to.eql(['row2']);
         });
+
+        context('when parent section has no rows left', function() {
+          it('removes that section from the entities', function() {
+            DataManager.deleteRow('row2', 'section1');
+            expect(data().entities.sections['section1']).to.be.undefined;
+          });
+
+          it('removes that section from the result sectionsList', function() {
+            DataManager.deleteRow('row2', 'section1');
+            expect(data().result.sections.indexOf('section1')).to.eql(-1);
+          });
+        });
       });
 
       context('when rowID is invalid', function() {

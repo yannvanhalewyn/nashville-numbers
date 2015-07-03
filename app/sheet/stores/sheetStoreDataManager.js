@@ -82,23 +82,26 @@
  * =================
  */
     deleteChord: function(chordID, barID) {
-      var deleted = _deleteEntityAndUpdateParent("chords", "bars", chordID, barID);
-      if(deleted && SHEET_DATA.getIn(['entities', 'bars', barID, 'chords']).size === 0) {
+      var wasDeleted = _deleteEntityAndUpdateParent("chords", "bars", chordID, barID);
+      if(wasDeleted && SHEET_DATA.getIn(['entities', 'bars', barID, 'chords']).size === 0) {
         var rowID = _getParentID(barID, "bars", "rows");
         this.deleteBar(barID, rowID);
       }
     },
 
     deleteBar: function(barID, rowID) {
-      var deleted = _deleteEntityAndUpdateParent('bars', 'rows', barID, rowID);
-      if(deleted && SHEET_DATA.getIn(['entities', 'rows', rowID, 'bars']).size === 0) {
+      var wasDeleted = _deleteEntityAndUpdateParent('bars', 'rows', barID, rowID);
+      if(wasDeleted && SHEET_DATA.getIn(['entities', 'rows', rowID, 'bars']).size === 0) {
         var sectionID = _getParentID(rowID, "rows", "sections");
         var d = this.deleteRow(rowID, sectionID);
       }
     },
 
     deleteRow: function(rowID, sectionID) {
-      _deleteEntityAndUpdateParent('rows', 'sections', rowID, sectionID);
+      var wasDeleted = _deleteEntityAndUpdateParent('rows', 'sections', rowID, sectionID);
+      if(wasDeleted && SHEET_DATA.getIn(['entities', 'sections', sectionID, 'rows']).size === 0) {
+        this.deleteSection(sectionID);
+      }
     },
 
     deleteSection: function(sectionID) {
