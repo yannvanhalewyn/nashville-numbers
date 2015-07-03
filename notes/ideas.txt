@@ -4,3 +4,4 @@
   discount
 - Have an upvote system for sheet quality's, sort by upvote when exploring
   sheets, put star next to official sheeters.
+- Have a points system with statuses, like "executive general note parser" :D
