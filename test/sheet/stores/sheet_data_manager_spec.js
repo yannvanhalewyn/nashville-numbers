@@ -412,6 +412,18 @@ describe('SheetStoreDataManager', function() {
         it('removes the bar ref from parent row', function() {
           expect(data().entities.rows['row1'].bars).to.eql(['bar2']);
         });
+
+        context('when parent row has no bars left', function() {
+          it('removes that row from the entities', function() {
+            DataManager.deleteBar('bar2', 'row1');
+            expect(data().entities.rows['row1']).to.be.undefined;
+          });
+
+          it('removes that row from the parent section', function() {
+            DataManager.deleteBar('bar2', 'row1');
+            expect(data().entities.sections['section1'].rows.indexOf('row1')).to.eql(-1);
+          });
+        });
       });
 
       context('when barID is invalid', function() {

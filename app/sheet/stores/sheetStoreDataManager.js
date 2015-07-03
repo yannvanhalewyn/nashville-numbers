@@ -90,7 +90,11 @@
     },
 
     deleteBar: function(barID, rowID) {
-      _deleteEntityAndUpdateParent('bars', 'rows', barID, rowID);
+      var deleted = _deleteEntityAndUpdateParent('bars', 'rows', barID, rowID);
+      if(deleted && SHEET_DATA.getIn(['entities', 'rows', rowID, 'bars']).size === 0) {
+        var sectionID = _getParentID(rowID, "rows", "sections");
+        var d = this.deleteRow(rowID, sectionID);
+      }
     },
 
     deleteRow: function(rowID, sectionID) {
@@ -169,7 +173,7 @@
     var parentID;
     var found = SHEET_DATA.getIn(['entities', parentName]).some(function(parent) {
       parentID = parent.get('id');
-      return parent.get('bars').indexOf(childID) !== -1
+      return parent.get(childName).indexOf(childID) !== -1
     });
     if (found) {
       return parentID;
