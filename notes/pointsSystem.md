@@ -5,7 +5,9 @@ REWARDS
 -------
 
 - creating a sheet: 5pts
+- creating a PUBLIC sheet: 10pts
 - creating first sheet: 10pts
+- creating first PUBLIC sheets: 15pts
 - posting a comments: 1pt
 - posting first comment: 5pts
 - creating a hub: 10pts
