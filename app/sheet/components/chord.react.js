@@ -90,6 +90,7 @@
             } else {
               SheetActions.addBar();
             }
+            e.preventDefault();
           }
           break;
 
