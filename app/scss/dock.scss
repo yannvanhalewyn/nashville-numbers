@@ -60,14 +60,12 @@
 
     &.active {
         color: white;
-        .pointer {
-        position: absolute;
-        right: 0;
-        width: 0;
-        height: 0;
-        border-top: 10px solid transparent;
-        border-bottom: 10px solid transparent;
-        border-right: 10px solid #f6f6f6;
+        .pointer-left {
+            position: absolute;
+            right: 0px;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-right: 10px solid #f6f6f6;
         }
     }
 }

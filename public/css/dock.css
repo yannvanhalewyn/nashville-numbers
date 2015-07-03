@@ -46,11 +46,9 @@
       color: inherit; }
   .dock-elem.active {
     color: white; }
-    .dock-elem.active .pointer {
+    .dock-elem.active .pointer-left {
       position: absolute;
-      right: 0;
-      width: 0;
-      height: 0;
+      right: 0px;
       border-top: 10px solid transparent;
       border-bottom: 10px solid transparent;
       border-right: 10px solid #f6f6f6; }

@@ -8,7 +8,7 @@ h1 {
   color: #464646; }
 
 .main-content {
-  padding-left: 120px; }
+  padding-left: 90px; }
 
 /* UTILITY
  ----------------- */
@@ -35,3 +35,10 @@ h1 {
   .btn.btn-orange {
     background: rgba(255, 152, 0, 0.75);
     color: white; }
+
+.pointer-up {
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid white;
+  position: absolute;
+  top: -10px; }

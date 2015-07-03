@@ -48,10 +48,9 @@ gulp.task('watchify', function() {
 // TASK live
 // uses livereload to reload the page upon css change
 gulp.task('css:livereload', function() {
-  livereload.listen();
   gulp.watch('./public/css/*.css', function(file) {
     gulp.src(file.path)
-      .pipe(livereload());
+      .pipe(livereload({start: true}));
   });
 });
 
