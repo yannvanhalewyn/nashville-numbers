@@ -4,10 +4,21 @@
 
   module.exports.controller = function(app) {
 
+    // INDEX
     app.get('/sheets', function(req, res) {
-      res.render('sheets', {active: {active_sheets: true}});
+      Sheet.find({}, function(err, data) {
+        if (err) {
+          res.sendStatus(500);
+        } else {
+          res.render('sheets', {
+            active: {active_sheets: true},
+            sheets: data
+          });
+        }
+      });
     });
 
+    // SHOW
     app.get('/sheets/:id', function(req, res) {
       var id = req.params.id;
       if (parseInt(id) === 15) {
@@ -17,10 +28,7 @@
       }
     });
 
-    app.get('/sheets/new', function(req, res) {
-      res.send("NEW SHEET");
-    });
-
+    // CREATE
     app.post('/sheets', function(req, res) {
       var sheet = new Sheet({title: req.body.title, artist: req.body.artist, data:""});
       if (!req.body.title || !req.body.artist) {
