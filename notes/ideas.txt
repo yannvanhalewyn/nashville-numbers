@@ -1,7 +1,0 @@
-- Offer a 'create a quick sheet without logging in' option
-- Offer a free month of PRO when posting about NN on FB with custom message
-- Have sheet "pro's" that upload GOOD sheets public sheets in exchange for
-  discount
-- Have an upvote system for sheet quality's, sort by upvote when exploring
-  sheets, put star next to official sheeters.
-- Have a points system with statuses, like "executive general note parser" :D

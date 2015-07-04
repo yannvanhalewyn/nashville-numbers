@@ -5,6 +5,7 @@ var routes     = require('./routes');
 var exphbs     = require('express-handlebars');
 var fs         = require('fs');
 var mongoose   = require('mongoose');
+var config     = require('./config');
 
 // Setup port, view engine and body-parser
 app.set('port', process.env.PORT || 3000);
@@ -25,7 +26,14 @@ fs.readdirSync('./controllers').forEach(function(file) {
 });
 
 // Connect to DB
-mongoose.connect('mongodb://localhost/nashville_numbers');
+mongoose.connection.on('open', function (ref) {
+  console.log('Connected to mongo server.');
+});
+mongoose.connection.on('error', function (err) {
+  console.log('Could not connect to mongo server!');
+  console.log(err);
+});
+mongoose.connect(config.db_url());
 
 // Start server
 app.listen(app.get('port'), function() {
