@@ -2,10 +2,10 @@
 
   var Sheet = require('../models/sheet');
 
-  module.exports.controller = function(app) {
+  module.exports = {
 
     // INDEX
-    app.get('/sheets', function(req, res) {
+    index: function(req, res) {
       Sheet.find({}, function(err, data) {
         if (err) {
           res.sendStatus(500);
@@ -16,18 +16,18 @@
           });
         }
       });
-    });
+    },
 
     // SHOW
-    app.get('/sheets/:id', function(req, res) {
+    show: function(req, res) {
       var id = req.params.id;
       Sheet.findById(req.params.id, function(err, sheet) {
         res.render('sheet', {active: {active_sheets: true}, state: sheet.data});
       });
-    });
+    },
 
     // CREATE
-    app.post('/sheets', function(req, res) {
+    create: function(req, res) {
       var sheet = new Sheet({title: req.body.title, artist: req.body.artist,
                             data:_generateDefaultData(req.body.title, req.body.artist)});
       if (!req.body.title || !req.body.artist) {
@@ -45,7 +45,7 @@
           state: sheet.data
         });
       });
-    })
+    }
 
   };
 

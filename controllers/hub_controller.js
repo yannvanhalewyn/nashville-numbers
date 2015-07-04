@@ -1,9 +1,9 @@
 (function() {
 
-  module.exports.controller = function(app) {
-    app.get('/hubs', function(req, res) {
+  module.exports = {
+    index: function(req, res) {
       res.render('hubs', {active: {active_hubs: true}})
-    })
+    }
   };
 
 }())

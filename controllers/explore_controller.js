@@ -1,10 +1,13 @@
 (function() {
 
-  module.exports.controller = function(app) {
+  ExploreController = {
 
-    app.get('/explore', function(req, res) {
-      res.render('explore', {active: {active_explore: true}})
-    })
+    index: function(req, res) {
+      res.render('explore', {active: {active_explore: true}});
+    }
+
   };
+
+  module.exports = ExploreController;
 
 }())
