@@ -36,7 +36,6 @@ passport.deserializeUser(function(obj, done) {
 });
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(printAuthenticated);
 
 // Setup Routes
 routes(app);
@@ -55,15 +54,3 @@ mongoose.connection.on('error', function (err) {
   process.exit(1);
 });
 mongoose.connect(config.db_url);
-
-
-
-// Route middleware to ensure authentication
-function printAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    console.log("MIDDLEWARE: Authenticated!");
-  } else {
-  console.log("MIDDLEWARE: Not authenticated..");
-  }
-  return next();
-}

@@ -1,7 +1,7 @@
 (function() {
 
   var UserSession = require('./controllers/user_session_controller');
-  var DashBoard = require('./controllers/dashboard_controller');
+  var Dashboard = require('./controllers/dashboard_controller');
   var Sheets = require('./controllers/sheet_controller');
   var Hubs = require('./controllers/hub_controller');
   var Explore = require('./controllers/explore_controller');
@@ -31,20 +31,29 @@
  * APP PAGES
  * =========
  */
-    app.route('/dashboard').get(DashBoard.index);
-    app.route('/hubs').get(Hubs.index);
-    app.route('/explore').get(Explore.index);
+    app.route('/').get(ensureAuth, Dashboard.index);
+    app.route('/dashboard').get(ensureAuth, Dashboard.index);
+    app.route('/hubs').get(ensureAuth, Hubs.index);
+    app.route('/explore').get(ensureAuth, Explore.index);
 
 /*
  * =========
  * RESOURCES
  * =========
  */
-    app.route('/sheets').get(Sheets.index)
+    app.route('/sheets').get(ensureAuth, Sheets.index)
                         .post(Sheets.create);
-    app.route('/sheets/:id').get(Sheets.show);
+    app.route('/sheets/:id').get(ensureAuth, Sheets.show);
   };
 
   module.exports = routes;
+
+  // Route middleware to ensure authentication
+  function ensureAuth(req, res, next) {
+    if (!req.isAuthenticated()) {
+      return res.redirect('/home');
+    }
+    return next();
+  }
 
 }())
