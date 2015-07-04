@@ -3,12 +3,14 @@
 
  .sheets-listing {
     padding: 75px 10px;
-    list-style: none;
 
     .sheet-list-entry {
         border-bottom: 1px solid #d5d5d5;
-        padding: 20px 0 0;
         cursor: pointer;
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
         &:hover {
             background: #d5d5d5;
         }
@@ -16,15 +18,15 @@
             width: 10%;
             text-align: center;
             font-size: 50px;
-            height: 100%;
-            margin-top: 30px;
+            // height: 100%;
+            margin-top: 20px;
             display: inline-block;
             vertical-align:top;
         }
         .block-info {
             display: inline-block;
             .title {
-                margin: 20px 0;
+                margin: 20px 0 0;
                 font-size: 1.2em;
             }
             .artist {
@@ -36,14 +38,16 @@
                 color: #CCC;
             }
         }
-        .actions {
+
+        .block-actions {
             display: inline-block;
             color: grey;
             float: right;
-            font-size: 1.5em;
+            font-size: 1.3em;
             cursor: pointer;
+            margin-right: 50px;
             span {
-                margin: 20px 10px;
+                margin: 20px 5px;
             }
             :hover {
                 color: black;

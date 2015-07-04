@@ -13,7 +13,7 @@
   });
 
   SheetSchema.virtual('createdAtInWords').get(function() {
-    return moment(this.createdAt).fromNow();
+    return moment(this.created_at).fromNow();
   });
 
   module.exports = Mongoose.model('Sheet', SheetSchema);
