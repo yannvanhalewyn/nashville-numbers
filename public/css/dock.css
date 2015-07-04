@@ -9,6 +9,9 @@
   z-index: 0;
   box-shadow: inset -10px 0 5px -5px rgba(0, 0, 0, 0.12);
   width: 90px; }
+  .dock a {
+    display: block;
+    text-decoration: none; }
   .dock .floor-wrap {
     position: absolute;
     bottom: 0;

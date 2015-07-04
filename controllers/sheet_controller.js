@@ -3,7 +3,7 @@
   module.exports.controller = function(app) {
 
     app.get('/sheets', function(req, res) {
-      res.render('sheets');
+      res.render('sheets', {active: {active_sheets: true}});
     });
 
     app.get('/sheets/:id', function(req, res) {

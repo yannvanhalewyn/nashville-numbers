@@ -25,12 +25,13 @@ GRADATIONS
 
 - Beginner Sheeter
 - Casual Cheetah
+- Treble maker
 - Private McCheaterSheeter
 - Private McCheaterSheeter first class
 - Score Specialist
 - Corporal McChart
 - Sergeant Sheeterific
-- Staff Sergeant No Tation
+- Staff Sergeant No Fun, No Tation
 - Sergeant First Class Charter
 - Master Sergeant Coda
 - Officer Dudy always on duty
