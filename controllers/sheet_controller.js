@@ -1,5 +1,7 @@
 (function() {
 
+  var Sheet = require('../models/sheet');
+
   module.exports.controller = function(app) {
 
     app.get('/sheets', function(req, res) {
@@ -20,7 +22,18 @@
     });
 
     app.post('/sheets', function(req, res) {
-      console.log(req.body.title);
+      var sheet = new Sheet({title: req.body.title, artist: req.body.artist, data:""});
+      if (!req.body.title || !req.body.artist) {
+        console.log("Forbidden - no title or artist");
+        res.sendStatus('403');
+        return;
+      }
+      sheet.save(function(err) {
+        if (err) {
+          console.log("ERROR!");
+          console.log(err);
+        }
+      });
       res.send('created!');
     })
 
