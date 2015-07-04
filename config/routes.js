@@ -1,10 +1,12 @@
 (function() {
 
-  var UserSession = require('./controllers/user_session_controller');
-  var Dashboard = require('./controllers/dashboard_controller');
-  var Sheets = require('./controllers/sheet_controller');
-  var Hubs = require('./controllers/hub_controller');
-  var Explore = require('./controllers/explore_controller');
+  "use strict";
+
+  var UserSession = require('../controllers/user_session_controller');
+  var Dashboard = require('../controllers/dashboard_controller');
+  var Sheets = require('../controllers/sheet_controller');
+  var Hubs = require('../controllers/hub_controller');
+  var Explore = require('../controllers/explore_controller');
 
   var routes = function(app) {
 

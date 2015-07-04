@@ -1,15 +1,15 @@
+"use strict";
+
 var express      = require('express');
 var bodyParser   = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session      = require('express-session');
-var app          = express();
-var routes       = require('./routes');
 var exphbs       = require('express-handlebars');
-var fs           = require('fs');
 var mongoose     = require('mongoose');
 var config       = require('./config');
-var passport     = require('passport');
-var User = require('./models/user');
+
+// Create the app
+var app          = express();
 
 // Setup port, view engine and body-parser
 app.set('port', process.env.PORT || config.PORT);
@@ -23,22 +23,9 @@ app.use(session({ resave: false,
                   saveUninitialized: false
 }))
 
-// Passport serialisation
-passport.serializeUser(function(user, done) {
-  console.log("In SERIALIZE USER");
-  console.log(user);
-  done(null, user._id);
-});
-passport.deserializeUser(function(obj, done) {
-  console.log("In DESERIALIZE USER");
-  console.log(obj);
-  User.findById(obj, done);
-});
-app.use(passport.initialize());
-app.use(passport.session());
-
-// Setup Routes
-routes(app);
+// Setup Routes and configurations
+require('./config/passport')(app);
+require('./config/routes')(app);
 
 // Connect to DB
 mongoose.connection.on('open', function (ref) {

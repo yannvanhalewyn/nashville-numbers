@@ -3,7 +3,7 @@
   var EventEmitter = require('events').EventEmitter;
   var SheetConstants = require('../sheetConstants');
   var SheetStoreDataManager = require('./sheetStoreDataManager');
-  var assign = require('object-assign');
+  var assign = require('lodash').assign;
   var deNormalize = require('./deNormalize');
 
   var CHANGE_EVENT = 'change';
