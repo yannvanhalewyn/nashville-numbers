@@ -15,6 +15,15 @@
       }
     });
 
+    app.get('/sheets/new', function(req, res) {
+      res.send("NEW SHEET");
+    });
+
+    app.post('/sheets', function(req, res) {
+      console.log(req.body.title);
+      res.send('created!');
+    })
+
   };
 
 }())
