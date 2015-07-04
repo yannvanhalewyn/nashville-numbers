@@ -16,6 +16,7 @@
     "flux": "^2.0.3",
     "immutable": "^3.7.4",
     "keymirror": "^0.1.1",
+    "moment": "^2.10.3",
     "mongoose": "^4.0.6",
     "object-assign": "^3.0.0",
     "react": "^0.13.3"

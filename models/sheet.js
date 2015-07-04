@@ -1,12 +1,19 @@
 (function() {
 
   var Mongoose = require('mongoose');
+  var moment = require('moment');
   var Schema = Mongoose.Schema;
 
   var SheetSchema = new Schema({
     title: String,
     artist: String,
+    public: {type: Boolean, default: true},
+    created_at: {type: Date, default: Date.now},
     data: String
+  });
+
+  SheetSchema.virtual('createdAtInWords').get(function() {
+    return moment(this.createdAt).fromNow();
   });
 
   module.exports = Mongoose.model('Sheet', SheetSchema);
