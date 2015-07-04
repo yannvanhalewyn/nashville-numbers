@@ -7,6 +7,7 @@ Quick Ideas
   discount
 - Have an upvote system for sheet quality's, sort by upvote when exploring
   sheets, put star next to official sheeters.
+  They also have the power to put a stamp of approval on existing sheets
 - Have a points system with statuses, like "executive general note parser" :D,
   (see PointSystem.md)
 
