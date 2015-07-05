@@ -15,13 +15,10 @@ Before deployment
 TIPS
 ====
 
-- Define virtual accessors on MongooseShemas. Ex:
-  someSchema.virtual('name.full').get(function() {
-    return this.name.first + " " + this.name.last;
-  });
-
 - Add valiator for JSON sheet data. Or maybe just DONT update if invalid
   Sheet(model).schema.path('data').validate(function(value) {
     // Test for valid JSON, return true/false
   }, 'corrupt');
 
+- Use $text to search mongo for strings, it uses text indexes!
+  http://docs.mongodb.org/manual/core/index-text/

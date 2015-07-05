@@ -18,10 +18,11 @@ REWARDS
 - following on twitter: 50pts
 - inviting a friend to go pro: 100pts
 - sending me a message about how much you love SheetBucket: 20pts
-- submitting an awesome gradation idea (if accepted): 100pts
+- submitting an awesome ranking-name idea (if accepted): 100pts
+- Get a sheet upvote
 
-GRADATIONS
-----------
+RANKINGS
+--------
 
 - Beginner Sheeter
 - Casual Cheetah
@@ -32,12 +33,12 @@ GRADATIONS
 - Corporal McChart
 - Sergeant Sheeterific
 - Staff Sergeant No Fun, No Tation
-- Sergeant First Class Charter
+- Sergeant First Class Charter // Conflicts with president, rethink this one
 - Master Sergeant Coda
 - Officer Dudy always on duty
 - Second Lieutenant "watch out ladies, he's always scoring!"
 
 - Executive general note parser
 - Vice-President of the charting assembly
-- President Jimmy Charter
-- King of SheetBuckets
+- President Jimmy Charter // MY FAV!
+- King of SheetBuckets // Or what the website name will be
