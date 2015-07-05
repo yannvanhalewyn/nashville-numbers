@@ -10,6 +10,8 @@ Quick Ideas
   They also have the power to put a stamp of approval on existing sheets
 - Have a points system with statuses, like "executive general note parser" :D,
   (see PointSystem.md)
+- Add the ability to make playlists (maybe even with a next button)
+- In Hubs, make a setlist and get to play those sheets in order
 
 
 Marketing
