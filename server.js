@@ -31,7 +31,7 @@ require('./config/routes')(app);
 mongoose.connection.on('open', function (ref) {
   console.log('Connected to mongo server.');
   // Start server
-  app.listen(app.get('port'), '10.0.1.5', function() {
+  app.listen(app.get('port'), function() {
     console.log("Server listening on port " + app.get('port'));
   });
 });

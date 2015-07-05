@@ -16,11 +16,9 @@
       callbackURL: _root_path + '/auth/facebook/callback',
       profileFields: ['id', 'name', 'displayName', 'photos', 'hometown', 'friends'],
       enableProof: false
-    }
+    },
+    use_mock_db: true
   };
-
-  var mongoose = require('mongoose');
-  mongoose.connect(config.db_url);
 
   module.exports = config;
 
