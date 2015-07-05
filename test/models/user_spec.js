@@ -98,7 +98,7 @@ describe("User", function() {
     var SHEET;
 
     beforeEach(function(done) {
-      User.create(validUserParams)
+      new User(validUserParams).save()
       .then(function(user) {
         USER = user;
         user.createSheet({title: "FOOBAR"})

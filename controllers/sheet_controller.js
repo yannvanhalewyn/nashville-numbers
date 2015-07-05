@@ -6,16 +6,18 @@
 
     // INDEX
     index: function(req, res) {
-      Sheet.find({}, function(err, data) {
-        if (err) {
-          res.sendStatus(500);
-        } else {
-          res.render('sheets', {
-            active: {active_sheets: true},
-            sheets: data
-          });
-        }
-      });
+      // Double check the user (if id exists but invalid, the error block
+      // below will run
+      if (!req.user._id) return res.sendStatus(403);
+
+      // Find sheets and render sheets templte
+      return Sheet.find({authorID: req.user._id}).exec()
+      .then(function(sheets) {
+        res.render('sheets', {
+          active: {active_sheets: true},
+          sheets: sheets
+        });
+      }, function(err) {res.redirect('/home')});
     },
 
     // SHOW
