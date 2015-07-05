@@ -19,22 +19,6 @@
 
   var User = mongoose.model('User', UserSchema);
 
-    // this.findOne({provider_id: authData.provider_id}, function(err, result) {
-    //   if(err) cb(err, null);
-    //   else {
-    //     if (result) {
-    //       cb(null, result);
-    //     } else {
-    //       var newUser = new this(authData);
-    //       newUser.save(function(err) {
-    //         if(err) cb(err, null);
-    //         else cb(null, newUser); // Here you can add a 3rd param - redirectURL
-    //       });
-    //     }
-    //   }
-    // }.bind(this));
-
-
   module.exports = User;
 
   module.exports.registerFacebookUser = function(authData) {

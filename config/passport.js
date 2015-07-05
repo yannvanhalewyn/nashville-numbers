@@ -39,7 +39,7 @@
           provider: 'facebook',
           provider_id: profile.id,
           providerData: providerData
-        }, done);
+        }).then(function(newUser) {done(null, newUser)}).catch(done);
       }
     ));
 
