@@ -1,16 +1,10 @@
-process.env.NODE_ENV = 'test';
+var util = require('../util');
 
 var User     = require('../../models/user');
 var Sheet    = require('../../models/sheet');
 var expect   = require('chai').expect;
-var mongoose = require('mongoose');
-var config   = require('../../config');
 var Q        = require('q');
 var _        = require('lodash');
-
-afterEach(function(done) {
-  User.remove({}, done);
-});
 
 var authData = {provider_id: "123", provider: "facebook", firstName: "Claudius"};
 var authData2 = {provider_id: "123", provider: "facebook", firstName: "Cesar"};

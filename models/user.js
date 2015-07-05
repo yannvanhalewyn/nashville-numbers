@@ -1,6 +1,5 @@
 (function() {
 
-  var Sheet = require('./sheet');
   var mongoose = require('mongoose');
   var Schema   = mongoose.Schema;
   var Q        = require('q');
@@ -16,7 +15,10 @@
     providerData: Object
   });
 
+  // TODO putting this in header just didn't work
+  // Find out what's up, but this makes my tests pass.
   UserSchema.virtual('sheets').get(function() {
+    var Sheet = require('./sheet')
     return Sheet.find({authorID: this._id});
   });
 

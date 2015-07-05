@@ -1,15 +1,8 @@
-process.env.NODE_ENV = 'test';
+var util = require('../util');
 
-var Q        = require('q');
-var Sheet    = require('../../models/sheet');
-var User = require('../../models/user');
-var expect   = require('chai').expect;
-var mongoose = require('mongoose');
-var config   = require('../../config');
-
-afterEach(function(done) {
-  Sheet.remove({}, done);
-});
+var Sheet  = require('../../models/sheet');
+var User   = require('../../models/user');
+var expect = require('chai').expect;
 
 var USER;
 
@@ -25,9 +18,7 @@ describe('Sheet', function() {
 
   describe('#instantiation', function() {
     it('is successful', function(done) {
-      return Sheet.create({title: "Baby", artist: "Justin Bieber", authorID: USER._id})
-      .then(function(data) { done() },
-            function(err) { done("Should not get called here") })
+      new Sheet({title: "Baby", artist: "Justin Bieber", authorID: USER._id}).save(done);
     });
 
     it('fails when no title', function(done) {
