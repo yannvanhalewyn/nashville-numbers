@@ -2,6 +2,7 @@ process.env.NODE_ENV = 'test';
 
 var Q        = require('q');
 var Sheet    = require('../../models/sheet');
+var User = require('../../models/user');
 var expect   = require('chai').expect;
 var mongoose = require('mongoose');
 var config   = require('../../config');
@@ -10,36 +11,98 @@ afterEach(function(done) {
   Sheet.remove({}, done);
 });
 
+var USER;
+
 describe('Sheet', function() {
+  beforeEach(function(done) {
+    var validUserParams = {firstName: "Yann", provider_id: '1', provider: 'facebook'};
+    User.create(validUserParams)
+    .then(function(user) {
+      USER = user;
+      done();
+    });
+  });
+
   describe('#instantiation', function() {
     it('is successful', function(done) {
-      return Sheet.create({title: "Baby", artist: "Justin Bieber"})
+      return Sheet.create({title: "Baby", artist: "Justin Bieber", authorID: USER._id})
       .then(function(data) { done() },
             function(err) { done("Should not get called here") })
     });
 
     it('fails when no title', function(done) {
-      return Sheet.create({artist: "Justin Bieber"})
+      return Sheet.create({artist: "Justin Bieber", authorID: USER._id})
       .then(function(data) { done("Should not get called here") },
-            function(err) { done() })
+            function(err) { done() });
     });
 
     it('fails with empty title', function(done) {
-      return Sheet.create({title: ""})
+      return Sheet.create({title: "", authorID: USER._id})
       .then(function(data) { done("Should not get called here") },
-            function(err) { done() })
+            function(err) { done() });
     });
 
-    it('sets the created_at time to current time', function() {
+    it('fails with no authorID title', function(done) {
       return Sheet.create({title: "foo"})
+      .then(function(data) { done("Should not get called here") },
+            function(err) { done() });
+    });
+
+    it('fails with invalid authorID title', function(done) {
+      return Sheet.create({title: "foo", authorID: "invalid"})
+      .then(function(data) { done("Should not get called here") },
+            function(err) { done() });
+    });
+
+    it('sets the visibility to public', function() {
+      return Sheet.create({title: "foo", authorID: USER._id})
       .then(function(data) {
-        expect(Date.now() - data.created_at).to.be.below(200);
+        expect(data.visibility).to.eql('public');
       });
-    })
+    });
+
+    it('sets the timestamps time to current time', function() {
+      return Sheet.create({title: "foo", authorID: USER._id})
+      .then(function(data) {
+        console.log(data.updated_at);
+        expect(Date.now() - data.created_at).to.be.below(200);
+        expect(Date.now() - data.updated_at).to.be.below(200);
+      });
+    });
   });
 
-  describe('#createAtInWords', function() {
-    it('returns a correct sentence', function() {
-    })
+  describe('#updating', function() {
+    it('refreshes the updated_at variable', function() {
+      return Sheet.create({title: "foo", updated_at: Date.now() - 1000 * 60, authorID: USER._id})
+      .then(function(data) {
+        data.update({artist: "bar"});
+        expect(Date.now() - data.updated_at).to.be.below(100);
+      });
+    });
+  });
+
+  describe ('virtual', function() {
+    describe('#createAtInWords', function() {
+      it('returns a correct sentence', function() {
+        return Sheet.create({title: "foo", created_at: Date.now() - 1000 * 60 * 60 * 2,
+                            authorID: USER._id})
+        .then(function(data) {
+          expect(data.createdAtInWords).to.eql("2 hours ago");
+        });
+      });
+    });
+
+    describe('#author', function() {
+      it('returns the correct author', function() {
+        return Sheet.create({title: "foo", authorID: USER._id})
+        .then(function(sheet) {
+          return sheet.author.then(function(author) {
+            expect(author.firstName).to.eql("Yann");
+            expect(author._id).to.eql(USER._id);
+            expect(author.provider_id).to.eql(USER.provider_id);
+          });
+        })
+      });
+    });
   });
 });

@@ -10,7 +10,7 @@
     displayName: String,
     userName: String,
     picture: String,
-    provider: { type: String, require: true },
+    provider: { type: String, required: true },
     provider_id: { type: String, required: true },
     providerData: Object
   });
