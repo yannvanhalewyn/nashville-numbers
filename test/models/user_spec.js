@@ -4,10 +4,7 @@ var User     = require('../../models/user');
 var expect   = require('chai').expect;
 var mongoose = require('mongoose');
 var config   = require('../../config');
-mongoose.connect(config.db_url);
 
-beforeEach(function() {
-});
 afterEach(function(done) {
   User.remove({}, done);
 });
@@ -60,10 +57,8 @@ describe("User", function() {
     context("when given data is invalid", function() {
       it('resolves in the error promise', function(done) {
         return User.registerFacebookUser({foo: 'bar'})
-        .then(function(data) { done("Should not get called here") })
-        .catch(function(err) {
-          done();
-        });
+        .then(function(data) { done("Should not get called here") },
+              function(err) { done()  });
       });
     })
   });

@@ -5,7 +5,7 @@
   var Schema = Mongoose.Schema;
 
   var SheetSchema = new Schema({
-    title: String,
+    title: {type: String, required: true},
     artist: String,
     public: {type: Boolean, default: true},
     created_at: {type: Date, default: Date.now},
