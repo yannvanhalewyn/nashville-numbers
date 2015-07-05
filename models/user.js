@@ -1,7 +1,8 @@
 (function() {
 
   var mongoose = require('mongoose');
-  var Schema = mongoose.Schema;
+  var Schema   = mongoose.Schema;
+  var Q        = require('q');
 
   var UserSchema = new Schema({
     firstName: String,
@@ -14,24 +15,37 @@
     providerData: Object
   });
 
+  var findOne = Q.denodeify(UserSchema.findOne);
 
-  UserSchema.statics.registerFacebookUser = function(authData, cb) {
-    this.findOne({provider_id: authData.provider_id}, function(err, result) {
-      if(err) cb(err, null);
-      else {
-        if (result) {
-          cb(null, result);
-        } else {
-          var newUser = new this(authData);
-          newUser.save(function(err) {
-            if(err) cb(err, null);
-            else cb(null, newUser); // Here you can add a 3rd param - redirectURL
-          });
-        }
+  var User = mongoose.model('User', UserSchema);
+
+    // this.findOne({provider_id: authData.provider_id}, function(err, result) {
+    //   if(err) cb(err, null);
+    //   else {
+    //     if (result) {
+    //       cb(null, result);
+    //     } else {
+    //       var newUser = new this(authData);
+    //       newUser.save(function(err) {
+    //         if(err) cb(err, null);
+    //         else cb(null, newUser); // Here you can add a 3rd param - redirectURL
+    //       });
+    //     }
+    //   }
+    // }.bind(this));
+
+
+  module.exports = User;
+
+  module.exports.registerFacebookUser = function(authData) {
+    return User.findOne({provider_id: authData.provider_id})
+    .then(function(result) {
+      if (result) {
+        return result;
       }
-    }.bind(this));
-  };
+      return User.create(authData)
+    })
+  }
 
-  module.exports = mongoose.model('User', UserSchema);
+}());
 
-}())
