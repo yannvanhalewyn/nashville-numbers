@@ -11,7 +11,7 @@
   var KEYCODES = {
     SPACE: 32,
     RETURN: 13,
-    B: 66
+    ALT: 18
   }
 
   var ChordComponent = React.createClass({
@@ -72,6 +72,7 @@
     _onKeyDown: function(e) {
       var shift = e.shiftKey;
       var meta = e.metaKey;
+      var alt = e.altKey;
 
       switch(e.keyCode) {
         case KEYCODES.SPACE:
@@ -83,29 +84,22 @@
           e.preventDefault();
           break;
 
-        case KEYCODES.B:
-          if (meta) {
-            if (shift) {
-              SheetActions.removeBar();
-            } else {
-              SheetActions.addBar();
-            }
-            e.preventDefault();
-          }
-          break;
-
         case KEYCODES.RETURN:
           if (shift) {
             if(meta) {
               SheetActions.removeSection();
-            } else {
+            } else if(alt) {
               SheetActions.removeRow();
+            } else {
+              SheetActions.removeBar();
             }
           } else {
             if(meta) {
               SheetActions.addSection();
-            } else {
+            } else if (alt) {
               SheetActions.addRow();
+            } else {
+              SheetActions.addBar();
             }
           }
           e.preventDefault();
