@@ -60,10 +60,11 @@ describe("User", function() {
     })
   });
 
+  var validUserParams = {firstName: "Yann", provider_id: '1', provider: 'facebook'};
+
   describe ('#sheets', function() {
     var USER;
     var SHEETS;
-    var validUserParams = {firstName: "Yann", provider_id: '1', provider: 'facebook'};
 
     beforeEach(function(done) {
       User.create(validUserParams)
@@ -89,6 +90,37 @@ describe("User", function() {
         });
         expect(foundSheets).to.eql(targetSheets);
       });
+    });
+  });
+
+  describe ('#createSheet()', function() {
+    var USER;
+    var SHEET;
+
+    beforeEach(function(done) {
+      User.create(validUserParams)
+      .then(function(user) {
+        USER = user;
+        user.createSheet({title: "FOOBAR"})
+        .then(function(newSheet) {
+          SHEET = newSheet;
+          done()
+        }, done);
+      });
+    });
+
+    it('creates a new sheet', function() {
+      return Sheet.count().then(function(count) {
+        expect(count).to.eql(1);
+      })
+    });
+
+    it('adds the correct authorID', function() {
+      expect(SHEET.authorID).to.eql(USER._id);
+    });
+
+    it('sets the params', function() {
+      expect(SHEET.title).to.eql("FOOBAR");
     });
   });
 });
