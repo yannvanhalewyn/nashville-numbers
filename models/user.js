@@ -1,5 +1,6 @@
 (function() {
 
+  var Sheet = require('./sheet');
   var mongoose = require('mongoose');
   var Schema   = mongoose.Schema;
   var Q        = require('q');
@@ -15,7 +16,9 @@
     providerData: Object
   });
 
-  var findOne = Q.denodeify(UserSchema.findOne);
+  UserSchema.virtual('sheets').get(function() {
+    return Sheet.find({authorID: this._id});
+  });
 
   var User = mongoose.model('User', UserSchema);
 

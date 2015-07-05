@@ -1,9 +1,12 @@
 process.env.NODE_ENV = 'test';
 
 var User     = require('../../models/user');
+var Sheet    = require('../../models/sheet');
 var expect   = require('chai').expect;
 var mongoose = require('mongoose');
 var config   = require('../../config');
+var Q        = require('q');
+var _        = require('lodash');
 
 afterEach(function(done) {
   User.remove({}, done);
@@ -61,5 +64,37 @@ describe("User", function() {
               function(err) { done()  });
       });
     })
+  });
+
+  describe ('#sheets', function() {
+    var USER;
+    var SHEETS;
+    var validUserParams = {firstName: "Yann", provider_id: '1', provider: 'facebook'};
+
+    beforeEach(function(done) {
+      User.create(validUserParams)
+      .then(function(user) {
+        USER = user;
+        Q.all([
+          Sheet.create({title: "song1", authorID: user._id}),
+          Sheet.create({title: "song2", authorID: user._id}),
+          Sheet.create({title: "song3", authorID: user._id})
+        ]).then(function(sheets) {
+          SHEETS = sheets;
+          done();
+        }, console.error)
+      });
+    });
+    it('returns the array of sheets', function() {
+      return USER.sheets.then(function(result) {
+        var foundSheets = result.map(function(s) {
+          return _.pick(s, ['title', 'authorID']);
+        });
+        var targetSheets = SHEETS.map(function(s) {
+          return _.pick(s, ['title', 'authorID']);
+        });
+        expect(foundSheets).to.eql(targetSheets);
+      });
+    });
   });
 });
