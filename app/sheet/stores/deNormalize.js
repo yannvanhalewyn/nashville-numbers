@@ -38,6 +38,8 @@
   *  components
   */
 
+  var _ = require('lodash');
+
   module.exports = function(data) {
     var input = data.toJS();
     var ret = {
@@ -47,22 +49,22 @@
     };
 
     // Loop over all sections
-    input.main.sections.forEach(function(sectionID, iii) {
+    _.each(input.main.sections, function(sectionID, iii) {
       var section = input.sections[sectionID];
       ret.sections[iii] = section;
 
       // Loop over all rows
-      section.rows.forEach(function(rowID, jjj) {
+      _.each(section.rows, function(rowID, jjj) {
         var row = input.rows[rowID];
         ret.sections[iii].rows[jjj] = row;
 
         // Loop over all bars
-        row.bars.forEach(function(barID, kkk) {
+        _.each(row.bars, function(barID, kkk) {
           var bar = input.bars[barID];
           ret.sections[iii].rows[jjj].bars[kkk] = bar;
 
           // Loop over all chords
-          bar.chords.forEach(function(chordID, lll) {
+          _.each(bar.chords, function(chordID, lll) {
             var chord = input.chords[chordID];
             ret.sections[iii].rows[jjj].bars[kkk].chords[lll] = chord;
           });
@@ -70,6 +72,6 @@
       });
     });
     return ret;
-    }
+  };
 
 }())

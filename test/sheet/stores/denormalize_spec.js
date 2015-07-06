@@ -11,34 +11,80 @@ describe('#denormalize()', function() {
 
   context("when a bar has no chords property", function() {
     it("doesnt throw an error", function() {
+      var input = _normalizedWithMissingChordsArrayInBar();
+      expect(denormalize.bind(this, input)).not.to.throw();
     });
   }); // End of context 'when a bar has no chords property'
 
+  context("when a row has no bars property", function() {
+    it("doesn't throw an error", function() {
+      var input = _normalizedWithMissingBarsArrayInRow();
+      expect(denormalize.bind(this, input)).not.to.throw();
+    });
+  }); // End of context 'when a row has no bars property'
+
+  context("when a section has no rows property", function() {
+    it("doesn't throw an error", function() {
+      var input = _normalizedWithMissingRowsArrayInSection();
+      expect(denormalize.bind(this, input)).not.to.throw();
+    });
+  }); // End of context 'when a section has no rows property'
+
+  context("when the sheet has no sections", function() {
+    it("doesn't throw an error", function() {
+      var input = _normalizedWithMissingSectionsInMain();
+      expect(denormalize.bind(this, input)).not.to.throw();
+    });
+  }); // End of context 'when the sheet has no sections'
 });
+
+function _normalizedWithMissingSectionsInMain() {
+  return Immutable.fromJS({main: {title: "theTitle", artist: "theArtist"}});
+}
 
 function _normalizedWithMissingChordsArrayInBar() {
   return Immutable.fromJS({
-    entities: {
-      sections: {
-        section1: { id: "section1", name: "intro", rows: [ "row1" ] },
-      },
-      rows: {
-        row1: { id: "row1", bars: [ "bar1" ] },
-      },
-      bars: {
-        bar1: { id: "bar1", chords: [ "chord1" ] },
-      },
-      chords: {
-        chord1: { id: "chord1", raw: "chord1-raw" },
-      }
-    },
-    result: {
+    main: {
       title: "theTitle",
       artist: "theArtist",
-      sections: [ "section1", "section2" ]
+      sections: [ "section1" ]
+    },
+    sections: {
+      section1: { id: "section1", name: "intro", rows: [ "row1" ] },
+    },
+    rows: {
+      row1: { id: "row1", bars: [ "bar1" ] },
+    },
+    bars: {
+      bar1: { id: "bar1" }
     }
-  })
+  });
 }
+
+function _normalizedWithMissingBarsArrayInRow() {
+  return Immutable.fromJS({
+    main: {
+      title: "theTitle",
+      artist: "theArtist",
+      sections: [ "section1" ]
+    },
+    sections: {
+      section1: { id: "section1", name: "intro", rows: [ "row1" ] },
+    },
+    rows: {
+      row1: { id: "row1" },
+    }
+  });
+}
+
+function _normalizedWithMissingRowsArrayInSection() {
+  return Immutable.fromJS({
+    main: { title: "theTitle", artist: "theArtist", sections: [ "section1" ] },
+    sections: { section1: { id: "section1", name: "intro" }, },
+  });
+}
+
+
 
 function _deNormalizedData() {
   return {
