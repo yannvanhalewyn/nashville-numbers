@@ -16,7 +16,7 @@ var Sheet = require('../../models/sheet');
 // of entities I created during tests
 var ENTITIES;
 
-describe('Controller', function() {
+describe('SHEETCONTROLLER', function() {
   // Setup stubs
   beforeEach(function() {
     ENTITIES = {users: {}, sheets: {}};
@@ -204,6 +204,52 @@ describe('Controller', function() {
             it("sends along the correct sheet data", function() {
               var expectedData = ENTITIES.sheets["theprivateone"].data;
               expect(this.res.render.args[0][1].state).to.eql(expectedData);
+            });
+          });
+        }); // End of when the requesting user owns the sheet
+
+
+        context("when the requesting user doesn't own the sheet", function() {
+          beforeEach(function() {
+            return _createUser("theOtherUser");
+          });
+
+          context("when the requested sheet is public", function() {
+            beforeEach(function() {
+              var sheetID = ENTITIES.sheets["theuser"][0]._id;
+              return Controller.show({
+                user: ENTITIES.users["theOtherUser"],
+                params: {id: sheetID}
+              }, this.res);
+            });
+
+            it("renders the sheet template", function() {
+              expect(this.res.render).to.have.been.calledWith('sheet');
+            });
+
+            it("sends along the correct sheet data", function() {
+              // Sorry for the hack. Check _createSheet for how thedata is created
+              var expectedData = ENTITIES.sheets["theuser"][0].data;
+              expect(this.res.render.args[0][1].state).to.eql(expectedData);
+            });
+
+            it("sends a read-only flag", function() {
+              expect(this.res.render.args[0][1].readOnly).to.eql(true)
+            });
+
+          });
+
+          context("when the requested sheet is private", function() {
+            beforeEach(function() {
+              var sheetID = ENTITIES.sheets["theprivateone"]._id;
+              return Controller.show({
+                user: ENTITIES.users["theOtherUser"],
+                params: {id: sheetID}
+              }, this.res);
+            });
+
+            it("redirects to /sheetsss", function() {
+              expect(this.res.redirect).to.have.been.called;
             });
           });
         });

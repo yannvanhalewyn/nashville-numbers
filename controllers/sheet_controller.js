@@ -29,7 +29,12 @@
       // Find the sheet
       return Sheet.findById(req.params.id).exec()
       .then(function(sheet) {
-        res.render('sheet', {active: {active_sheets: true}, state: sheet.data});
+        var isAuthor = sheet.authorID.equals(req.user._id);
+        if ((!isAuthor) && sheet.visibility === 'private') {
+          return res.redirect('/sheets');
+        }
+        return res.render('sheet', { active: {active_sheets: true}, state: sheet.data,
+                                readOnly: !isAuthor });
       }, function(err) {res.redirect('/')});
     },
 
