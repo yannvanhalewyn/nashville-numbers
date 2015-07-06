@@ -4,11 +4,11 @@
 
   module.exports = {
 
-    // INDEX
+    // GET#INDEX
     index: function(req, res) {
       // Double check the user (if id exists but invalid, the error block
       // below will run
-      if (!req.user._id) return res.sendStatus(403);
+      if (!req.user || !req.user._id) return res.sendStatus(403);
 
       // Find sheets and render sheets templte
       return Sheet.find({authorID: req.user._id}).exec()
@@ -17,15 +17,20 @@
           active: {active_sheets: true},
           sheets: sheets
         });
-      }, function(err) {res.redirect('/home')});
+      }, function(err) {res.redirect('/')});
     },
 
-    // SHOW
+    // GET#SHOW
     show: function(req, res) {
-      var id = req.params.id;
-      Sheet.findById(req.params.id, function(err, sheet) {
+      // Double check again (this is just for peace of mind)
+      if (!req.user || !req.user._id) return res.sendStatus(403);
+      if (!req.params) return res.redirect('/sheets');
+
+      // Find the sheet
+      return Sheet.findById(req.params.id).exec()
+      .then(function(sheet) {
         res.render('sheet', {active: {active_sheets: true}, state: sheet.data});
-      });
+      }, function(err) {res.redirect('/')});
     },
 
     // CREATE
