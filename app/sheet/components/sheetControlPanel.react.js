@@ -4,7 +4,7 @@
   /** @jsx React.DOM */
 
   var React = require('react');
-  var SheetActions = require('../actions/sheetActions');
+  var NetworkActions = require('../actions/networkActions');
   var SheetControlEditActions = require('./sheetControlEditActions.react');
 
   var SheetControlPanel = React.createClass({
@@ -17,10 +17,14 @@
           <span className="SC-icon fa fa-star-o" id="SC-fav-icon"></span>
           <SheetControlEditActions />
           <span className="fa fa-expand" id="play-mode-toggle"></span>
-          <div className="btn" id="save-button">Save!</div>
+          <div className="btn" id="save-button" onClick={this._handleSave}>Save!</div>
         </div>
       )
     },
+
+    _handleSave: function(e) {
+      NetworkActions.save();
+    }
 
   });
 

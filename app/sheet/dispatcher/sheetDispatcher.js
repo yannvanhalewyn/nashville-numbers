@@ -16,49 +16,49 @@
         break;
 
       case Actions.APPEND_NEW_CHORD:
-        SheetStoreDataManager.addChord(selected.parentIDs.barID, selected.chordID);
+        SheetStoreDataManager.addChord(selected.barID, selected.chordID);
         SheetStore.emitChange();
         break;
 
       case Actions.APPEND_NEW_BAR:
-        SheetStoreDataManager.addBar(selected.parentIDs.rowID, selected.parentIDs.barID);
+        SheetStoreDataManager.addBar(selected.rowID, selected.barID);
         SheetStore.emitChange();
         break;
 
       case Actions.APPEND_NEW_ROW:
-        SheetStoreDataManager.addRow(selected.parentIDs.sectionID, selected.parentIDs.rowID);
+        SheetStoreDataManager.addRow(selected.sectionID, selected.rowID);
         SheetStore.emitChange();
         break;
 
       case Actions.APPEND_NEW_SECTION:
-        SheetStoreDataManager.addSection(selected.parentIDs.sectionID);
+        SheetStoreDataManager.addSection(selected.sectionID);
         SheetStore.emitChange();
         break;
 
       case Actions.DELETE_SELECTED_CHORD:
-        SheetStoreDataManager.deleteChord(selected.chordID, selected.parentIDs.barID);
+        SheetStoreDataManager.deleteChord(selected.chordID, selected.barID);
         SheetStore.emitChange();
         break;
 
       case Actions.DELETE_SELECTED_BAR:
-        SheetStoreDataManager.deleteBar(selected.parentIDs.barID,
-                                        selected.parentIDs.rowID);
+        SheetStoreDataManager.deleteBar(selected.barID,
+                                        selected.rowID);
         SheetStore.emitChange();
         break;
 
       case Actions.DELETE_SELECTED_ROW:
-        SheetStoreDataManager.deleteRow(selected.parentIDs.rowID,
-                                        selected.parentIDs.sectionID);
+        SheetStoreDataManager.deleteRow(selected.rowID,
+                                        selected.sectionID);
         SheetStore.emitChange();
         break;
 
       case Actions.DELETE_SELECTED_SECTION:
-        SheetStoreDataManager.deleteSection(selected.parentIDs.sectionID);
+        SheetStoreDataManager.deleteSection(selected.sectionID);
         SheetStore.emitChange();
         break;
 
       case Actions.STORE_CHORD_REF_AS_SELECTED:
-        SheetStore.storeRefToSelectedChord(action.chordID, action.barID);
+        SheetStore.storeRefToSelectedChord(action.chordID, action.parentIDs);
         break;
 
       default:

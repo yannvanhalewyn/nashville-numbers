@@ -13,7 +13,11 @@
     DELETE_SELECTED_ROW: null,
     DELETE_SELECTED_SECTION: null,
     DELETE_CHORD: null,
-    STORE_CHORD_REF_AS_SELECTED: null
+    STORE_CHORD_REF_AS_SELECTED: null,
+
+    // NETWORK
+    SAVE: null,
+    DELETE: null
   });
 
   module.exports = SheetConstants;

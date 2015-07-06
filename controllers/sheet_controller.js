@@ -9,6 +9,7 @@
 
     // GET#index
     index: function(req, res) {
+      console.log("INDEX");
       // Double check the user (if id exists but invalid, the error block
       // below will run
       if (!req.user) return res.sendStatus(422);
@@ -62,13 +63,22 @@
     // TODO get rid of those 24bit hex regexes!
     // mongoose query promises wont hand me error callbacks for some reason.. :(
     update: function(req, res) {
-      if(!req.params || !req.body || !req.body.data || !req.user) return res.sendStatus(422);
+      // Validate params
+      if(!req.params || !req.body || !req.user) return res.sendStatus(422);
       if(!/^([a-fA-F0-9]){24}$/.test(req.params.id)) return res.sendStatus(404);
       if(!/^([a-fA-F0-9]){24}$/.test(req.user._id)) return res.sendStatus(401);
-      return Sheet.update({_id: req.params.id, authorID: req.user._id},
-                          {$set: {data: req.body.data}}).exec()
+      if(!req.body.main) return res.sendStatus(406);
+
+      return Sheet.update(
+        {_id: req.params.id, authorID: req.user._id},
+        {$set: {
+          data: JSON.stringify(req.body),
+          title: req.body.main.title,
+          artist: req.body.main.artist
+        }}
+      ).exec()
       .then(function(db_response) {
-        db_response.nModified === 0 ? res.sendStatus(403) : res.status(200).send('foo');
+        db_response.n === 0 ? res.sendStatus(403) : res.status(200).send('foo');
       });
     },
 
