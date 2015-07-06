@@ -76,21 +76,21 @@ describe('SHEETCONTROLLER', function() {
       }.bind(this))
     });
 
-    context("when user property is inexistant", function() {
-      it("it sends a 403", function() {
+    context("when user object is inexistant", function() {
+      it("it sends a 407", function() {
         Controller.index({}, this.res)
-        expect(this.res.sendStatus).to.have.been.calledWith(403);
+        expect(this.res.sendStatus).to.have.been.calledWith(407);
       });
     });
 
-    context("when user property is invalid", function() {
-      it("it sends a 403", function() {
+    context("when user object is invalid", function() {
+      it("it sends a 401", function() {
         Controller.index({user: "invalid"}, this.res)
-        expect(this.res.sendStatus).to.have.been.calledWith(403);
+        expect(this.res.sendStatus).to.have.been.calledWith(401);
       });
     });
 
-    context("With an invalid user ID", function() {
+    context("With an invalid userID", function() {
       it("redirects to /", function() {
         return Controller.index({user: {_id: "unexistant"}}, this.res)
         .then(function() {
@@ -108,16 +108,16 @@ describe('SHEETCONTROLLER', function() {
    */
   describe('GET#show', function() {
     context("when user property is inexistant", function() {
-      it("it sends a 403", function() {
+      it("it sends a 407", function() {
         Controller.show({}, this.res)
-        expect(this.res.sendStatus).to.have.been.calledWith(403);
+        expect(this.res.sendStatus).to.have.been.calledWith(407);
       });
     });
 
     context("when user property is invalid", function() {
-      it("it sends a 403", function() {
+      it("it sends a 401", function() {
         Controller.show({user: "invalid"}, this.res)
-        expect(this.res.sendStatus).to.have.been.calledWith(403);
+        expect(this.res.sendStatus).to.have.been.calledWith(401);
       });
     });
 
@@ -300,9 +300,9 @@ describe('SHEETCONTROLLER', function() {
       }); // End of when the sheet title is present
 
       context("when sheet title is invalid", function() {
-        it("sends a 403", function() {
+        it("sends a 400", function() {
           Controller.create({body: {title: ""}, user: ENTITIES.users["theuser"]}, this.res)
-          expect(this.res.sendStatus).to.have.been.calledWith(403);
+          expect(this.res.sendStatus).to.have.been.calledWith(400);
         });
       });
     }); // END of with valid logged in user
@@ -322,8 +322,46 @@ describe('SHEETCONTROLLER', function() {
         }.bind(this));
       });
     });
+  }); // END of POST#create
 
-  });
+  /*
+   * ==========
+   * PUT#update
+   * ==========
+   */
+  describe('PUT#update', function() {
+    context("with valid user logged in", function() {
+      context("with valid sheetID", function() {
+        it("updates the sheet", function() {
+        });
+      }); // End of context 'with valid sheetID'
+
+      context("with invalid sheet id", function() {
+        it("sends a 404", function() {
+        });
+      }); // End of context 'with invalid sheet id'
+
+      context("with missing sheet id", function() {
+        it("400 a 403", function() {
+        });
+      }); // End of context 'with missing sheet id'
+
+      context("with invalid data", function() {
+        it("sends a 406", function() {
+        });
+      }); // End of context 'with invalid data'
+    }); // End of context 'with valid user logged in'
+
+    context("with no user logged in", function() {
+      it("sends a 407", function() {
+      });
+    }); // End of context 'with no user logged in'
+
+    context("with invalid user logged in", function() {
+      it("sends a 401", function() {
+      });
+    }); // End of context 'with invalid user logged in'
+  }); // End of describe 'PUT#update'
 });
 
 // create a user and store it under ENTITIES.users[`name`]

@@ -11,7 +11,8 @@
     index: function(req, res) {
       // Double check the user (if id exists but invalid, the error block
       // below will run
-      if (!req.user || !req.user._id) return res.sendStatus(403);
+      if (!req.user) return res.sendStatus(407);
+      if (!req.user._id) return res.sendStatus(401);
 
       // Find sheets and render sheets templte
       return Sheet.find({authorID: req.user._id}).exec()
@@ -26,7 +27,9 @@
     // GET#show
     show: function(req, res) {
       // Double check again (this is just for peace of mind)
-      if (!req.user || !req.user._id) return res.sendStatus(403);
+      // if (!req.user) return res.sendStatus(407);
+      if (!req.user) return res.sendStatus(407);
+      if (!req.user._id) return res.sendStatus(401);
       if (!req.params) return res.redirect('/sheets');
 
       // Find the sheet
@@ -43,7 +46,8 @@
 
     // POST#create
     create: function(req, res) {
-      if (!req.body.title || !req.user) return res.sendStatus(403);
+      if (!req.body.title) return res.sendStatus(400);
+      if (!req.user) return res.sendStatus(403);
       return new Sheet({
         title: req.body.title,
         artist: req.body.artist,
@@ -53,7 +57,8 @@
         var url = ('/sheet/' + newSheet._id).toString();
         res.redirect(url);
       }, function(err) { res.redirect('/home'); });
-    }
+    },
+
 
   };
 

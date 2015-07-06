@@ -31,6 +31,8 @@ CONTROLLERS
   when sheetID is private and your not the owner, redirect to explore?
   when do I return a 403? I don't want the user to see that stuff.
 - Should my controller validate creating data, or my model? or both?
+- Maybe look over the response codes, just read test output, especially in
+  sheet#update! I feel like everything is a 403
 
 TESTING
 -------
