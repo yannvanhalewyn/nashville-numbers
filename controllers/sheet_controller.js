@@ -53,7 +53,7 @@
         authorID: req.user._id,
       }).save()
       .then(function(newSheet) {
-        var url = ('/sheet/' + newSheet._id).toString();
+        var url = ('/sheets/' + newSheet._id).toString();
         res.redirect(url);
       }, function(err) { res.redirect('/home'); });
     },

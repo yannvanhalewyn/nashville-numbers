@@ -295,7 +295,7 @@ describe('SHEETCONTROLLER', function() {
         it("redirects to the newly created sheet", function() {
           return Sheet.findOne({title: "theTitle"}).exec()
           .then(function(sheet) {
-            var url = ('/sheet/' + sheet._id).toString();
+            var url = ('/sheets/' + sheet._id).toString();
             expect(this.res.redirect).to.have.been.calledWith(url);
           }.bind(this));
         });
