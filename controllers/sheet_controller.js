@@ -1,10 +1,13 @@
 (function() {
 
+  // TODO Maybe put validators in own handle error method, and then redirect or
+  // respond based on the error. That method could be put at the end of the
+  // promise chain
   var Sheet = require('../models/sheet');
 
   module.exports = {
 
-    // GET#INDEX
+    // GET#index
     index: function(req, res) {
       // Double check the user (if id exists but invalid, the error block
       // below will run
@@ -20,7 +23,7 @@
       }, function(err) {res.redirect('/')});
     },
 
-    // GET#SHOW
+    // GET#show
     show: function(req, res) {
       // Double check again (this is just for peace of mind)
       if (!req.user || !req.user._id) return res.sendStatus(403);
@@ -38,25 +41,18 @@
       }, function(err) {res.redirect('/')});
     },
 
-    // CREATE
+    // POST#create
     create: function(req, res) {
-      var sheet = new Sheet({title: req.body.title, artist: req.body.artist,
-                            data:_generateDefaultData(req.body.title, req.body.artist)});
-      if (!req.body.title || !req.body.artist) {
-        res.sendStatus('403');
-        return;
-      }
-      sheet.save(function(err) {
-        if (err) {
-          console.log("ERROR!");
-          console.log(err);
-          res.sendStatus('500')
-        }
-        res.render('sheet', {
-          active: {active_sheets: true},
-          state: sheet.data
-        });
-      });
+      if (!req.body.title || !req.user) return res.sendStatus(403);
+      return new Sheet({
+        title: req.body.title,
+        artist: req.body.artist,
+        authorID: req.user._id,
+      }).save()
+      .then(function(newSheet) {
+        var url = ('/sheet/' + newSheet._id).toString();
+        res.redirect(url);
+      }, function(err) { res.redirect('/home'); });
     }
 
   };

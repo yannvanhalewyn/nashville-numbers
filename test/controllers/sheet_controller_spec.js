@@ -28,11 +28,11 @@ describe('SHEETCONTROLLER', function() {
     this.req = {}
   });
 
-/*
- * =========
- * GET#INDEX
- * =========
- */
+  /*
+   * =========
+   * GET#INDEX
+   * =========
+   */
   describe('GET#index', function() {
     // Setup and store refs to a user and a sheet
     beforeEach(function() {
@@ -101,11 +101,11 @@ describe('SHEETCONTROLLER', function() {
   }); // End of GET#index
 
 
-/*
- * ========
- * GET#SHOW
- * ========
- */
+  /*
+   * ========
+   * GET#SHOW
+   * ========
+   */
   describe('GET#show', function() {
     context("when user property is inexistant", function() {
       it("it sends a 403", function() {
@@ -162,9 +162,9 @@ describe('SHEETCONTROLLER', function() {
           authorID = ENTITIES.users["theuser"]._id;
           return Sheet.create({title: "private", visibility: "private",
                               authorID: authorID, data: "dataOfThePrivateOne"})
-          .then(function(privateSheet) {
-            ENTITIES.sheets["theprivateone"] = privateSheet;
-          });
+                              .then(function(privateSheet) {
+                                ENTITIES.sheets["theprivateone"] = privateSheet;
+                              });
         });
 
         context("when the requesting user owns the sheet", function() {
@@ -253,7 +253,74 @@ describe('SHEETCONTROLLER', function() {
             });
           });
         });
-      })
+      }); // End of with valid sheetID
+    }); // End of with valid logged in user
+  }); // End of GET#show
+
+  /*
+   * ===========
+   * POST#CREATE
+   * ===========
+   */
+  describe('POST#create', function() {
+    context("with a valid user logged in", function() {
+      beforeEach(function() {
+        return _createUser("theuser")
+      });
+
+      context("when the sheet title is present", function() {
+        beforeEach(function() {
+          return Controller.create({ body: {title: "theTitle", artist: "theArtist"},
+                                   user: ENTITIES.users["theuser"] }, this.res)
+        });
+
+        it('creates a new sheet in the database', function() {
+          return Sheet.count()
+          .then(function(count) {
+            expect(count).to.eql(1);
+          });
+        });
+
+        it("stores the title, artist and authorID", function() {
+          return Sheet.findOne({title: "theTitle"}).exec()
+          .then(function(sheet) {
+            expect(sheet.title).to.eql("theTitle");
+            expect(sheet.artist).to.eql("theArtist");
+            expect(sheet.authorID).to.eql(ENTITIES.users["theuser"]._id);
+          });
+        });
+
+        it("redirects to the newly created sheet", function() {
+          return Sheet.findOne({title: "theTitle"}).exec()
+          .then(function(sheet) {
+            var url = ('/sheet/' + sheet._id).toString();
+            expect(this.res.redirect).to.have.been.calledWith(url);
+          }.bind(this));
+        });
+      }); // End of when the sheet title is present
+
+      context("when sheet title is invalid", function() {
+        it("sends a 403", function() {
+          Controller.create({body: {title: ""}, user: ENTITIES.users["theuser"]}, this.res)
+          expect(this.res.sendStatus).to.have.been.calledWith(403);
+        });
+      });
+    }); // END of with valid logged in user
+
+    context("when not logged in", function() {
+      it("sends a 403", function() {
+        Controller.create({body: {title: "the title"}}, this.res)
+        expect(this.res.sendStatus).to.have.been.calledWith(403);
+      });
+    });
+
+    context("when user invalid", function() {
+      it("redirects to /home", function() {
+        return Controller.create({body: {title: "the title"}, user: "invalid"}, this.res)
+        .then(function() {
+          expect(this.res.redirect).to.have.been.calledWith('/home');
+        }.bind(this));
+      });
     });
 
   });

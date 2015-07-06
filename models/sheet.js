@@ -5,6 +5,7 @@
   var Schema = mongoose.Schema;
   var User = require('./user');
 
+  // TODO give default artist, like undefined or some musician
   var SheetSchema = new Schema({
     title: {type: String, required: true},
     artist: String,
@@ -15,6 +16,7 @@
     data: String
   });
 
+  // TODO create method .public() that returns if visibility == 'public'
   SheetSchema.virtual('createdAtInWords').get(function() {
     return moment(this.created_at).fromNow();
   });

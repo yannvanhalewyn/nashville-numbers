@@ -30,6 +30,7 @@ CONTROLLERS
 - Where to redirect to when. Ex: When sheetID is not found, redirect to /sheets,
   when sheetID is private and your not the owner, redirect to explore?
   when do I return a 403? I don't want the user to see that stuff.
+- Should my controller validate creating data, or my model? or both?
 
 TESTING
 -------
@@ -46,3 +47,9 @@ TESTING
         - when b is invalid
         - when b is missing
         [etc..]
+
+GENERAL
+-------
+- How much funny is acceptable before it becomes not serious? Ex: Can the
+  default artist be "probably some musician"?
+
