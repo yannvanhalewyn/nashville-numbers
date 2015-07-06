@@ -7,6 +7,7 @@ TODO Make tabbing through append new bars if needed
 TODO Chord spacing (should be straight forward)
 TODO Deleting bar should select the previous one
   -- Maybe add a prop for focus
+TODO Add undo stack. Is pretty simple -> command pattern, that book will pay off!
 
 Before deployment
 -----------------
