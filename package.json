@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "browserify": "^10.2.4",
+    "browserify-shim": "^3.8.9",
     "chai": "^3.0.0",
     "gulp": "^3.9.0",
     "gulp-livereload": "^3.8.0",
@@ -40,8 +41,11 @@
     "reactify": "^1.1.1",
     "sinon": "^1.15.3",
     "sinon-chai": "^2.8.0",
-    "underscore": "^1.8.3",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.2.3"
+  },
+  "browserify-shim": {
+    "react": "global:React",
+    "lodash": "global:_"
   }
 }
