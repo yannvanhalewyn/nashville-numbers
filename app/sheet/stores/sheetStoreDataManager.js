@@ -60,6 +60,12 @@
     },
 
     addSection: function(sectionID) {
+      // Lazy init sections array
+      if (!SHEET_DATA.getIn(['main', 'sections'])) {
+        SHEET_DATA = SHEET_DATA.setIn(['main', 'sections'], Immutable.List());
+      }
+
+      // Add the new section
       var newID = _randomID();
       var index = SHEET_DATA.getIn(['main', 'sections']).indexOf(sectionID);
       SHEET_DATA = SHEET_DATA.withMutations(function(data) {

@@ -18,6 +18,12 @@
       SheetStoreDataManager.setData(data);
     },
 
+    setDefaultData: function() {
+      var defaultData = {main: {title: "title", artist: "artist"}};
+      SheetStoreDataManager.setData(defaultData);
+      SheetStoreDataManager.addSection();
+    },
+
     emitChange: function() {
       this.emit(CHANGE_EVENT);
     },
