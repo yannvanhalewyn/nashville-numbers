@@ -39,12 +39,14 @@
     storeRefToSelectedChord: function(chordID, parentIDs) {
       this.selectedChordRef = {
         chordID: chordID,
-        parentIDs: parentIDs
+        barID: parentIDs.barID,
+        rowID: parentIDs.rowID,
+        sectionID: parentIDs.sectionID
       }
     },
 
     getRefToSelectedChord: function() {
-      return this.selectedChordRef;
+      return this.selectedChordRef ? this.selectedChordRef : {};
     }
 
   });
