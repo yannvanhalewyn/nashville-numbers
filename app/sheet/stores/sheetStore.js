@@ -1,9 +1,11 @@
 (function() {
 
+  var assign = require('lodash').assign;
+  var $ = require('jquery');
+
   var EventEmitter = require('events').EventEmitter;
   var SheetConstants = require('../sheetConstants');
   var SheetStoreDataManager = require('./sheetStoreDataManager');
-  var assign = require('lodash').assign;
   var deNormalize = require('./deNormalize');
 
   var CHANGE_EVENT = 'change';
@@ -47,6 +49,22 @@
 
     getRefToSelectedChord: function() {
       return this.selectedChordRef ? this.selectedChordRef : {};
+    },
+
+    // Networking
+    saveSheet: function() {
+      var data = SheetStoreDataManager.getData();
+      $.ajax({
+        url: window.location.pathname,
+        method: "PUT",
+        contentType: 'application/json',
+        data: JSON.stringify(data.toJS())
+      }).done(function(res) {
+        alert("saved!");
+      }).error(function(err) {
+        alert("not saved. Check console.");
+        console.log(err);
+      });
     }
 
   });

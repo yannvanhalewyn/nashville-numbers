@@ -4,8 +4,7 @@
   /** @jsx React.DOM */
 
   var React = require('react');
-  var $ = require('jquery');
-  var SheetActions = require('../actions/sheetActions');
+  var NetworkActions = require('../actions/networkActions');
   var SheetControlEditActions = require('./sheetControlEditActions.react');
 
   var SheetControlPanel = React.createClass({
@@ -24,32 +23,7 @@
     },
 
     _handleSave: function(e) {
-      $.ajax({
-        url: window.location.pathname,
-        method: "PUT",
-        contentType: 'application/json',
-        success: function(result) {
-          console.log("IN SUCCESS BLOCK");
-          console.log(res);
-        },
-        error: function(err) {
-          console.log("IN ERR BLOCK");
-          console.log(err);
-        },
-        data: '{"main": {"title": "anotherTitle", "artist": "artist", "sections": []}}'
-      }).done(function(res) {
-        console.log("IN DONE BLOCK");
-        if (res.status == 200) {
-          alert("saved!")
-        } else {
-          alert("error!")
-          console.log(res.error());
-        }
-      }).error(function(err) {
-        console.log("IN ERR PROMISE");
-        alert("error!");
-        console.log(err);
-      })
+      NetworkActions.save();
     }
 
   });
