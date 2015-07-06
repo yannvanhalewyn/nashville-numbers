@@ -1,6 +1,7 @@
 (function() {
 
   "use strict";
+
   var Immutable = require('immutable');
 
   var SHEET_DATA = Immutable.Map();
@@ -17,8 +18,8 @@
     },
 
     updateChordText: function(id, text) {
-      if (SHEET_DATA.getIn(['entities', 'chords', id])) {
-        SHEET_DATA = SHEET_DATA.setIn(['entities', 'chords', id, 'raw'], text);
+      if (SHEET_DATA.getIn(['chords', id])) {
+        SHEET_DATA = SHEET_DATA.setIn(['chords', id, 'raw'], text);
       }
     },
 
@@ -34,14 +35,14 @@
      *
      */
     addChord: function(barID, chordID) {
-      if (SHEET_DATA.getIn(['entities', 'bars', barID])) {
+      if (SHEET_DATA.getIn(['bars', barID])) {
         var chordIndex = _getIndexOfChildInParent('chords', 'bars', chordID, barID);
         _insertNewChildInParentAtIndex("chords", "bars", barID, chordIndex+1);
       }
     },
 
     addBar: function(rowID, barID) {
-      if (SHEET_DATA.getIn(['entities', 'rows', rowID])) {
+      if (SHEET_DATA.getIn(['rows', rowID])) {
         var barIndex = _getIndexOfChildInParent('bars', 'rows', barID, rowID);
         var newID = _insertNewChildInParentAtIndex('bars', 'rows', rowID, barIndex+1);
         this.addChord(newID);
@@ -49,7 +50,7 @@
     },
 
     addRow: function(sectionID, rowID) {
-      if (SHEET_DATA.getIn(['entities', 'sections', sectionID])) {
+      if (SHEET_DATA.getIn(['sections', sectionID])) {
         var rowIndex = _getIndexOfChildInParent('rows', 'sections', rowID, sectionID);
         var newID = _insertNewChildInParentAtIndex('rows', 'sections', sectionID, rowIndex + 1);
         for (var i = 0; i < DEFAULT_NUM_BARS_IN_ROW; i++) {
@@ -60,18 +61,18 @@
 
     addSection: function(sectionID) {
       var newID = _randomID();
-      var index = SHEET_DATA.getIn(['result', 'sections']).indexOf(sectionID)
+      var index = SHEET_DATA.getIn(['main', 'sections']).indexOf(sectionID);
       SHEET_DATA = SHEET_DATA.withMutations(function(data) {
         data
-          .setIn(['entities', 'sections', newID], Immutable.fromJS({
+          .setIn(['sections', newID], Immutable.fromJS({
             id: newID, name: "section", rows: []}))
-          .updateIn(['result', 'sections'], function(list) {
+          .updateIn(['main', 'sections'], function(list) {
             if (index === -1) {
               return list.push(newID);
             } else {
               return list.splice(index+1, 0, newID);
             }
-          })
+          });
       });
       this.addRow(newID);
     },
@@ -83,7 +84,7 @@
  */
     deleteChord: function(chordID, barID) {
       var wasDeleted = _deleteEntityAndUpdateParent("chords", "bars", chordID, barID);
-      if(wasDeleted && SHEET_DATA.getIn(['entities', 'bars', barID, 'chords']).size === 0) {
+      if(wasDeleted && SHEET_DATA.getIn(['bars', barID, 'chords']).size === 0) {
         var rowID = _getParentID(barID, "bars", "rows");
         this.deleteBar(barID, rowID);
       }
@@ -91,7 +92,7 @@
 
     deleteBar: function(barID, rowID) {
       var wasDeleted = _deleteEntityAndUpdateParent('bars', 'rows', barID, rowID);
-      if(wasDeleted && SHEET_DATA.getIn(['entities', 'rows', rowID, 'bars']).size === 0) {
+      if(wasDeleted && SHEET_DATA.getIn(['rows', rowID, 'bars']).size === 0) {
         var sectionID = _getParentID(rowID, "rows", "sections");
         var d = this.deleteRow(rowID, sectionID);
       }
@@ -99,19 +100,19 @@
 
     deleteRow: function(rowID, sectionID) {
       var wasDeleted = _deleteEntityAndUpdateParent('rows', 'sections', rowID, sectionID);
-      if(wasDeleted && SHEET_DATA.getIn(['entities', 'sections', sectionID, 'rows']).size === 0) {
+      if (wasDeleted && SHEET_DATA.getIn(['sections', sectionID, 'rows']).size === 0) {
         this.deleteSection(sectionID);
       }
     },
 
     deleteSection: function(sectionID) {
-      if (!SHEET_DATA.getIn(['entities', 'sections', sectionID])) {
+      if (!SHEET_DATA.getIn(['sections', sectionID])) {
         return;
       }
       SHEET_DATA = SHEET_DATA.withMutations(function(data) {
         data
-          .deleteIn(['entities', 'sections', sectionID])
-          .updateIn(['result', 'sections'], function(list) {
+          .deleteIn(['sections', sectionID])
+          .updateIn(['main', 'sections'], function(list) {
             return list.splice(list.indexOf(sectionID), 1);
           });
       })
@@ -122,15 +123,14 @@
   module.exports = SheetStoreDataManager;
 
 /*
- * =========
- *   private
- * =========
+ * =======
+ * private
+ * =======
  */
   function _insertNewChildInParentAtIndex(childName, parentName, parentID, index) {
     // Lazy init Children array
-    if (!SHEET_DATA.getIn(['entities', parentName, parentID, childName])) {
-      SHEET_DATA = SHEET_DATA.setIn(['entities', parentName, parentID, childName],
-                                    Immutable.List());
+    if (!SHEET_DATA.getIn([parentName, parentID, childName])) {
+      SHEET_DATA = SHEET_DATA.setIn([parentName, parentID, childName], Immutable.List());
     }
 
     // Insert entity as pleased
@@ -138,9 +138,9 @@
     SHEET_DATA = SHEET_DATA.withMutations(function(data) {
       data
         // insert new entity
-        .setIn(['entities', childName, newID], Immutable.Map({id: newID}))
+        .setIn([childName, newID], Immutable.Map({id: newID}))
         // Give parent a ref to that entity at index
-        .updateIn(['entities', parentName, parentID, childName], function(childRefs) {
+        .updateIn([parentName, parentID, childName], function(childRefs) {
           if (index) {
             return childRefs.splice(index, 0, newID);
           } else {
@@ -152,20 +152,19 @@
   }
 
   function _getIndexOfChildInParent(childName, parentName, childID, parentID) {
-    if (SHEET_DATA.getIn(['entities', parentName, parentID, childName])) {
-      return SHEET_DATA.getIn(['entities', parentName, parentID, childName]).indexOf(childID);
+    if (SHEET_DATA.getIn([parentName, parentID, childName])) {
+      return SHEET_DATA.getIn([parentName, parentID, childName]).indexOf(childID);
     }
   }
 
   function _deleteEntityAndUpdateParent(entityName, parentName, entityID, parentID) {
-    if (!SHEET_DATA.getIn(['entities', parentName, parentID, entityName]) ||
-        SHEET_DATA.getIn(['entities', parentName, parentID, entityName]).
-          indexOf(entityID) === -1) {
+    var childrenRefsInParent = SHEET_DATA.getIn([parentName, parentID, entityName]);
+    if (!childrenRefsInParent || childrenRefsInParent.indexOf(entityID) === -1) {
       return false;
     }
 
-    SHEET_DATA = SHEET_DATA.deleteIn(['entities', entityName, entityID]);
-    SHEET_DATA = SHEET_DATA.updateIn(['entities', parentName, parentID, entityName],
+    SHEET_DATA = SHEET_DATA.deleteIn([entityName, entityID]);
+    SHEET_DATA = SHEET_DATA.updateIn([parentName, parentID, entityName],
                                      function(list) {
       return list.splice(list.indexOf(entityID), 1);
     });
@@ -174,7 +173,7 @@
 
   function _getParentID(childID, childName, parentName) {
     var parentID;
-    var found = SHEET_DATA.getIn(['entities', parentName]).some(function(parent) {
+    var found = SHEET_DATA.getIn([parentName]).some(function(parent) {
       parentID = parent.get('id');
       return parent.get(childName).indexOf(childID) !== -1
     });
