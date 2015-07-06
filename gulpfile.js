@@ -28,7 +28,7 @@ gulp.task('server', function() {
 gulp.task('watchify', function() {
   var browserifyOpts = {
     entries: './app/app.js',
-    transform: ['reactify'],
+    transform: ['reactify', 'browserify-shim'],
     debug: true,
     cache: {}, packageCache: {}, fullPaths: true // Watchify
   };
