@@ -1,8 +1,8 @@
 (function() {
 
-  // TODO Maybe put validators in own handle error method, and then redirect or
-  // respond based on the error. That method could be put at the end of the
-  // promise chain
+  // TODO Maybe put validateMandatoryFields(req, field) in own handle error
+  // method, and then redirect or respond based on the error. That method could
+  // be put at the end of the promise chain
   var Sheet = require('../models/sheet');
 
   module.exports = {
@@ -11,7 +11,7 @@
     index: function(req, res) {
       // Double check the user (if id exists but invalid, the error block
       // below will run
-      if (!req.user) return res.sendStatus(407);
+      if (!req.user) return res.sendStatus(422);
       if (!req.user._id) return res.sendStatus(401);
 
       // Find sheets and render sheets templte
@@ -27,8 +27,7 @@
     // GET#show
     show: function(req, res) {
       // Double check again (this is just for peace of mind)
-      // if (!req.user) return res.sendStatus(407);
-      if (!req.user) return res.sendStatus(407);
+      if (!req.user) return res.sendStatus(422);
       if (!req.user._id) return res.sendStatus(401);
       if (!req.params) return res.redirect('/sheets');
 
@@ -58,6 +57,20 @@
         res.redirect(url);
       }, function(err) { res.redirect('/home'); });
     },
+
+    // PUT#update
+    // TODO get rid of those 24bit hex regexes!
+    // mongoose query promises wont hand me error callbacks for some reason.. :(
+    update: function(req, res) {
+      if(!req.params || !req.body || !req.body.data || !req.user) return res.sendStatus(422);
+      if(!/^([a-fA-F0-9]){24}$/.test(req.params.id)) return res.sendStatus(404);
+      if(!/^([a-fA-F0-9]){24}$/.test(req.user._id)) return res.sendStatus(401);
+      return Sheet.update({_id: req.params.id, authorID: req.user._id},
+                          {$set: {data: req.body.data}}).exec()
+      .then(function(db_response) {
+        db_response.nModified === 0 ? res.sendStatus(403) : res.status(200).send('foo');
+      });
+    }
 
 
   };

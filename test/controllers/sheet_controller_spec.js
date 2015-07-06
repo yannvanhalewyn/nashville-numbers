@@ -23,8 +23,10 @@ describe('SHEETCONTROLLER', function() {
     this.res = {
       render: sinon.spy(),
       sendStatus: sinon.spy(),
-      redirect: sinon.spy()
+      redirect: sinon.spy(),
+      send: sinon.spy()
     }
+    this.res.status = sinon.stub().returns(this.res);
     this.req = {}
   });
 
@@ -77,9 +79,9 @@ describe('SHEETCONTROLLER', function() {
     });
 
     context("when user object is inexistant", function() {
-      it("it sends a 407", function() {
+      it("it sends a 422", function() {
         Controller.index({}, this.res)
-        expect(this.res.sendStatus).to.have.been.calledWith(407);
+        expect(this.res.sendStatus).to.have.been.calledWith(422);
       });
     });
 
@@ -108,9 +110,9 @@ describe('SHEETCONTROLLER', function() {
    */
   describe('GET#show', function() {
     context("when user property is inexistant", function() {
-      it("it sends a 407", function() {
+      it("it sends a 422", function() {
         Controller.show({}, this.res)
-        expect(this.res.sendStatus).to.have.been.calledWith(407);
+        expect(this.res.sendStatus).to.have.been.calledWith(422);
       });
     });
 
@@ -330,37 +332,127 @@ describe('SHEETCONTROLLER', function() {
    * ==========
    */
   describe('PUT#update', function() {
+    beforeEach(function() {
+      return _createUser("theuser")
+      .then(_createSheet);
+    });
+
     context("with valid user logged in", function() {
       context("with valid sheetID", function() {
-        it("updates the sheet", function() {
+        beforeEach(function() {
+          var sheetID = ENTITIES.sheets['theuser'][0]._id;
+          return Controller.update({params: {id: sheetID},
+                                   user: ENTITIES.users["theuser"],
+                                   body: {data: "newData"}}, this.res)
+        });
+
+        it("sends a 200", function() {
+          expect(this.res.status).to.have.been.calledWith(200);
+        });
+
+        // Not sure if nececessary TODO come back after working on front-end
+        it.skip("sends the new data back over", function() {
+          return Sheet.findOne({authorID: ENTITIES.users["theuser"]._id})
+          .then(function(sheet) {
+            expect(this.res.send).to.have.been.calledWith(sheet.data);
+          }.bind(this));
+        });
+
+        it("updates the sheet in the DB", function() {
+          return Sheet.findOne({authorID: ENTITIES.users["theuser"]._id})
+          .then(function(sheet) {
+            expect(sheet.data).to.eql("newData");
+          });
+        });
+
+        it.skip("updates the title and artist", function() {
         });
       }); // End of context 'with valid sheetID'
 
       context("with invalid sheet id", function() {
-        it("sends a 404", function() {
+        it("sends a 404", function(done) {
+          Controller.update({params: {id: "invalid"}, user: ENTITIES.users["theuser"],
+                                     body: {data: "newData"} }, this.res);
+          expect(this.res.sendStatus).to.have.been.calledWith(404);
+          done();
         });
       }); // End of context 'with invalid sheet id'
 
-      context("with missing sheet id", function() {
-        it("400 a 403", function() {
+      context("with mising params object", function() {
+        it("sends a 422", function(done) {
+          Controller.update({user: ENTITIES.users["theuser"],
+                                   body: {data: "newData"}}, this.res);
+          expect(this.res.sendStatus).to.have.been.calledWith(422);
+          done();
         });
       }); // End of context 'with missing sheet id'
 
-      context("with invalid data", function() {
+      context("with missing params.id", function() {
+        it("sends a 404", function(done) {
+          Controller.update({ params: {}, user: ENTITIES.users["theuser"],
+                                   body: {data: "newData"}}, this.res);
+          expect(this.res.sendStatus).to.have.been.calledWith(404);
+          done();
+        });
+      }); // End of context 'with missing sheet id'
+
+      context("with missing body", function() {
+        it("sends a 422", function(done) {
+          Controller.update({ params: {id: ENTITIES.sheets["theuser"][0]._id},
+                                   user: ENTITIES.users["theuser"]}, this.res);
+          expect(this.res.sendStatus).to.have.been.calledWith(422);
+          done();
+        });
+      }); // End of context 'with missing data'
+
+      context("with missing data", function() {
+        it("sends a 422", function() {
+          Controller.update({ params: {id: ENTITIES.sheets["theuser"][0]._id},
+                                   body: {},
+                                   user: ENTITIES.users["theuser"]}, this.res);
+          expect(this.res.sendStatus).to.have.been.calledWith(422);
+        });
+      }); // End of context 'with missing data'
+
+      context.skip("with invalid data", function() {
         it("sends a 406", function() {
         });
       }); // End of context 'with invalid data'
     }); // End of context 'with valid user logged in'
 
     context("with no user logged in", function() {
-      it("sends a 407", function() {
+      it("sends a 422", function(done) {
+        Controller.update({ params: {id: ENTITIES.sheets["theuser"][0]._id},
+                          body: {data: "kk"}}, this.res);
+        expect(this.res.sendStatus).to.have.been.calledWith(422);
+        done();
       });
     }); // End of context 'with no user logged in'
 
     context("with invalid user logged in", function() {
-      it("sends a 401", function() {
+      it("sends a 401", function(done) {
+        Controller.update({ params: {id: ENTITIES.sheets["theuser"][0]._id},
+                          user: "invalid",
+                          body: {data: "someData"}}, this.res);
+        expect(this.res.sendStatus).to.have.been.calledWith(401);
+        done();
       });
     }); // End of context 'with invalid user logged in'
+
+    context("when logged in user isn't the author of the sheet", function() {
+      it("sends a 403", function(done) {
+        return _createUser()
+        .then(function(otherUser) {
+          return Controller.update({ params: {id: ENTITIES.sheets["theuser"][0]._id},
+                            user: otherUser,
+                            body: {data: "someData"}}, this.res)
+          .then(function() {
+            expect(this.res.sendStatus).to.have.been.calledWith(403);
+            done();
+          }.bind(this))
+        }.bind(this));
+      });
+    }); // End of context 'when logged in user isn't the author of the sheet'
   }); // End of describe 'PUT#update'
 });
 
