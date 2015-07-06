@@ -333,6 +333,7 @@ describe('SHEETCONTROLLER', function() {
    */
   describe('PUT#update', function() {
     beforeEach(function() {
+      this.dummyUpdatedata = {main:{title:"newTitle",artist:"newArtist"}};
       return _createUser("theuser")
       .then(_createSheet);
     });
@@ -341,9 +342,11 @@ describe('SHEETCONTROLLER', function() {
       context("with valid sheetID", function() {
         beforeEach(function() {
           var sheetID = ENTITIES.sheets['theuser'][0]._id;
-          return Controller.update({params: {id: sheetID},
-                                   user: ENTITIES.users["theuser"],
-                                   body: {data: "newData"}}, this.res)
+          return Controller.update({
+            params: {id: sheetID},
+            user: ENTITIES.users["theuser"],
+            body: this.dummyUpdatedata
+          }, this.res);
         });
 
         it("sends a 200", function() {
@@ -358,11 +361,19 @@ describe('SHEETCONTROLLER', function() {
           }.bind(this));
         });
 
-        it("updates the sheet in the DB", function() {
+        it("updates the sheet.data in the DB", function() {
           return Sheet.findOne({authorID: ENTITIES.users["theuser"]._id})
           .then(function(sheet) {
-            expect(sheet.data).to.eql("newData");
-          });
+            expect(sheet.data).to.eql(JSON.stringify(this.dummyUpdatedata));
+          }.bind(this));
+        });
+
+        it("updates the sheets title and artist in the DB", function() {
+          return Sheet.findOne({authorID: ENTITIES.users["theuser"]._id})
+          .then(function(sheet) {
+            expect(sheet.title).to.eql("newTitle");
+            expect(sheet.artist).to.eql("newArtist");
+          }.bind(this));
         });
 
         it.skip("updates the title and artist", function() {
@@ -371,8 +382,10 @@ describe('SHEETCONTROLLER', function() {
 
       context("with invalid sheet id", function() {
         it("sends a 404", function(done) {
-          Controller.update({params: {id: "invalid"}, user: ENTITIES.users["theuser"],
-                                     body: {data: "newData"} }, this.res);
+          Controller.update({
+            params: {id: "invalid"}, user: ENTITIES.users["theuser"],
+            body: {data: "newData"}
+          }, this.res);
           expect(this.res.sendStatus).to.have.been.calledWith(404);
           done();
         });
@@ -380,8 +393,9 @@ describe('SHEETCONTROLLER', function() {
 
       context("with mising params object", function() {
         it("sends a 422", function(done) {
-          Controller.update({user: ENTITIES.users["theuser"],
-                                   body: {data: "newData"}}, this.res);
+          Controller.update({
+            user: ENTITIES.users["theuser"], body: this.dummyUpdatedata
+          }, this.res);
           expect(this.res.sendStatus).to.have.been.calledWith(422);
           done();
         });
@@ -389,8 +403,9 @@ describe('SHEETCONTROLLER', function() {
 
       context("with missing params.id", function() {
         it("sends a 404", function(done) {
-          Controller.update({ params: {}, user: ENTITIES.users["theuser"],
-                                   body: {data: "newData"}}, this.res);
+          Controller.update({
+            params: {}, user: ENTITIES.users["theuser"], body: {data: "newData"}
+          }, this.res);
           expect(this.res.sendStatus).to.have.been.calledWith(404);
           done();
         });
@@ -398,19 +413,22 @@ describe('SHEETCONTROLLER', function() {
 
       context("with missing body", function() {
         it("sends a 422", function(done) {
-          Controller.update({ params: {id: ENTITIES.sheets["theuser"][0]._id},
-                                   user: ENTITIES.users["theuser"]}, this.res);
+          Controller.update({
+            params: {id: ENTITIES.sheets["theuser"][0]._id},
+            user: ENTITIES.users["theuser"]
+          }, this.res);
           expect(this.res.sendStatus).to.have.been.calledWith(422);
           done();
         });
       }); // End of context 'with missing data'
 
-      context("with missing data", function() {
-        it("sends a 422", function() {
-          Controller.update({ params: {id: ENTITIES.sheets["theuser"][0]._id},
-                                   body: {},
-                                   user: ENTITIES.users["theuser"]}, this.res);
-          expect(this.res.sendStatus).to.have.been.calledWith(422);
+      context("with empty body", function() {
+        it("sends a 422 jskaj", function() {
+          Controller.update({
+            params: {id: ENTITIES.sheets["theuser"][0]._id},
+            body: {}, user: ENTITIES.users["theuser"]
+          }, this.res);
+          expect(this.res.sendStatus).to.have.been.calledWith(406);
         });
       }); // End of context 'with missing data'
 
@@ -422,8 +440,9 @@ describe('SHEETCONTROLLER', function() {
 
     context("with no user logged in", function() {
       it("sends a 422", function(done) {
-        Controller.update({ params: {id: ENTITIES.sheets["theuser"][0]._id},
-                          body: {data: "kk"}}, this.res);
+        Controller.update({
+          params: {id: ENTITIES.sheets["theuser"][0]._id},
+          body: {data: "kk"}}, this.res);
         expect(this.res.sendStatus).to.have.been.calledWith(422);
         done();
       });
@@ -431,9 +450,10 @@ describe('SHEETCONTROLLER', function() {
 
     context("with invalid user logged in", function() {
       it("sends a 401", function(done) {
-        Controller.update({ params: {id: ENTITIES.sheets["theuser"][0]._id},
-                          user: "invalid",
-                          body: {data: "someData"}}, this.res);
+        Controller.update({
+          params: {id: ENTITIES.sheets["theuser"][0]._id},
+          user: "invalid", body: {data: "someData"}
+        }, this.res);
         expect(this.res.sendStatus).to.have.been.calledWith(401);
         done();
       });
@@ -441,11 +461,12 @@ describe('SHEETCONTROLLER', function() {
 
     context("when logged in user isn't the author of the sheet", function() {
       it("sends a 403", function(done) {
-        return _createUser()
+        return _createUser("otheruser")
         .then(function(otherUser) {
-          return Controller.update({ params: {id: ENTITIES.sheets["theuser"][0]._id},
-                            user: otherUser,
-                            body: {data: "someData"}}, this.res)
+          return Controller.update({
+            params: {id: ENTITIES.sheets["theuser"][0]._id},
+            user: otherUser, body: this.dummyUpdatedata
+          }, this.res)
           .then(function() {
             expect(this.res.sendStatus).to.have.been.calledWith(403);
             done();
