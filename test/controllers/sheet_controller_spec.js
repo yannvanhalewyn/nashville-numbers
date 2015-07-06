@@ -376,6 +376,19 @@ describe('SHEETCONTROLLER', function() {
           }.bind(this));
         });
 
+        it("saving twice doesn't send a 403", function() {
+          var sheetID = ENTITIES.sheets['theuser'][0]._id;
+          return Controller.update({
+            params: {id: sheetID},
+            user: ENTITIES.users["theuser"],
+            body: this.dummyUpdatedata
+          }, this.res)
+          .then(function() {
+            expect(this.res.status).to.have.been.calledWith(200);
+            expect(this.res.sendStatus).not.to.have.been.calledWith(403);
+          }.bind(this))
+        });
+
         it.skip("updates the title and artist", function() {
         });
       }); // End of context 'with valid sheetID'

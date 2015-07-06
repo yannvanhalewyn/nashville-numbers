@@ -78,7 +78,7 @@
         }}
       ).exec()
       .then(function(db_response) {
-        db_response.nModified === 0 ? res.sendStatus(403) : res.status(200).send('foo');
+        db_response.n === 0 ? res.sendStatus(403) : res.status(200).send('foo');
       });
     },
 

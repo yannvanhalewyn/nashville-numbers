@@ -13,6 +13,7 @@
       case SheetConstants.SAVE:
         SheetStore.saveSheet();
         break;
+
       default:
         console.error("Unknow task " + action.actionType + " in NetworkDispatcher.");
         break;
