@@ -250,7 +250,7 @@ describe('SHEETCONTROLLER', function() {
               }, this.res);
             });
 
-            it("redirects to /sheetsss", function() {
+            it("redirects to /sheets", function() {
               expect(this.res.redirect).to.have.been.called;
             });
           });
@@ -337,7 +337,7 @@ describe('SHEETCONTROLLER', function() {
       .then(_createSheet);
     });
 
-    context("with valid user logged in", function() {
+    context("with correct user logged in", function() {
       context("with valid sheetID", function() {
         beforeEach(function() {
           var sheetID = ENTITIES.sheets['theuser'][0]._id;
@@ -454,6 +454,124 @@ describe('SHEETCONTROLLER', function() {
       });
     }); // End of context 'when logged in user isn't the author of the sheet'
   }); // End of describe 'PUT#update'
+
+  /*
+   * =============
+   * DELET#destroy
+   * =============
+   */
+  describe('DELETE#destroy', function() {
+    beforeEach(function() {
+      return _createUser("theuser")
+      .then(_createSheet);
+    });
+
+    context("when correct user is logged in", function() {
+      context("and existing sheetID is given", function() {
+        beforeEach(function() {
+          var sheetID = ENTITIES.sheets['theuser'][0]._id;
+          return Controller.destroy({params: {id: sheetID},
+                                    user: ENTITIES.users["theuser"]}, this.res
+          );
+        });
+        it("deletes the sheet document", function() {
+          return Sheet.count()
+          .then(function(count) {
+            expect(count).to.eql(0);
+          })
+        });
+
+        it("redirects to /sheets", function() {
+          expect(this.res.redirect).to.have.been.calledWith('/sheets');
+        });
+      }); // End of context 'and existing sheetID is given'
+
+      context("and unexisting sheetID is given", function() {
+        beforeEach(function() {
+          return Controller.destroy({params: {id: "1782793028abca7892871acb"},
+                                    user: ENTITIES.users["theuser"]}, this.res
+          );
+        });
+        it("sends a 404", function() {
+          expect(this.res.sendStatus).to.have.been.calledWith(404);
+        });
+      }); // End of context 'and unexisting sheetID is given'
+
+      context("and invalid sheetID is given", function() {
+        beforeEach(function() {
+          return Controller.destroy({params: {id: "invalid"},
+                                    user: ENTITIES.users["theuser"]}, this.res
+          );
+        });
+        it("sends a 401", function() {
+          expect(this.res.sendStatus).to.have.been.calledWith(401);
+        });
+      }); // End of context 'and invalid sheetID is given'
+
+      context("and no sheetID is passed in", function() {
+        beforeEach(function() {
+          return Controller.destroy({params: {},
+                                    user: ENTITIES.users["theuser"]}, this.res
+          );
+        });
+        it("sends a 404", function() {
+          expect(this.res.sendStatus).to.have.been.calledWith(404);
+        });
+      }); // End of context 'and no sheetID is passed in'
+
+      context("and no params obj is passed in", function() {
+        beforeEach(function() {
+          return Controller.destroy({user: ENTITIES.users["theuser"]}, this.res
+          );
+        });
+        it("sends a 422", function() {
+          expect(this.res.sendStatus).to.have.been.calledWith(422);
+        });
+      }); // End of context 'and no params obj is passed in'
+    }); // End of context 'when correct user is logged in'
+
+    // NOTE Should I test if the document doesn't get deleted every time?
+    context("when logged in user isn't the author", function() {
+      beforeEach(function() {
+        return _createUser("otheruser")
+        .then(function(otherUser) {
+          return Controller.destroy({params: {id: ENTITIES.sheets["theuser"][0]._id},
+                             user: otherUser}, this.res);
+        }.bind(this));
+      });
+      it("sends a 404aaa", function() {
+        expect(this.res.sendStatus).to.have.been.calledWith(404);
+      });
+
+      it("doesn't delete the document from the db", function() {
+        Sheet.count()
+        .then(function(count) {
+          expect(count).to.eql(1);
+        });
+      });
+    }); // End of context 'when logged in user isn't the author'
+
+    context("when invalid user is passed in", function() {
+      beforeEach(function() {
+        return Controller.destroy({params: {id: "1782793028abca7892871acb"},
+                                  user: "invalid"}, this.res
+        );
+      });
+      it("sends a 404", function() {
+        expect(this.res.sendStatus).to.have.been.calledWith(404);
+      });
+    }); // End of context 'when invalid user is passed in'
+
+    context("when no user object is passed on", function() {
+      beforeEach(function() {
+        return Controller.destroy({params: {id: "1782793028abca7892871acb"}}, this.res);
+      });
+      it("sends a 422", function() {
+        expect(this.res.sendStatus).to.have.been.calledWith(422);
+      });
+    }); // End of context 'when no user object is passed on'
+
+  }); // End of describe 'DELETE#destroy'
 });
 
 // create a user and store it under ENTITIES.users[`name`]

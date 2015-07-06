@@ -70,6 +70,18 @@
       .then(function(db_response) {
         db_response.nModified === 0 ? res.sendStatus(403) : res.status(200).send('foo');
       });
+    },
+
+    // DELETE#destroy
+    destroy: function(req, res) {
+      if(!req.params || !req.user) return res.sendStatus(422);
+      return Sheet.remove({_id: req.params.id, authorID: req.user._id}).exec()
+      .then(function(db_response) {
+        if (db_response.result.n === 0) return res.sendStatus(404);
+        return res.redirect('/sheets');
+      }, function(err) {
+        return res.sendStatus(401);
+      });
     }
 
 
