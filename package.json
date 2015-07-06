@@ -45,6 +45,7 @@
     "watchify": "^3.2.3"
   },
   "browserify-shim": {
-    "react": "global:React"
+    "react": "global:React",
+    "lodash": "global:_"
   }
 }
