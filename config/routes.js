@@ -24,6 +24,8 @@
  * USER SESSIONS
  * =============
  */
+    // Good route name would be /users/me to usercontroller.me for the
+    // usersettings
     app.route('/logout').get(UserSession.logout);
     app.route('/auth/facebook').get(UserSession.newFacebookSession);
     app.route('/auth/facebook/callback').get(UserSession.oauthCallback('facebook'));

@@ -24,6 +24,12 @@ CONTROLLERS
 - Do I need to check for req.user in controller (sheet for example) methods?
   Middleware is redirecting if not logged in, but if I don't do any checks in
   the controller, the controller feels naked and exposed.
+- When a user goes to a public /sheet/:id of another user. Should I render
+  another view, or the same view, but with a flag saying "read-only", as in
+  have the display logic on the front-end
+- Where to redirect to when. Ex: When sheetID is not found, redirect to /sheets,
+  when sheetID is private and your not the owner, redirect to explore?
+  when do I return a 403? I don't want the user to see that stuff.
 
 TESTING
 -------
