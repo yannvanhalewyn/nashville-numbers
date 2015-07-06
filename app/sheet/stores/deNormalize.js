@@ -39,32 +39,31 @@
   */
 
   module.exports = function(data) {
-    var result = data.get('result').toJS();
-    var entities = data.get('entities').toJS();
+    var input = data.toJS();
     var ret = {
-      title: result.title,
-      artist: result.artist,
+      title: input.main.title,
+      artist: input.main.artist,
       sections: []
     };
 
     // Loop over all sections
-    result.sections.forEach(function(sectionID, iii) {
-      var section = entities.sections[sectionID];
+    input.main.sections.forEach(function(sectionID, iii) {
+      var section = input.sections[sectionID];
       ret.sections[iii] = section;
 
       // Loop over all rows
       section.rows.forEach(function(rowID, jjj) {
-        var row = entities.rows[rowID];
+        var row = input.rows[rowID];
         ret.sections[iii].rows[jjj] = row;
 
         // Loop over all bars
         row.bars.forEach(function(barID, kkk) {
-          var bar = entities.bars[barID];
+          var bar = input.bars[barID];
           ret.sections[iii].rows[jjj].bars[kkk] = bar;
 
           // Loop over all chords
           bar.chords.forEach(function(chordID, lll) {
-            var chord = entities.chords[chordID];
+            var chord = input.chords[chordID];
             ret.sections[iii].rows[jjj].bars[kkk].chords[lll] = chord;
           });
         });
