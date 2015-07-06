@@ -47,7 +47,9 @@
  */
     app.route('/sheets').get(ensureAuth, Sheets.index)
                         .post(Sheets.create);
-    app.route('/sheets/:id').get(ensureAuth, Sheets.show);
+    app.route('/sheets/:id').get(ensureAuth, Sheets.show)
+                            .put(ensureAuth, Sheets.update)
+                            .delete(ensureAuth, Sheets.destroy)
   };
 
   module.exports = routes;
