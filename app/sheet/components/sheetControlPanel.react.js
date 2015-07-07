@@ -16,12 +16,17 @@
     render: function() {
       return (
         <div className="sheet-control-panel">
-          <form action="/sheets/559c1e68218c0216350b84e0" method="post" ref="deleteForm">
+          <form action="/sheets/559c285fbdc11328483e09ae" method="post" ref="deleteForm">
             <input type="hidden" value="DELETE" name="_method"/>
           </form>
-          <Modal />
+          <Modal
+            title="You're about to delete this sheet."
+            body="Are you sure? This cannot be undone."
+            ref="deleteConfirmationModal"
+            onConfirm={this._handleDelete}
+          />
+          <span className="SC-icon fa fa-trash-o" onClick={this._deleteClicked}></span>
 
-          <span className="SC-icon fa fa-trash-o" onClick={this._handleDelete}></span>
           <span className="SC-icon fa fa-star-o" id="SC-fav-icon"></span>
           <SheetControlEditActions />
           <span className="fa fa-expand" id="play-mode-toggle"></span>
@@ -34,7 +39,11 @@
       NetworkActions.save();
     },
 
-    _handleDelete: function(e) {
+    _deleteClicked: function() {
+      this.refs.deleteConfirmationModal.slideOut();
+    },
+
+    _handleDelete: function() {
       this.refs.deleteForm.getDOMNode().submit();
     }
 
