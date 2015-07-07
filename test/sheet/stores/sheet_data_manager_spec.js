@@ -13,14 +13,27 @@ describe('SheetStoreDataManager', function() {
 
     it('stores the data', function() {
       DataManager.setData({foo: "bar"});
-      var res = DataManager.getData();
-      expect(res.size).to.eql(1);
-      expect(res.get('foo')).to.eql("bar");
+      expect(data().foo).to.eql("bar");
     });
 
-    it.skip('creates an empty section/row/bar/chord if missing', function() {
-      DataManager.setData({main: {title: "theTitle", artist: "theArtist"}})
-    });
+    context("when no sections exist in the sheet", function() {
+      beforeEach(function() {
+       DataManager.setData({main: {title: "title"}});
+      });
+
+      it("adds a brand new section", function() {
+        expect(_.size(_.keys(data().sections))).to.eql(1);
+      });
+
+      it("adds a brand new row", function() {
+        expect(_.size(_.keys(data().rows))).to.eql(1);
+      });
+
+      it("adds DEFAULT_NUM brand new bars and chords", function() {
+        expect(_.size(_.keys(data().bars))).to.eql(4);
+        expect(_.size(_.keys(data().chords))).to.eql(4);
+      });
+    }); // End of context 'when no sections exist in the sheet'
   });
 
   describe('managing data', function() {
@@ -309,25 +322,6 @@ describe('SheetStoreDataManager', function() {
             .to.not.be.undefined;
         });
 
-        context("when no sections exist in the sheet", function() {
-          beforeEach(function() {
-            DataManager.setData({main: {title: "title"}});
-            DataManager.addSection();
-          });
-
-          it("adds a brand new section", function() {
-            expect(_.size(_.keys(data().sections))).to.eql(1);
-          });
-
-          it("adds a brand new row", function() {
-            expect(_.size(_.keys(data().rows))).to.eql(1);
-          });
-
-          it("adds DEFAULT_NUM brand new bars and chords", function() {
-            expect(_.size(_.keys(data().bars))).to.eql(4);
-            expect(_.size(_.keys(data().chords))).to.eql(4);
-          });
-        }); // End of context 'when no sections exist in the sheet'
       });
 
       context('when sectionID is given', function() {

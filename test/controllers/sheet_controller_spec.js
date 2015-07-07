@@ -252,13 +252,6 @@ describe('SHEETCONTROLLER', function() {
           });
         });
 
-        it("sets up the sheet's data", function() {
-          return Sheet.findOne({title: "theTitle"}).exec()
-          .then(function(sheet) {
-            expect(sheet.data).to.eql('{"main":{"title":"theTitle","artist":"theArtist"}}');
-          });
-        });
-
         it("redirects to the newly created sheet", function() {
           return Sheet.findOne({title: "theTitle"}).exec()
           .then(function(sheet) {

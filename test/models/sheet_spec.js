@@ -21,6 +21,14 @@ describe('Sheet', function() {
       new Sheet({title: "Baby", artist: "Justin Bieber", authorID: USER._id}).save(done);
     });
 
+    it("Sets the correct default data", function() {
+      return new Sheet({title: "Baby", artist: "Justin Bieber", authorID: USER._id}).save()
+      .then(function(sheet) {
+        expData = JSON.stringify({main: {title: "Baby", artist: "Justin Bieber"}})
+        expect(sheet.data).to.eql(expData);
+      })
+    });
+
     it('fails when no title', function(done) {
       return Sheet.create({artist: "Justin Bieber", authorID: USER._id})
       .then(function(data) { done("Should not get called here") },

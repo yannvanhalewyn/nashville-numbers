@@ -11,6 +11,9 @@
 
     setData: function(data) {
       SHEET_DATA = Immutable.fromJS(data);
+      if (!data.sections) {
+        this.addSection();
+      }
     },
 
     getData: function() {
