@@ -3,6 +3,9 @@
   // TODO Maybe put validateMandatoryFields(req, field) in own handle error
   // method, and then redirect or respond based on the error. That method could
   // be put at the end of the promise chain
+  // NOTE Currently I feel like big violator of SRP. Every method is performing
+  // too many checks on the params. I should extract all the validation logic to
+  // middleware, and write specs for those.
   var Sheet = require('../models/sheet');
 
   module.exports = {
@@ -52,6 +55,8 @@
         title: req.body.title,
         artist: req.body.artist,
         authorID: req.user._id,
+        // Maybe this should be a mongoose pre-save hook!
+        data: JSON.stringify({main: {title: req.body.title, artist: req.body.artist}})
       }).save()
       .then(function(newSheet) {
         var url = ('/sheets/' + newSheet._id).toString();

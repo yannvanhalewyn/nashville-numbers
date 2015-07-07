@@ -219,15 +219,21 @@ describe('SHEETCONTROLLER', function() {
    * ===========
    */
   describe('POST#create', function() {
+    beforeEach(function() {
+      this.req.body = {title: "theTitle", artist: "theArtist"}
+    });
+
     context("with a valid user logged in", function() {
       beforeEach(function() {
         return _createUser("theuser")
+        .then(function(createdUser) {
+          this.req.user = createdUser;
+        }.bind(this))
       });
 
       context("when the sheet title is present", function() {
         beforeEach(function() {
-          return Controller.create({ body: {title: "theTitle", artist: "theArtist"},
-                                   user: ENTITIES.users["theuser"] }, this.res)
+          return Controller.create(this.req, this.res)
         });
 
         it('creates a new sheet in the database', function() {
@@ -246,6 +252,13 @@ describe('SHEETCONTROLLER', function() {
           });
         });
 
+        it("sets up the sheet's data", function() {
+          return Sheet.findOne({title: "theTitle"}).exec()
+          .then(function(sheet) {
+            expect(sheet.data).to.eql('{"main":{"title":"theTitle","artist":"theArtist"}}');
+          });
+        });
+
         it("redirects to the newly created sheet", function() {
           return Sheet.findOne({title: "theTitle"}).exec()
           .then(function(sheet) {
@@ -257,7 +270,8 @@ describe('SHEETCONTROLLER', function() {
 
       context("when sheet title is invalid", function() {
         it("sends a 400", function() {
-          Controller.create({body: {title: ""}, user: ENTITIES.users["theuser"]}, this.res)
+          this.req.body.title = "";
+          Controller.create(this.req, this.res)
           expect(this.res.sendStatus).to.have.been.calledWith(400);
         });
       });
@@ -265,14 +279,15 @@ describe('SHEETCONTROLLER', function() {
 
     context("when not logged in", function() {
       it("sends a 403", function() {
-        Controller.create({body: {title: "the title"}}, this.res)
+        Controller.create(this.req, this.res)
         expect(this.res.sendStatus).to.have.been.calledWith(403);
       });
     });
 
     context("when user invalid", function() {
       it("redirects to /home", function() {
-        return Controller.create({body: {title: "the title"}, user: "invalid"}, this.res)
+        this.req.user = "invalid";
+        return Controller.create(this.req, this.res)
         .then(function() {
           expect(this.res.redirect).to.have.been.calledWith('/home');
         }.bind(this));
