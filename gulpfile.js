@@ -18,7 +18,7 @@ gulp.task('server', function() {
   nodemon({
     script: 'server.js',
     ext: 'js handlebars',
-    ignore: ['gulpfile.js', 'test/'],
+    ignore: ['gulpfile.js', 'test/', 'app/', 'public/'],
     env: { 'NODE_ENV': 'development' }
   });
 });

@@ -8,6 +8,9 @@ TODO Chord spacing (should be straight forward)
 TODO Deleting bar should select the previous one
   -- Maybe add a prop for focus
 TODO Add undo stack. Is pretty simple -> command pattern, that book will pay off!
+TODO BUG: When entered a chord like ('h'), the box shadow dissapears but no
+     chord appears. Thats because it thinks it's content is full, while it's a bad
+     chord
 
 Before deployment
 -----------------
