@@ -59,6 +59,7 @@ gulp.task('css:livereload', function() {
 gulp.task('sass', function() {
   gulp.src('app/scss/**/*.scss')
     .pipe(sass())
+    .on('error', console.error)
     .pipe(gulp.dest('public/css/'));
 });
 
