@@ -27,6 +27,7 @@
 
   SheetSchema.pre('save', function(next) {
     this.updated_at = Date.now();
+    this.data = JSON.stringify({main: {title: this.title, artist: this.artist}})
     next();
   });
 
