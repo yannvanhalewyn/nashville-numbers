@@ -24,7 +24,7 @@ describe('SHEETCONTROLLER', function() {
       render: sinon.spy(),
       sendStatus: sinon.spy(),
       redirect: sinon.spy(),
-      send: sinon.spy()
+      send: sinon.spy(),
     }
     this.res.status = sinon.stub().returns(this.res);
     this.req = {}
@@ -79,7 +79,7 @@ describe('SHEETCONTROLLER', function() {
     });
 
     context("when user object is inexistant", function() {
-      it("it sends a 422", function() {
+      it("it sends a 422 (0)", function() {
         Controller.index({}, this.res)
         expect(this.res.sendStatus).to.have.been.calledWith(422);
       });
@@ -110,7 +110,7 @@ describe('SHEETCONTROLLER', function() {
    */
   describe('GET#show', function() {
     context("when user property is inexistant", function() {
-      it("it sends a 422", function() {
+      it("it sends a 422 (1)", function() {
         Controller.show({}, this.res)
         expect(this.res.sendStatus).to.have.been.calledWith(422);
       });
@@ -333,20 +333,21 @@ describe('SHEETCONTROLLER', function() {
    */
   describe('PUT#update', function() {
     beforeEach(function() {
-      this.dummyUpdatedata = {main:{title:"newTitle",artist:"newArtist"}};
       return _createUser("theuser")
-      .then(_createSheet);
+      .then(_createSheet)
+      .then(function(thesheet) {
+        this.req = {
+          body: {main:{title:"newTitle",artist:"newArtist"}},
+          user: ENTITIES.users["theuser"],
+          params: {id: thesheet._id}
+        };
+      }.bind(this));
     });
 
     context("with correct user logged in", function() {
       context("with valid sheetID", function() {
         beforeEach(function() {
-          var sheetID = ENTITIES.sheets['theuser'][0]._id;
-          return Controller.update({
-            params: {id: sheetID},
-            user: ENTITIES.users["theuser"],
-            body: this.dummyUpdatedata
-          }, this.res);
+          return Controller.update(this.req, this.res);
         });
 
         it("sends a 200", function() {
@@ -364,7 +365,7 @@ describe('SHEETCONTROLLER', function() {
         it("updates the sheet.data in the DB", function() {
           return Sheet.findOne({authorID: ENTITIES.users["theuser"]._id})
           .then(function(sheet) {
-            expect(sheet.data).to.eql(JSON.stringify(this.dummyUpdatedata));
+            expect(sheet.data).to.eql(JSON.stringify(this.req.body));
           }.bind(this));
         });
 
@@ -377,12 +378,7 @@ describe('SHEETCONTROLLER', function() {
         });
 
         it("saving twice doesn't send a 403", function() {
-          var sheetID = ENTITIES.sheets['theuser'][0]._id;
-          return Controller.update({
-            params: {id: sheetID},
-            user: ENTITIES.users["theuser"],
-            body: this.dummyUpdatedata
-          }, this.res)
+          return Controller.update(this.req, this.res)
           .then(function() {
             expect(this.res.status).to.have.been.calledWith(200);
             expect(this.res.sendStatus).not.to.have.been.calledWith(403);
@@ -394,53 +390,45 @@ describe('SHEETCONTROLLER', function() {
       }); // End of context 'with valid sheetID'
 
       context("with invalid sheet id", function() {
-        it("sends a 404", function(done) {
-          Controller.update({
-            params: {id: "invalid"}, user: ENTITIES.users["theuser"],
-            body: {data: "newData"}
-          }, this.res);
+        it("sends a 404 (1)", function(done) {
+          this.req.params.id = "invalid";
+          Controller.update(this.req, this.res);
           expect(this.res.sendStatus).to.have.been.calledWith(404);
           done();
         });
       }); // End of context 'with invalid sheet id'
 
       context("with mising params object", function() {
-        it("sends a 422", function(done) {
-          Controller.update({
-            user: ENTITIES.users["theuser"], body: this.dummyUpdatedata
-          }, this.res);
+        it("sends a 422 (2)", function(done) {
+          delete this.req.params;
+          Controller.update(this.req, this.res);
           expect(this.res.sendStatus).to.have.been.calledWith(422);
           done();
         });
       }); // End of context 'with missing sheet id'
 
       context("with missing params.id", function() {
-        it("sends a 404", function(done) {
-          Controller.update({
-            params: {}, user: ENTITIES.users["theuser"], body: {data: "newData"}
-          }, this.res);
+        it("sends a 404 (2)", function(done) {
+          delete this.req.params.id;
+          Controller.update(this.req, this.res);
           expect(this.res.sendStatus).to.have.been.calledWith(404);
           done();
         });
       }); // End of context 'with missing sheet id'
 
       context("with missing body", function() {
-        it("sends a 422", function(done) {
-          Controller.update({
-            params: {id: ENTITIES.sheets["theuser"][0]._id},
-            user: ENTITIES.users["theuser"]
-          }, this.res);
+        it("sends a 422 (3)", function(done) {
+          delete this.req.body;
+          Controller.update(this.req, this.res);
           expect(this.res.sendStatus).to.have.been.calledWith(422);
           done();
         });
       }); // End of context 'with missing data'
 
       context("with empty body", function() {
-        it("sends a 422 jskaj", function() {
-          Controller.update({
-            params: {id: ENTITIES.sheets["theuser"][0]._id},
-            body: {}, user: ENTITIES.users["theuser"]
-          }, this.res);
+        it("sends a 422 (4)", function() {
+          this.req.body = {};
+          Controller.update(this.req, this.res);
           expect(this.res.sendStatus).to.have.been.calledWith(406);
         });
       }); // End of context 'with missing data'
@@ -452,10 +440,9 @@ describe('SHEETCONTROLLER', function() {
     }); // End of context 'with valid user logged in'
 
     context("with no user logged in", function() {
-      it("sends a 422", function(done) {
-        Controller.update({
-          params: {id: ENTITIES.sheets["theuser"][0]._id},
-          body: {data: "kk"}}, this.res);
+      it("sends a 422 (5)", function(done) {
+        delete this.req.user;
+        Controller.update(this.req, this.res);
         expect(this.res.sendStatus).to.have.been.calledWith(422);
         done();
       });
@@ -463,10 +450,8 @@ describe('SHEETCONTROLLER', function() {
 
     context("with invalid user logged in", function() {
       it("sends a 401", function(done) {
-        Controller.update({
-          params: {id: ENTITIES.sheets["theuser"][0]._id},
-          user: "invalid", body: {data: "someData"}
-        }, this.res);
+        this.req.user = "invalid";
+        Controller.update(this.req, this.res);
         expect(this.res.sendStatus).to.have.been.calledWith(401);
         done();
       });
@@ -476,10 +461,8 @@ describe('SHEETCONTROLLER', function() {
       it("sends a 403", function(done) {
         return _createUser("otheruser")
         .then(function(otherUser) {
-          return Controller.update({
-            params: {id: ENTITIES.sheets["theuser"][0]._id},
-            user: otherUser, body: this.dummyUpdatedata
-          }, this.res)
+          this.req.user = otherUser;
+          return Controller.update(this.req, this.res)
           .then(function() {
             expect(this.res.sendStatus).to.have.been.calledWith(403);
             done();
@@ -497,69 +480,110 @@ describe('SHEETCONTROLLER', function() {
   describe('DELETE#destroy', function() {
     beforeEach(function() {
       return _createUser("theuser")
-      .then(_createSheet);
+      .then(_createSheet)
+      .then(function(thesheet) {
+        this.req = {
+          user: ENTITIES.users["theuser"],
+          params: {id: thesheet._id},
+          headers: {accept: "application/html"},
+          accepts: function(type) {
+            return this.headers.accept.indexOf(type) > -1;
+          }
+        };
+      }.bind(this));
     });
 
     context("when correct user is logged in", function() {
       context("and existing sheetID is given", function() {
-        beforeEach(function() {
-          var sheetID = ENTITIES.sheets['theuser'][0]._id;
-          return Controller.destroy({params: {id: sheetID},
-                                    user: ENTITIES.users["theuser"]}, this.res
-          );
-        });
-        it("deletes the sheet document", function() {
-          return Sheet.count()
-          .then(function(count) {
-            expect(count).to.eql(0);
-          })
-        });
+        context("and the request wants HTML", function() {
+          beforeEach(function() {
+            return Controller.destroy(this.req, this.res);
+          });
 
-        it("redirects to /sheets", function() {
-          expect(this.res.redirect).to.have.been.calledWith('/sheets');
-        });
+          it("deletes the sheet document (1)", function() {
+            return Sheet.count()
+            .then(function(count) {
+              expect(count).to.eql(0);
+            });
+          });
+
+          it("redirects to /sheets (1)", function() {
+            expect(this.res.redirect).to.have.been.calledWith('/sheets');
+          });
+        }); // End of context 'and the request wants HTML'
+
+        context("and the request wants JSON", function() {
+          beforeEach(function() {
+            this.req.headers.accept = "application/json";
+            // Create another sheet to test the response data
+          });
+
+          it("deletes the sheet document (2)", function() {
+            return Controller.destroy(this.req, this.res)
+            .then(function() {
+              return Sheet.count()
+              .then(function(count) {
+                expect(count).to.eql(0);
+              })
+            })
+          });
+
+          it("sends a 200 OK with the updated users sheet list", function() {
+            return _createSheet(this.req.user)
+            .then(Controller.destroy.bind(this, this.req, this.res))
+            .then(function() {
+              expect(this.res.status).to.have.been.calledWith(200);
+              // Grab the updated users sheet list and compare with response
+              return ENTITIES.users["theuser"].sheets
+              .then(function(sheets) {
+                var sentData = this.res.send.args[0][0];
+                expect(sentData.length).to.eql(1);
+                expect(sentData[0]._id).to.eql(sheets[0]._id);
+              }.bind(this))
+            }.bind(this))
+          });
+        }); // End of context 'and the request wants JSON'
+
+
       }); // End of context 'and existing sheetID is given'
 
       context("and unexisting sheetID is given", function() {
         beforeEach(function() {
-          return Controller.destroy({params: {id: "1782793028abca7892871acb"},
-                                    user: ENTITIES.users["theuser"]}, this.res
-          );
+          this.req.params.id = "01234567890123456789abcd";
+          return Controller.destroy(this.req, this.res);
         });
-        it("sends a 404", function() {
+
+        it("sends a 404 (3)", function() {
           expect(this.res.sendStatus).to.have.been.calledWith(404);
         });
       }); // End of context 'and unexisting sheetID is given'
 
       context("and invalid sheetID is given", function() {
-        beforeEach(function() {
-          return Controller.destroy({params: {id: "invalid"},
-                                    user: ENTITIES.users["theuser"]}, this.res
-          );
-        });
         it("sends a 401", function() {
-          expect(this.res.sendStatus).to.have.been.calledWith(401);
+          this.req.params.id = "invalid";
+          return Controller.destroy(this.req, this.res)
+          .then(function() {
+            expect(this.res.sendStatus).to.have.been.calledWith(401);
+          }.bind(this));
         });
       }); // End of context 'and invalid sheetID is given'
 
       context("and no sheetID is passed in", function() {
-        beforeEach(function() {
-          return Controller.destroy({params: {},
-                                    user: ENTITIES.users["theuser"]}, this.res
-          );
-        });
-        it("sends a 404", function() {
-          expect(this.res.sendStatus).to.have.been.calledWith(404);
+        it("sends a 404 (4)", function() {
+          delete this.req.params.id;
+          return Controller.destroy(this.req, this.res)
+          .then(function() {
+            expect(this.res.sendStatus).to.have.been.calledWith(404);
+          }.bind(this));
         });
       }); // End of context 'and no sheetID is passed in'
 
       context("and no params obj is passed in", function() {
-        beforeEach(function() {
-          return Controller.destroy({user: ENTITIES.users["theuser"]}, this.res
-          );
-        });
-        it("sends a 422", function() {
+        it("sends a 422 (6)", function(done) {
+          delete this.req.params;
+          Controller.destroy(this.req, this.res)
           expect(this.res.sendStatus).to.have.been.calledWith(422);
+          done();
         });
       }); // End of context 'and no params obj is passed in'
     }); // End of context 'when correct user is logged in'
@@ -569,44 +593,50 @@ describe('SHEETCONTROLLER', function() {
       beforeEach(function() {
         return _createUser("otheruser")
         .then(function(otherUser) {
-          return Controller.destroy({params: {id: ENTITIES.sheets["theuser"][0]._id},
-                             user: otherUser}, this.res);
+          this.req.user = otherUser;
+          return Controller.destroy(this.req, this.res);
         }.bind(this));
       });
-      it("sends a 404aaa", function() {
+
+      it("sends a 404 (5)", function() {
         expect(this.res.sendStatus).to.have.been.calledWith(404);
       });
 
       it("doesn't delete the document from the db", function() {
-        Sheet.count()
-        .then(function(count) {
+        Sheet.count().then(function(count) {
           expect(count).to.eql(1);
         });
       });
     }); // End of context 'when logged in user isn't the author'
 
     context("when invalid user is passed in", function() {
-      beforeEach(function() {
-        return Controller.destroy({params: {id: "1782793028abca7892871acb"},
-                                  user: "invalid"}, this.res
-        );
-      });
-      it("sends a 404", function() {
-        expect(this.res.sendStatus).to.have.been.calledWith(404);
+      it("sends a 404 (6)", function() {
+        this.req.user = "invalid";
+        return Controller.destroy(this.req, this.res)
+        .then(function() {
+          expect(this.res.sendStatus).to.have.been.calledWith(404);
+        }.bind(this));
       });
     }); // End of context 'when invalid user is passed in'
 
     context("when no user object is passed on", function() {
-      beforeEach(function() {
-        return Controller.destroy({params: {id: "1782793028abca7892871acb"}}, this.res);
-      });
-      it("sends a 422", function() {
+      it("sends a 422 (7)", function(done) {
+        delete this.req.user;
+        Controller.destroy(this.req, this.res)
         expect(this.res.sendStatus).to.have.been.calledWith(422);
+        done();
       });
     }); // End of context 'when no user object is passed on'
 
   }); // End of describe 'DELETE#destroy'
 });
+
+
+/*
+ * ===============
+ * PRIVATE HELPERS
+ * ===============
+ */
 
 // create a user and store it under ENTITIES.users[`name`]
 function _createUser(name) {

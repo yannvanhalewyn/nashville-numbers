@@ -63,7 +63,7 @@
     // TODO get rid of those 24bit hex regexes!
     // mongoose query promises wont hand me error callbacks for some reason.. :(
     update: function(req, res) {
-      // Validate params
+      // Validate params. Is this necessary?
       if(!req.params || !req.body || !req.user) return res.sendStatus(422);
       if(!/^([a-fA-F0-9]){24}$/.test(req.params.id)) return res.sendStatus(404);
       if(!/^([a-fA-F0-9]){24}$/.test(req.user._id)) return res.sendStatus(401);
@@ -88,7 +88,9 @@
       return Sheet.remove({_id: req.params.id, authorID: req.user._id}).exec()
       .then(function(db_response) {
         if (db_response.result.n === 0) return res.sendStatus(404);
-        return res.redirect('/sheets');
+        if (req.accepts('html')) return res.redirect('/sheets');
+        res.status(200);
+        return req.user.sheets.then(res.send);
       }, function(err) {
         return res.sendStatus(401);
       });
