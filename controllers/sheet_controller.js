@@ -55,8 +55,6 @@
         title: req.body.title,
         artist: req.body.artist,
         authorID: req.user._id,
-        // Maybe this should be a mongoose pre-save hook!
-        data: JSON.stringify({main: {title: req.body.title, artist: req.body.artist}})
       }).save()
       .then(function(newSheet) {
         var url = ('/sheets/' + newSheet._id).toString();
