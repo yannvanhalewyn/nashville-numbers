@@ -6,6 +6,7 @@
   var React = require('react');
   var NetworkActions = require('../actions/networkActions');
   var SheetControlEditActions = require('./sheetControlEditActions.react');
+  var Modal = require('../../utility_react_components/modal.react');
 
   var $ = require('jquery');
 
@@ -18,6 +19,8 @@
           <form action="/sheets/559c1e68218c0216350b84e0" method="post" ref="deleteForm">
             <input type="hidden" value="DELETE" name="_method"/>
           </form>
+          <Modal />
+
           <span className="SC-icon fa fa-trash-o" onClick={this._handleDelete}></span>
           <span className="SC-icon fa fa-star-o" id="SC-fav-icon"></span>
           <SheetControlEditActions />
