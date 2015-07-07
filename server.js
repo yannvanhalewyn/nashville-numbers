@@ -1,12 +1,13 @@
 "use strict";
 
-var express      = require('express');
-var bodyParser   = require('body-parser');
-var cookieParser = require('cookie-parser');
-var session      = require('express-session');
-var exphbs       = require('express-handlebars');
-var mongoose     = require('mongoose');
-var config       = require('./config');
+var express        = require('express');
+var bodyParser     = require('body-parser');
+var cookieParser   = require('cookie-parser');
+var methodOverride = require('method-override');
+var session        = require('express-session');
+var exphbs         = require('express-handlebars');
+var mongoose       = require('mongoose');
+var config         = require('./config');
 
 // Create the app
 var app          = express();
@@ -19,10 +20,22 @@ app.use('/', express.static(__dirname + '/public/'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(cookieParser())
-app.use(session({ resave: false,
-                  secret: 'a dirty little secret',
-                  saveUninitialized: false
-}))
+app.use(session({
+  resave: false,
+  secret: 'a dirty little secret',
+  saveUninitialized: false
+}));
+app.use(methodOverride(function(req, res){
+  console.log("BEGIN METHOD OVERRIDE");
+  console.log(req.body);
+  if (req.body && typeof req.body === 'object' && '_method' in req.body) {
+    // look in urlencoded POST bodies and delete it
+    console.log("GOT PAST IF");
+    var method = req.body._method
+    delete req.body._method
+    return method
+  }
+}));
 
 // Setup Routes and configurations
 require('./config/passport')(app);
