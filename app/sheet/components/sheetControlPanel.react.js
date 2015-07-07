@@ -15,6 +15,9 @@
     render: function() {
       return (
         <div className="sheet-control-panel">
+          <form action="/sheets/559c1e68218c0216350b84e0" method="post" ref="deleteForm">
+            <input type="hidden" value="DELETE" name="_method"/>
+          </form>
           <span className="SC-icon fa fa-trash-o" onClick={this._handleDelete}></span>
           <span className="SC-icon fa fa-star-o" id="SC-fav-icon"></span>
           <SheetControlEditActions />
@@ -29,7 +32,7 @@
     },
 
     _handleDelete: function(e) {
-      NetworkActions.delete();
+      this.refs.deleteForm.getDOMNode().submit();
     }
 
   });
