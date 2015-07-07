@@ -27,7 +27,7 @@ describe('SHEETCONTROLLER', function() {
       send: sinon.spy(),
     }
     this.res.status = sinon.stub().returns(this.res);
-    this.req = {}
+    this.req = {};
   });
 
   /*
@@ -109,21 +109,91 @@ describe('SHEETCONTROLLER', function() {
    * ========
    */
   describe('GET#show', function() {
+    beforeEach(function() {
+      return _createUser("theuser")
+      .then(_createSheet)
+      .then(function(sheet) {
+        this.req = {
+          user: ENTITIES.users["theuser"],
+          params: {id: sheet._id}
+        }
+      }.bind(this))
+    });
+
+    context("with correct logged in user", function() {
+      context("with valid sheetid", function() {
+        beforeEach(function() {
+          return Controller.show(this.req, this.res);
+        });
+
+        it("renders the sheet template", function() {
+          expect(this.res.render).to.have.been.calledWith('sheet');
+        });
+
+        it("sends along the correct sheet data", function() {
+          // Sorry for the hack. Check _createSheet for how thedata is created
+          var expectedData = ENTITIES.sheets["theuser"][0].data;
+          expect(this.res.render.args[0][1].state).to.eql(expectedData);
+        });
+      });
+    });
+
+    context("when another user is requesting", function() {
+      beforeEach(function() {
+        return _createUser("theotheruser")
+        .then(function() {
+          this.req.user = ENTITIES.users["theotheruser"];
+        }.bind(this));
+      });
+
+      context("when the requested sheet is public", function() {
+        it("renders the sheet template with the correct data but readonly", function() {
+          return Controller.show(this.req, this.res)
+          .then(function() {
+            var expectedData = ENTITIES.sheets["theuser"][0].data;
+            expect(this.res.render).to.have.been.calledWith(
+              'sheet', {active: {active_sheets: true}, state: expectedData, readOnly: true}
+            );
+          }.bind(this));
+        });
+      }); // End of context 'when the requested sheet is public'
+
+      context("when the requested sheet is private", function() {
+        beforeEach(function() {
+          var authorID = ENTITIES.users["theuser"]._id;
+          return Sheet.create({title: "privateSheet", authorID: authorID, visibility: 'private'})
+          .then(function(sheet) {
+            this.req.params.id = sheet._id;
+          }.bind(this));
+        });
+
+        it("redirects to /sheets (1)", function() {
+          return Controller.show(this.req, this.res)
+          .then(function() {
+            expect(this.res.redirect).to.have.been.calledWith("/sheets");
+          }.bind(this));
+        });
+      }); // End of context 'when the requested sheet is private'
+    }); // End of context 'when another user is requesting'
+
     context("when user property is inexistant", function() {
-      it("it sends a 422 (1)", function() {
-        Controller.show({}, this.res)
+      it("it sends a 422 (1)", function(done) {
+        delete this.req.user;
+        Controller.show(this.req, this.res)
         expect(this.res.sendStatus).to.have.been.calledWith(422);
+        done();
       });
     });
 
     context("when user property is invalid", function() {
       it("it sends a 401", function() {
-        Controller.show({user: "invalid"}, this.res)
+        this.req.user = "invalid";
+        Controller.show(this.req, this.res)
         expect(this.res.sendStatus).to.have.been.calledWith(401);
       });
     });
 
-    // NOTE come back later
+    // NOTE come back later, is this necessary?
     context.skip("With an invalid logged in user ID", function() {
       context("with no sheet id", function() {
         it("redirects to /", function() {
@@ -141,122 +211,6 @@ describe('SHEETCONTROLLER', function() {
         });
       });
     }); // End of with invalid logged in userID
-
-
-    // WITH VALID USER
-    // ===============
-    context("with valid logged in user", function() {
-      beforeEach(function() {
-        return _createUser("theuser")
-        .then(_createSheet)
-      });
-
-      context("with no sheetid param", function() {
-        it("redirects to /sheets", function() {
-          Controller.show({user: ENTITIES.users["theuser"]}, this.res)
-          expect(this.res.redirect).to.have.been.calledWith("/sheets");
-        });
-      });
-
-      context("with valid sheetid", function() {
-        beforeEach(function() {
-          // Create a private sheet
-          authorID = ENTITIES.users["theuser"]._id;
-          return Sheet.create({title: "private", visibility: "private",
-                              authorID: authorID, data: "dataOfThePrivateOne"})
-                              .then(function(privateSheet) {
-                                ENTITIES.sheets["theprivateone"] = privateSheet;
-                              });
-        });
-
-        context("when the requesting user owns the sheet", function() {
-          context("when the requested sheet is public", function() {
-            beforeEach(function() {
-              var sheetID = ENTITIES.sheets["theuser"][0]._id;
-              return Controller.show({
-                user: ENTITIES.users["theuser"],
-                params: {id: sheetID}
-              }, this.res);
-            });
-
-            it("renders the sheet template", function() {
-              expect(this.res.render).to.have.been.calledWith('sheet');
-            });
-
-            it("sends along the correct sheet data", function() {
-              // Sorry for the hack. Check _createSheet for how thedata is created
-              var expectedData = ENTITIES.sheets["theuser"][0].data;
-              expect(this.res.render.args[0][1].state).to.eql(expectedData);
-            });
-          });
-
-          context("when the requested sheet is private", function() {
-            beforeEach(function() {
-              var sheetID = ENTITIES.sheets["theprivateone"]._id;
-              return Controller.show({
-                user: ENTITIES.users["theuser"],
-                params: {id: sheetID}
-              }, this.res);
-            });
-
-            it("renders the sheet", function() {
-              expect(this.res.render).to.have.been.calledWith('sheet');
-            });
-
-            it("sends along the correct sheet data", function() {
-              var expectedData = ENTITIES.sheets["theprivateone"].data;
-              expect(this.res.render.args[0][1].state).to.eql(expectedData);
-            });
-          });
-        }); // End of when the requesting user owns the sheet
-
-
-        context("when the requesting user doesn't own the sheet", function() {
-          beforeEach(function() {
-            return _createUser("theOtherUser");
-          });
-
-          context("when the requested sheet is public", function() {
-            beforeEach(function() {
-              var sheetID = ENTITIES.sheets["theuser"][0]._id;
-              return Controller.show({
-                user: ENTITIES.users["theOtherUser"],
-                params: {id: sheetID}
-              }, this.res);
-            });
-
-            it("renders the sheet template", function() {
-              expect(this.res.render).to.have.been.calledWith('sheet');
-            });
-
-            it("sends along the correct sheet data", function() {
-              // Sorry for the hack. Check _createSheet for how thedata is created
-              var expectedData = ENTITIES.sheets["theuser"][0].data;
-              expect(this.res.render.args[0][1].state).to.eql(expectedData);
-            });
-
-            it("sends a read-only flag", function() {
-              expect(this.res.render.args[0][1].readOnly).to.eql(true)
-            });
-
-          });
-
-          context("when the requested sheet is private", function() {
-            beforeEach(function() {
-              var sheetID = ENTITIES.sheets["theprivateone"]._id;
-              return Controller.show({
-                user: ENTITIES.users["theOtherUser"],
-                params: {id: sheetID}
-              }, this.res);
-            });
-
-            it("redirects to /sheets", function() {
-              expect(this.res.redirect).to.have.been.called;
-            });
-          });
-        });
-      }); // End of with valid sheetID
-    }); // End of with valid logged in user
   }); // End of GET#show
 
   /*
