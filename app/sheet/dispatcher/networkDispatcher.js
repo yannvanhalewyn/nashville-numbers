@@ -14,6 +14,10 @@
         SheetStore.saveSheet();
         break;
 
+      case SheetConstants.DELETE:
+        SheetStore.deleteSheet();
+        break;
+
       default:
         console.error("Unknow task " + action.actionType + " in NetworkDispatcher.");
         break;

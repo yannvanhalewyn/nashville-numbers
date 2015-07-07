@@ -65,6 +65,18 @@
         alert("not saved. Check console.");
         console.log(err);
       });
+    },
+
+    deleteSheet: function() {
+      $.ajax({
+        url: window.locataion.pathname,
+        method: "DELETE",
+        headers: {Accept: "text/html"}
+      }).done(function(res) {
+        console.log(res);
+      }).error(function(err) {
+        console.error(err);
+      });
     }
 
   });

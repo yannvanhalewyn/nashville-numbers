@@ -8,7 +8,6 @@
   var NetworkActions = {
 
     save: function() {
-      console.log("In actions");
       NetworkDispatcher.dispatch({actionType: SheetConstants.SAVE});
     },
 
