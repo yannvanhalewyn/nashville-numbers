@@ -17,6 +17,7 @@
     "express-session": "^1.11.3",
     "flux": "^2.0.3",
     "immutable": "^3.7.4",
+    "include": "^0.1.2",
     "jquery": "^2.1.4",
     "keymirror": "^0.1.1",
     "lodash": "^3.10.0",
@@ -47,6 +48,7 @@
     "reactify": "^1.1.1",
     "sinon": "^1.15.3",
     "sinon-chai": "^2.8.0",
+    "supertest": "^1.0.1",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.2.3"
   },

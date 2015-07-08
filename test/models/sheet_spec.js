@@ -1,8 +1,8 @@
-var util = require('../util');
-
-var Sheet  = require('../../models/sheet');
-var User   = require('../../models/user');
-var expect = require('chai').expect;
+var include = require('include');
+var expect  = require('chai').expect;
+var util    = include('/test/util/mock_db');
+var Sheet   = include('/models/sheet');
+var User    = include('/models/user');
 
 var USER;
 

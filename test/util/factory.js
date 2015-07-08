@@ -4,8 +4,9 @@
 
   var Factory = require('factory-lady');
   var Chance  = require('chance');
-  var User    = require('../models/user');
-  var Sheet   = require('../models/sheet');
+  var include = require('include');
+  var User    = include('/models/user');
+  var Sheet   = include('/models/sheet');
   var Q       = require('q');
   var chance  = new Chance();
 

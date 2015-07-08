@@ -1,16 +1,17 @@
-var util = require('../util');
+var include = require('include');
+include('/test/util/mock_db');
 
 // Setup Chai and sinon
-var chai = require('chai');
-var sinon = require('sinon');
+var chai      = require('chai');
+var sinon     = require('sinon');
 var sinonChai = require('sinon-chai');
-var expect = chai.expect;
+var expect    = chai.expect;
 chai.use(sinonChai);
 
 // Require what we're testing
-var Controller = require('../../controllers/sheet_controller');
-var User = require('../../models/user');
-var Sheet = require('../../models/sheet');
+var Controller = include('/controllers/sheet_controller');
+var User       = include('/models/user');
+var Sheet      = include('/models/sheet');
 
 // Just a place where I can keep track
 // of entities I created during tests

@@ -2,7 +2,7 @@
 
 process.env.NODE_ENV = 'test';
 
-var config = require('../config');
+var config = require('../../config');
 var mongoose = require('mongoose');
 
 function _clearDB() {

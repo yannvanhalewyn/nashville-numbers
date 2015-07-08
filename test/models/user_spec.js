@@ -1,11 +1,11 @@
-var util = require('../util');
-
-var User     = require('../../models/user');
-var Sheet    = require('../../models/sheet');
-var build    = require('../factory')
-var expect   = require('chai').expect;
-var Q        = require('q');
-var _        = require('lodash');
+var include = require('include');
+var expect  = require('chai').expect;
+var Q       = require('q');
+var _       = require('lodash');
+var util    = include('/test/util/mock_db');
+var User    = include('/models/user');
+var Sheet   = include('/models/sheet');
+var build   = include('/test/util/factory')
 
 var authData = {provider_id: "123", provider: "facebook", firstName: "Claudius"};
 var authData2 = {provider_id: "123", provider: "facebook", firstName: "Cesar"};
