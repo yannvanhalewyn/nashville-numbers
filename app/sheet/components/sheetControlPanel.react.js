@@ -12,11 +12,14 @@
 
   var SheetControlPanel = React.createClass({
 
+    propTypes: {
+      dbid: React.PropTypes.string.isRequired
+    },
 
     render: function() {
       return (
         <div className="sheet-control-panel">
-          <form action="/sheets/559c285fbdc11328483e09ae" method="post" ref="deleteForm">
+          <form action={this._url()} method="post" ref="deleteForm">
             <input type="hidden" value="DELETE" name="_method"/>
           </form>
           <Modal
@@ -33,6 +36,10 @@
           <div className="btn" id="save-button" onClick={this._handleSave}>Save!</div>
         </div>
       )
+    },
+
+    _url: function() {
+      return "/sheets/" + this.props.dbid;
     },
 
     _handleSave: function(e) {

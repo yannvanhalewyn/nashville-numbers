@@ -10,6 +10,12 @@
 
   var SheetEditor = React.createClass({
 
+    propTypes: {
+      title: React.PropTypes.string,
+      artist: React.PropTypes.string,
+      dbid: React.PropTypes.string.isRequired
+    },
+
     getInitialState: function() {
       return SheetStore.getState();
     },
@@ -25,7 +31,7 @@
     render: function() {
       return (
         <div className="sheet-editor">
-          <SheetControlPanel />
+          <SheetControlPanel dbid={this.state.dbid}/>
           <h1 className="sheet-title">
             {this.state.title} <small className="artist">{this.state.artist}</small>
           </h1>
