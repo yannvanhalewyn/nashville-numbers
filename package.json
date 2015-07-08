@@ -46,6 +46,7 @@
     "mocha-mongoose": "^1.0.4",
     "mongodb": "^1.4.38",
     "reactify": "^1.1.1",
+    "reqres": "^1.2.1",
     "sinon": "^1.15.3",
     "sinon-chai": "^2.8.0",
     "supertest": "^1.0.1",
