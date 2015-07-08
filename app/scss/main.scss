@@ -86,9 +86,9 @@ a {
 
         // SLIDING OUT
         transition-duration: .4s;
-        transform: translate3d(0, -100%, 0);
+        transform: translate(0, -100%);
         &.modal-active {
-            transform: translate3d(0, 0, 0);
+            transform: translate(0, 0);
             box-shadow: 0px 2px 10px #999;
         }
     }

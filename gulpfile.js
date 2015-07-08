@@ -1,13 +1,15 @@
 'use strict';
 
-var watchify   = require('watchify');
-var browserify = require('browserify');
-var reactify   = require('reactify');
-var gulp       = require('gulp');
-var source     = require('vinyl-source-stream');
-var gutil      = require('gulp-util');
-var livereload = require('gulp-livereload');
-var sass       = require('gulp-sass');
+var watchify     = require('watchify');
+var browserify   = require('browserify');
+var reactify     = require('reactify');
+var gulp         = require('gulp');
+var source       = require('vinyl-source-stream');
+var gutil        = require('gulp-util');
+var livereload   = require('gulp-livereload');
+var sass         = require('gulp-sass');
+var postcss      = require('gulp-postcss');
+var autoprefixer = require('autoprefixer-core');
 
 var nodemon = require('gulp-nodemon');
 var path = require('path');
@@ -60,6 +62,7 @@ gulp.task('sass', function() {
   gulp.src('app/scss/**/*.scss')
     .pipe(sass())
     .on('error', console.error)
+    .pipe(postcss([ autoprefixer({ browsers: ['last 2 version'] }) ]))
     .pipe(gulp.dest('public/css/'));
 });
 
