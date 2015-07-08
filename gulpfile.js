@@ -27,7 +27,7 @@ gulp.task('server', function() {
 // uses watchify to update small parts of bundle if needed
 gulp.task('watchify', function() {
   var browserifyOpts = {
-    entries: './app/app.js',
+    entries: './app/sheet/editor.js',
     transform: ['reactify', 'browserify-shim'],
     debug: true,
     cache: {}, packageCache: {}, fullPaths: true // Watchify
@@ -37,7 +37,7 @@ gulp.task('watchify', function() {
   function bundle() {
     return b.bundle()
       .on('error', gutil.log.bind(gutil, 'Browserify Error'))
-      .pipe(source('bundle.js'))
+      .pipe(source('editor-bundled.js'))
       .pipe(gulp.dest('./public/js'));
   }
   bundle();
