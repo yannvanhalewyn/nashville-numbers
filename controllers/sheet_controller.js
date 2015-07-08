@@ -12,7 +12,6 @@
 
     // GET#index
     index: function(req, res) {
-      console.log("INDEX");
       // Double check the user (if id exists but invalid, the error block
       // below will run
       if (!req.user) return res.sendStatus(422);
@@ -98,74 +97,5 @@
         return res.sendStatus(401);
       });
     }
-
-
   };
-
-  function _generateDefaultData(title, artist) {
-    return JSON.stringify({
-      "entities": {
-        "sections": {
-          "section1": {
-            "id": "section1",
-            "name": "intro",
-            "rows": [
-              "row1"
-            ]
-          }
-        },
-        "rows": {
-          "row1": {
-            "id": "row1",
-            "bars": [
-              "bar1",
-              "bar2",
-              "bar3",
-              "bar4"
-            ]
-          }
-        },
-        "bars": {
-          "bar1": {
-            "id": "bar1",
-            "chords": ["chord1"]
-          },
-          "bar2": {
-            "id": "bar2",
-            "chords": ["chord2"]
-          },
-          "bar3": {
-            "id": "bar3",
-            "chords": ["chord3"]
-          },
-          "bar4": {
-            "id": "bar4",
-            "chords": ["chord4"]
-          }
-        },
-        "chords": {
-          "chord1": {
-            "id": "chord1"
-          },
-          "chord2": {
-            "id": "chord2"
-          },
-          "chord3": {
-            "id": "chord3"
-          },
-          "chord4": {
-            "id": "chord4"
-          }
-        }
-      },
-      "result": {
-        "title": title,
-        "artist": artist,
-        "sections": [
-          "section1"
-        ]
-      }
-    })
-  }
-
 }())

@@ -2,6 +2,7 @@ var util = require('../util');
 
 var User     = require('../../models/user');
 var Sheet    = require('../../models/sheet');
+var build    = require('../factory')
 var expect   = require('chai').expect;
 var Q        = require('q');
 var _        = require('lodash');
@@ -66,30 +67,30 @@ describe("User", function() {
     var USER;
     var SHEETS;
 
-    beforeEach(function(done) {
-      User.create(validUserParams)
+    beforeEach(function() {
+      return User.create(validUserParams)
       .then(function(user) {
-        USER = user;
-        Q.all([
+        this.user = user;
+        return Q.all([
           Sheet.create({title: "song1", authorID: user._id}),
           Sheet.create({title: "song2", authorID: user._id}),
           Sheet.create({title: "song3", authorID: user._id})
         ]).then(function(sheets) {
-          SHEETS = sheets;
-          done();
-        }, console.error)
-      });
+          this.sheets = sheets;
+        }.bind(this), console.error)
+      }.bind(this));
     });
+
     it('returns the array of sheets', function() {
-      return USER.sheets.then(function(result) {
+      return this.user.sheets.then(function(result) {
         var foundSheets = result.map(function(s) {
           return _.pick(s, ['title', 'authorID']);
         });
-        var targetSheets = SHEETS.map(function(s) {
+        var targetSheets = this.sheets.map(function(s) {
           return _.pick(s, ['title', 'authorID']);
         });
         expect(foundSheets).to.eql(targetSheets);
-      });
+      }.bind(this));
     });
   });
 
@@ -97,16 +98,15 @@ describe("User", function() {
     var USER;
     var SHEET;
 
-    beforeEach(function(done) {
-      new User(validUserParams).save()
+    beforeEach(function() {
+      return build('user')
       .then(function(user) {
-        USER = user;
-        user.createSheet({title: "FOOBAR"})
-        .then(function(newSheet) {
-          SHEET = newSheet;
-          done()
-        }, done);
-      });
+        this.user = user;
+        return user.createSheet({title: "FOOBAR"})
+        .then(function(sheet) {
+          this.sheet = sheet;
+        }.bind(this))
+      }.bind(this))
     });
 
     it('creates a new sheet', function() {
@@ -116,11 +116,59 @@ describe("User", function() {
     });
 
     it('adds the correct authorID', function() {
-      expect(SHEET.authorID).to.eql(USER._id);
+      expect(this.sheet.authorID).to.eql(this.user._id);
     });
 
     it('sets the params', function() {
-      expect(SHEET.title).to.eql("FOOBAR");
+      expect(this.sheet.title).to.eql("FOOBAR");
     });
   });
+
+  describe('friends', function() {
+    beforeEach(function() {
+      return build('user')
+      .then(function(userA) {
+        this.userA = userA;
+        return build('user')
+        .then(function(userB) {
+          this.userB = userB;
+        }.bind(this));
+      }.bind(this));
+    });
+
+    describe('#addFriend()', function() {
+      context("when supplied friend id is a valid user", function() {
+        beforeEach(function() {
+          this.userA.addFriend(this.userB._id);
+        });
+
+        it("adds that id to the friends list", function() {
+          expect(this.userA.friend_ids.length).to.eql(1);
+          expect(this.userA.friend_ids[0]).to.equal(this.userB._id);
+        });
+
+        context("when userA already has userB as a friend", function() {
+          it("doesn't duplicate the entry", function() {
+            this.userA.addFriend(this.userB._id);
+            expect(this.userA.friend_ids.length).to.eql(1);
+          });
+        }); // End of context 'when userA already has userB as a friend'
+      }); // End of context 'when supplied friend id is a valid user'
+
+      context("when supplied friendID is not a valid Mongo id", function() {
+        it("doesn't add it", function() {
+          this.userA.addFriend("invalid");
+          expect(this.userA.friend_ids.length).to.eql(0);
+        });
+      }); // End of context 'when supplied friendID is not a valid Mongo id'
+    }); // End of describe '#addFriend()'
+
+    describe('#removeFriend', function() {
+      it("removes the friendID", function() {
+        this.userA.addFriend(this.userB._id);
+        this.userA.removeFriend(this.userB._id);
+        expect(this.userA.friend_ids.length).to.eql(0);
+      });
+    }); // End of describe '#removeFriend'
+  }); // End of describe 'friends'
 });

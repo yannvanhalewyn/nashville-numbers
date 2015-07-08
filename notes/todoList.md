@@ -11,6 +11,7 @@ TODO Add undo stack. Is pretty simple -> command pattern, that book will pay off
 TODO BUG: When entered a chord like ('h'), the box shadow dissapears but no
      chord appears. Thats because it thinks it's content is full, while it's a bad
      chord
+TODO is 17 a bug or lack of superscrip?
 
 Before deployment
 -----------------
