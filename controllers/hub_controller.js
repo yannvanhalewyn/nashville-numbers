@@ -2,7 +2,7 @@
 
   module.exports = {
     index: function(req, res) {
-      res.render('hubs', {active: {active_hubs: true}})
+      res.render('hubs', {active_hubs: true})
     }
   };
 

@@ -35,6 +35,7 @@ app.use(methodOverride(function(req, res){
 
 // Setup Routes and configurations
 require('./config/passport')(app);
+require('./config/helpers')(app);
 require('./config/routes')(app);
 
 // Connect to DB
