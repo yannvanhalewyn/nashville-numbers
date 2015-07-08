@@ -152,7 +152,7 @@ describe('SHEETCONTROLLER', function() {
           .then(function() {
             var expectedData = ENTITIES.sheets["theuser"][0].data;
             expect(this.res.render).to.have.been.calledWith(
-              'sheet', {active: {active_sheets: true}, state: expectedData, readOnly: true}
+              'sheet', {active_sheets: true, state: expectedData, readOnly: true}
             );
           }.bind(this));
         });

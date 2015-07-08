@@ -22,7 +22,7 @@
       return Sheet.find({authorID: req.user._id}).exec()
       .then(function(sheets) {
         res.render('sheets', {
-          active: {active_sheets: true},
+          active_sheets: true,
           sheets: sheets
         });
       }, function(err) {res.redirect('/')});
@@ -42,7 +42,7 @@
         if ((!isAuthor) && sheet.visibility === 'private') {
           return res.redirect('/sheets');
         }
-        return res.render('sheet', { active: {active_sheets: true}, state: sheet.data,
+        return res.render('sheet', { active_sheets: true, state: sheet.data,
                                 readOnly: !isAuthor });
       }, function(err) {res.redirect('/')});
     },

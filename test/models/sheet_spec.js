@@ -24,9 +24,11 @@ describe('Sheet', function() {
     it("Sets the correct default data", function() {
       return new Sheet({title: "Baby", artist: "Justin Bieber", authorID: USER._id}).save()
       .then(function(sheet) {
-        expData = JSON.stringify({main: {title: "Baby", artist: "Justin Bieber"}})
+        expData = JSON.stringify({
+          main: { title: "Baby", artist: "Justin Bieber", dbid: sheet._id }
+        });
         expect(sheet.data).to.eql(expData);
-      })
+      });
     });
 
     it('fails when no title', function(done) {
@@ -73,9 +75,14 @@ describe('Sheet', function() {
   describe('#updating', function() {
     it('refreshes the updated_at variable', function() {
       return Sheet.create({title: "foo", updated_at: Date.now() - 1000 * 60, authorID: USER._id})
-      .then(function(data) {
-        data.update({artist: "bar"});
-        expect(Date.now() - data.updated_at).to.be.below(100);
+      .then(function(sheet) {
+        return sheet.update({artist: "bar"})
+        .then(function() {
+          return Sheet.findById(sheet._id).exec()
+          .then(function(updatedSheet) {
+            expect(updatedSheet.updated_at).not.to.eql(updatedSheet.created_at);
+          });
+        });
       });
     });
   });

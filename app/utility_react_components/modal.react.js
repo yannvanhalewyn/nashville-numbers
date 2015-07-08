@@ -11,8 +11,8 @@
     },
 
     propTypes: {
-      title: React.PropTypes.String,
-      body: React.PropTypes.String,
+      title: React.PropTypes.string,
+      body: React.PropTypes.string,
       onConfirm: React.PropTypes.func
     },
 

@@ -90,6 +90,7 @@ function _deNormalizedData() {
   return {
     title: "theTitle",
     artist: "theArtist",
+    dbid: "THEDBID",
     sections: [
       {
         id: "section1",
@@ -150,6 +151,7 @@ function _normalizedData() {
     main: {
       title: "theTitle",
       artist: "theArtist",
+      dbid: "THEDBID",
       sections: [ "section1", "section2" ]
     },
     sections: {

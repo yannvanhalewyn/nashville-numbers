@@ -53,8 +53,9 @@
     // Networking
     saveSheet: function() {
       var data = SheetStoreDataManager.getData();
+      var dbid = data.getIn(['main', 'dbid']);
       $.ajax({
-        url: window.location.pathname,
+        url: '/sheets/' + dbid,
         method: "PUT",
         contentType: 'application/json',
         data: JSON.stringify(data.toJS())
@@ -66,9 +67,12 @@
       });
     },
 
+    // Not used right now, using a hidden form in control panel.
     deleteSheet: function() {
+      var data = SheetStoreDataManager.getData();
+      var dbid = data.getIn(['main', 'dbid']);
       $.ajax({
-        url: window.locataion.pathname,
+        url: '/sheets/' + dbid,
         method: "DELETE",
         headers: {Accept: "text/html"}
       }).done(function(res) {

@@ -1,13 +1,15 @@
 'use strict';
 
-var watchify   = require('watchify');
-var browserify = require('browserify');
-var reactify   = require('reactify');
-var gulp       = require('gulp');
-var source     = require('vinyl-source-stream');
-var gutil      = require('gulp-util');
-var livereload = require('gulp-livereload');
-var sass       = require('gulp-sass');
+var watchify     = require('watchify');
+var browserify   = require('browserify');
+var reactify     = require('reactify');
+var gulp         = require('gulp');
+var source       = require('vinyl-source-stream');
+var gutil        = require('gulp-util');
+var livereload   = require('gulp-livereload');
+var sass         = require('gulp-sass');
+var postcss      = require('gulp-postcss');
+var autoprefixer = require('autoprefixer-core');
 
 var nodemon = require('gulp-nodemon');
 var path = require('path');
@@ -27,7 +29,7 @@ gulp.task('server', function() {
 // uses watchify to update small parts of bundle if needed
 gulp.task('watchify', function() {
   var browserifyOpts = {
-    entries: './app/app.js',
+    entries: './app/sheet/editor.js',
     transform: ['reactify', 'browserify-shim'],
     debug: true,
     cache: {}, packageCache: {}, fullPaths: true // Watchify
@@ -37,7 +39,7 @@ gulp.task('watchify', function() {
   function bundle() {
     return b.bundle()
       .on('error', gutil.log.bind(gutil, 'Browserify Error'))
-      .pipe(source('bundle.js'))
+      .pipe(source('editor-bundled.js'))
       .pipe(gulp.dest('./public/js'));
   }
   bundle();
@@ -60,6 +62,7 @@ gulp.task('sass', function() {
   gulp.src('app/scss/**/*.scss')
     .pipe(sass())
     .on('error', console.error)
+    .pipe(postcss([ autoprefixer({ browsers: ['last 2 version'] }) ]))
     .pipe(gulp.dest('public/css/'));
 });
 

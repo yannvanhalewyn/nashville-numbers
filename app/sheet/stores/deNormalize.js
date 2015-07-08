@@ -45,6 +45,7 @@
     var ret = {
       title: input.main.title,
       artist: input.main.artist,
+      dbid: input.main.dbid,
       sections: []
     };
 

@@ -1,4 +1,4 @@
 node_modules
-public/js/bundle.js
+public/js/editor-bundled.js
 public/css/
 db/
