@@ -12,7 +12,7 @@
     authorID: {type: Schema.Types.ObjectId, ref: 'User', required: true},
     visibility: {type: String, default: 'public'},
     created_at: {type: Date, default: Date.now},
-    updated_at: {type: Date},
+    updated_at: {type: Date, default: Date.now},
     data: String
   });
 
@@ -25,9 +25,15 @@
     return User.findById(this.authorID).exec();
   });
 
-  SheetSchema.pre('save', function(next) {
+  SheetSchema.pre('update', function(next) {
     this.updated_at = Date.now();
-    this.data = JSON.stringify({main: {title: this.title, artist: this.artist}})
+    next();
+  });
+
+  SheetSchema.pre('save', function(next) {
+    this.data = JSON.stringify({
+      main: { title: this.title, artist: this.artist, dbid: this._id }
+    });
     next();
   });
 
