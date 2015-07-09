@@ -33,6 +33,13 @@
     );
   };
 
+  User.prototype.sheets = function() {
+    return db.query(
+      "MATCH (p:Person)-[:AUTHORED]->(s:Sheet) WHERE id(p) = {uid} RETURN s",
+      {uid: this._id}
+    );
+  }
+
 
 /*
  * ======

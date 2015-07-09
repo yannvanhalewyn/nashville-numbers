@@ -46,6 +46,28 @@ describe('User', function() {
     });
   }); // End of describe '#createSheet()'
 
+  describe('#sheets()', function() {
+    beforeEach(function() {
+      return Factory('sheet').then(function(objs) {
+        this.userA = objs.user;
+        this.sheetA = objs.sheet;
+        return Factory('sheet', {uid: this.userA._id}).then(function(sheetB) {
+          this.sheetB = sheetB;
+          return Factory('sheet'); // Add a sheet that's not userA's
+        }.bind(this));
+      }.bind(this))
+    });
+
+    it("returns an array of all sheets related to the user", function() {
+      return this.userA.sheets().then(function(sheets) {
+        expect(sheets.length).to.eql(2);
+        expect(sheets[1].s._id).to.eql(this.sheetA._id); // Might later throw error, not sure
+        expect(sheets[0].s._id).to.eql(this.sheetB._id); // how neo4j orders responses.
+      }.bind(this));
+    });
+
+  }); // End of describe '#sheets()'
+
   describe('STATICS', function() {
     describe('#findById', function() {
       it("returns the searched for user object", function() {
