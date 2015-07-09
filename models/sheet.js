@@ -32,6 +32,13 @@
     );
   }
 
+  Sheet.prototype.destroy = function() {
+    return db.query(
+      "MATCH (s:Sheet) WHERE id(s) = {sid} " +
+      "OPTIONAL MATCH s-[r]-() DELETE s,r", {sid: this._id}
+    );
+  }
+
 /*
  * ======
  * STATIC
@@ -43,7 +50,7 @@
   Sheet.create = function(params) {
     params = _.assign({}, DEFAULT, params);
     return db.query(
-      "MATCH (p:Person) WHERE id(p) = {uid}" +
+      "MATCH (p:Person) WHERE id(p) = {uid} " +
       "CREATE (s:Sheet {" +
         "title: {title}," +
         "artist: {artist}," +

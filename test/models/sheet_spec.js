@@ -18,7 +18,7 @@ describe('Sheet', function() {
     }.bind(this))
   });
 
-  context("instantiation", function() {
+  describe("instantiation", function() {
     it("stores the information", function() {
       return Sheet.create(this.params)
       .then(function(sheet) {
@@ -56,9 +56,9 @@ describe('Sheet', function() {
         });
       });
     }); // End of context 'with missing params'
-  }); // End of context 'instantiation'
+  }); // End of describe 'instantiation'
 
-  context("#update()", function() {
+  describe("#update()", function() {
     it("stores the updated data", function() {
       return Sheet.create(this.params).then(function(sheet) {
         return sheet.update({title: "updated-title", artist: "updated-artist"}).then(function() {
@@ -70,5 +70,21 @@ describe('Sheet', function() {
         });
       });
     });
-  }); // End of context '#update()'
+  }); // End of describe '#update()'
+
+  describe('#destroy()', function() {
+    beforeEach(function() {
+      return Sheet.create(this.params).then(function(sheet) {
+        this.sheet = sheet;
+        return sheet.destroy()
+      }.bind(this));
+    });
+
+    it("Has deleted the sheet from the database", function() {
+      return db.query("MATCH (s:Sheet) WHERE id(s) = {sid} RETURN s", {sid: this.sheet._id})
+      .then(function(res) {
+        expect(res.length).to.eql(0);
+      }.bind(this));
+    });
+  }); // End of describe '#destroy()'
 }); // End of describe 'Sheet'
