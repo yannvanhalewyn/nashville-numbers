@@ -14,8 +14,9 @@
     });
 
     passport.deserializeUser(function(obj, done) {
-      User.findById(obj, done);
+      User.findById(obj).then(done.bind(null, null)); // This way the found user obj is 2nd param
     });
+
     app.use(passport.initialize());
     app.use(passport.session());
 
@@ -27,7 +28,7 @@
         var providerData = profile._json;
         providerData.accessToken = accessToken;
         providerData.refreshToken = refreshToken;
-        User.registerFacebookUser({
+        User.create({
           firstName: profile.name.givenName,
           lastName: profile.name.familyName,
           displayName: profile.name.displayName,

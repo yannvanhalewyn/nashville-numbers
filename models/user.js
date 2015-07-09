@@ -47,12 +47,18 @@
  * ======
  */
   User.create = function(params) {
+    var setTemplate = "{key}: '{val}'"
+    var queries = [];
+    _.forEach(params, function(val, key) {
+      if (val) {
+        if (key == "providerData") val = JSON.stringify(val);
+        var tmp = setTemplate.replace("{key}", key);
+        queries.push(tmp.replace("{val}", val));
+      }
+    });
+    var paramsString = queries.join(',');
     return db.query(
-      "CREATE (p:Person {" +
-        "firstName: {firstName}," +
-        "lastName: {lastName}, provider_id: {provider_id}," +
-        "provider: {provider}" +
-      "}) RETURN p", params)
+      "CREATE (p:Person {" + paramsString + "}) RETURN p", params)
     .then(function(res) {
       return new User(res[0].p);
     });
