@@ -11,14 +11,22 @@
   };
 
   var Sheet = function(params) {
+    _.merge(this, params);
+  }
+
+  Sheet.create = function(params) {
     params = _.assign({}, DEFAULT, params);
-    return db.query("CREATE (s:Sheet {" +
-      "title: {title}," +
-      "artist: {artist}," +
-      "visibility: {visibility}" +
-    "}) RETURN s", params)
-    .then(function(sheet) {
-      return sheet[0].s;
+    return db.query(
+      "MATCH (p:Person) WHERE id(p) = {uid}" +
+      "CREATE (s:Sheet {" +
+        "title: {title}," +
+        "artist: {artist}," +
+        "visibility: {visibility}" +
+      "})," +
+      "(p)-[:AUTHORED]->(s)" +
+      "RETURN s", params)
+    .then(function(res) {
+      return new Sheet(res[0].s);
     });
   }
 
