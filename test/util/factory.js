@@ -23,7 +23,7 @@
   var Factory = function(model, params) {
     switch (model.toLowerCase()) {
       case 'user':
-        return new User(_.assign(chance.user(), params));
+        return User.create(_.assign(chance.user(), params));
 
       case 'sheet':
         break;
