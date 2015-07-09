@@ -2,36 +2,24 @@
 
   "use strict";
 
-  var Factory = require('factory-lady');
-  var Chance  = require('chance');
-  var include = require('include');
-  var User    = include('/models/user');
-  var Sheet   = include('/models/sheet');
-  var Q       = require('q');
-  var chance  = new Chance();
+  var Monky    = require('monky')
+    , mongoose = require('mongoose')
+    , monky    = new Monky(mongoose)
 
-  Factory.define('user', User, {
-    firstName: chance.first(),
-    lastName: chance.last(),
-    provider_id: chance.integer(),
+  monky.factory('User', {
+    firstName: 'firstName-#n',
+    lastName: 'lastName-#n',
+    provider_id: '#n',
     provider: 'facebook'
   });
 
-  Factory.define('sheet', Sheet, {
-    title: chance.word(),
-    artist: chance.name(),
-    authorID: chance.string({pool: '123456789abcdef', length: 24}),
+  monky.factory('Sheet', {
+    title: 'title-#n',
+    artist: 'artist-#n',
+    authorID: monky.ref('User', 'id')
   });
 
-  var build = function(model, params) {
-    var defered = Q.defer();
-    Factory.build(model, params, function(data) {
-      defered.resolve(data);
-    })
-    return defered.promise;
-  }
-
-  module.exports = build;
+  module.exports = monky;
 
 }())
 

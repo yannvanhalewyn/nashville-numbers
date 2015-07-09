@@ -36,12 +36,14 @@
     });
     if (alreadyAdded) return;
     this.friend_ids.push(otherUID);
+    return this.save();
   };
 
   UserSchema.methods.removeFriend = function(otherUID) {
     _.remove(this.friend_ids, function(id) {
       return id.equals(otherUID);
     });
+    return this.update({$set: {friend_ids: this.friend_ids}});
   };
 
   var User = mongoose.model('User', UserSchema);
