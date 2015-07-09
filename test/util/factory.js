@@ -6,7 +6,7 @@
     , _       = require('lodash')
     , Chance = require('chance')
     , User    = include('/models/user')
-    // , Sheet = include('/models/sheet')
+    , Sheet = include('/models/sheet')
 
   var chance = new Chance();
   chance.mixin({
@@ -18,6 +18,14 @@
         provider: 'facebook'
       }
     },
+
+    'sheet': function() {
+      return {
+        title: chance.word(),
+        artist: chance.first(),
+        visibility: 'public'
+      }
+    }
   });
 
   var Factory = function(model, params) {
@@ -26,6 +34,16 @@
         return User.create(_.assign(chance.user(), params));
 
       case 'sheet':
+        if (params && params.uid) {
+          return Sheet.create(_.assign(chance.sheet(), params));
+        } else {
+          return Factory('user').then(function(user) {
+            return Sheet.create(_.assign(chance.sheet(), {uid: user._id}, params))
+            .then(function(sheet) {
+              return {user: user, sheet: sheet}; // The awesome final touch!!
+            });
+          }).catch(console.error);
+        }
         break;
 
       default:
