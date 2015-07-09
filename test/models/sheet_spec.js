@@ -42,7 +42,7 @@ describe('Sheet', function() {
 
     context("with missing params", function() {
       it("sets the default title, artist and visibility", function() {
-        return Sheet.create({uid: 111})
+        return Sheet.create({uid: this.user._id})
         .then(function(sheet) {
           expect(sheet.properties.title).to.eql("title");
           expect(sheet.properties.artist).to.eql("artist");
@@ -57,4 +57,18 @@ describe('Sheet', function() {
       });
     }); // End of context 'with missing params'
   }); // End of context 'instantiation'
+
+  context("#update()", function() {
+    it("stores the updated data", function() {
+      return Sheet.create(this.params).then(function(sheet) {
+        return sheet.update({title: "updated-title", artist: "updated-artist"}).then(function() {
+          return db.query("MATCH (s:Sheet) WHERE id(s) = {sid} RETURN s", {sid: sheet._id})
+          .then(function(updatedSheet) {
+            expect(updatedSheet[0].s.properties.title).to.eql("updated-title");
+            expect(updatedSheet[0].s.properties.artist).to.eql("updated-artist");
+          });
+        });
+      });
+    });
+  }); // End of context '#update()'
 }); // End of describe 'Sheet'
