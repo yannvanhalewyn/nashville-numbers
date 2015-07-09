@@ -133,7 +133,7 @@ describe("User", function() {
 
   describe('friends', function() {
     beforeEach(function() {
-      return Factory.buildList('User', 2)
+      return Factory.createList('User', 2)
       .then(function(users) {
         this.userA = users[0];
         this.userB = users[1]
@@ -190,5 +190,22 @@ describe("User", function() {
         });
       });
     }); // End of describe '#removeFriend'
+
+    describe('.friends virtual accessor', function() {
+      beforeEach(function() {
+        return this.userA.addFriend(this.userB._id);
+      });
+
+      it("returns an array of all the users friends", function() {
+        return this.userA.getFriends().exec()
+        .then(function(friends) {
+          var target = [_.pick(this.userB, ['firstName', 'lastName'])];
+          var found = friends.map(function(f) {
+            return _.pick(f, ['firstName', 'lastName']);
+          });
+          expect(found).to.eql(target);
+        }.bind(this));
+      });
+    }); // End of describe '.friends virtual accessor'
   }); // End of describe 'friends'
 });

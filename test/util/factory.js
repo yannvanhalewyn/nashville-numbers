@@ -5,6 +5,8 @@
   var Monky    = require('monky')
     , mongoose = require('mongoose')
     , monky    = new Monky(mongoose)
+    , User     = require('../../models/user')
+    , Sheet    = require('../../models/sheet')
 
   monky.factory('User', {
     firstName: 'firstName-#n',

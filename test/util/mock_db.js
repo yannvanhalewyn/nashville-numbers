@@ -11,10 +11,10 @@ function _clearDB() {
   }
 }
 
-// Use mock DB, or clear db afterEach
+// Use mock DB, or clear db afterEach if required
 if (config.use_mock_db) {
   var clearDB = require('mocha-mongoose')(config.db_url);
-} else {
+} else if (config.clear_db_after_test) {
   afterEach(function() {
     _clearDB();
   });

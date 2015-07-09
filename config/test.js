@@ -17,7 +17,8 @@
       profileFields: ['id', 'name', 'displayName', 'photos', 'hometown', 'friends'],
       enableProof: false
     },
-    use_mock_db: true
+    use_mock_db: true,
+    clear_db_after_test: true
   };
 
   module.exports = config;
