@@ -9,7 +9,7 @@
   var config = {
     PORT: _port,
     ROOT_PATH: _root_path,
-    db_url: 'mongodb://localhost/nashville_numbers',
+    db_url: 'http://neo4j:Diabolo1n@localhost:7474',
     facebook: {
       clientID: "854040621311184",
       clientSecret: "931475fc8ca3b75f7472d3ed544f69d3",
