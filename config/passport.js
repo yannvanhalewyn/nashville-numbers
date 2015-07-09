@@ -10,13 +10,10 @@
   module.exports = function(app) {
     // Passport serialisation
     passport.serializeUser(function(user, done) {
-      console.log("In SERIALIZE USER");
-      console.log(user);
       done(null, user._id);
     });
+
     passport.deserializeUser(function(obj, done) {
-      console.log("In DESERIALIZE USER");
-      console.log(obj);
       User.findById(obj, done);
     });
     app.use(passport.initialize());

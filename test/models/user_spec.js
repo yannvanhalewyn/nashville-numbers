@@ -1,11 +1,11 @@
-var util = require('../util');
-
-var User     = require('../../models/user');
-var Sheet    = require('../../models/sheet');
-var build    = require('../factory')
-var expect   = require('chai').expect;
-var Q        = require('q');
-var _        = require('lodash');
+var include = require('include');
+var expect  = require('chai').expect;
+var Q       = require('q');
+var _       = require('lodash');
+var util    = include('/test/util/mock_db');
+var User    = include('/models/user');
+var Sheet   = include('/models/sheet');
+var Factory = include('/test/util/factory');
 
 var authData = {provider_id: "123", provider: "facebook", firstName: "Claudius"};
 var authData2 = {provider_id: "123", provider: "facebook", firstName: "Cesar"};
@@ -99,7 +99,7 @@ describe("User", function() {
     var SHEET;
 
     beforeEach(function() {
-      return build('user')
+      return Factory.build('User')
       .then(function(user) {
         this.user = user;
         return user.createSheet({title: "FOOBAR"})
@@ -122,30 +122,41 @@ describe("User", function() {
     it('sets the params', function() {
       expect(this.sheet.title).to.eql("FOOBAR");
     });
+
+    it('persists to the db', function() {
+      return Sheet.findOne({title: "FOOBAR"})
+      .then(function(sheet) {
+        expect(sheet).to.not.be.undefined;
+      });
+    })
   });
 
   describe('friends', function() {
     beforeEach(function() {
-      return build('user')
-      .then(function(userA) {
-        this.userA = userA;
-        return build('user')
-        .then(function(userB) {
-          this.userB = userB;
-        }.bind(this));
-      }.bind(this));
+      return Factory.createList('User', 2)
+      .then(function(users) {
+        this.userA = users[0];
+        this.userB = users[1]
+      }.bind(this))
     });
 
     describe('#addFriend()', function() {
       context("when supplied friend id is a valid user", function() {
         beforeEach(function() {
-          this.userA.addFriend(this.userB._id);
+          return this.userA.addFriend(this.userB._id);
         });
 
         it("adds that id to the friends list", function() {
           expect(this.userA.friend_ids.length).to.eql(1);
           expect(this.userA.friend_ids[0]).to.equal(this.userB._id);
         });
+
+        it("persists the friendship", function() {
+          return User.findById(this.userA._id)
+          .then(function(user) {
+            expect(user.friend_ids.length).to.eql(1);
+          });
+        })
 
         context("when userA already has userB as a friend", function() {
           it("doesn't duplicate the entry", function() {
@@ -164,11 +175,37 @@ describe("User", function() {
     }); // End of describe '#addFriend()'
 
     describe('#removeFriend', function() {
+      beforeEach(function() {
+        return this.userA.addFriend(this.userB._id)
+        .then(this.userA.removeFriend.bind(this.userA, this.userB._id))
+      });
       it("removes the friendID", function() {
-        this.userA.addFriend(this.userB._id);
-        this.userA.removeFriend(this.userB._id);
         expect(this.userA.friend_ids.length).to.eql(0);
       });
+
+      it("persists the change", function() {
+        return User.findById(this.userA._id)
+        .then(function(db_user) {
+          expect(db_user.friend_ids.length).to.eql(0);
+        });
+      });
     }); // End of describe '#removeFriend'
+
+    describe('.friends virtual accessor', function() {
+      beforeEach(function() {
+        return this.userA.addFriend(this.userB._id);
+      });
+
+      it("returns an array of all the users friends", function() {
+        return this.userA.getFriends().exec()
+        .then(function(friends) {
+          var target = [_.pick(this.userB, ['firstName', 'lastName'])];
+          var found = friends.map(function(f) {
+            return _.pick(f, ['firstName', 'lastName']);
+          });
+          expect(found).to.eql(target);
+        }.bind(this));
+      });
+    }); // End of describe '.friends virtual accessor'
   }); // End of describe 'friends'
 });

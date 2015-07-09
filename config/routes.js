@@ -2,11 +2,19 @@
 
   "use strict";
 
-  var UserSession = require('../controllers/user_session_controller');
-  var Dashboard = require('../controllers/dashboard_controller');
-  var Sheets = require('../controllers/sheet_controller');
-  var Hubs = require('../controllers/hub_controller');
-  var Explore = require('../controllers/explore_controller');
+  var include     = require('include');
+
+  // Controllers
+  var UserSession = include('/controllers/user_session_controller')
+    , Dashboard   = include('/controllers/dashboard_controller')
+    , Sheets      = include('/controllers/sheet_controller')
+    , Friends     = include('/routes/friends')
+    , Users       = include('/routes/users')
+    , Hubs        = include('/controllers/hub_controller')
+    , Explore     = include('/controllers/explore_controller')
+
+  // Middlewares
+  var ensureAuth = include('/middlewares/auth');
 
   var routes = function(app) {
 
@@ -41,6 +49,13 @@
     app.route('/explore').get(ensureAuth, Explore.index);
 
 /*
+ * =============
+ * USERS/FRIENDS
+ * =============
+ */
+    app.use('/users/:user_id/friends', Friends);
+    app.use('/users', Users);
+/*
  * =========
  * RESOURCES
  * =========
@@ -53,13 +68,5 @@
   };
 
   module.exports = routes;
-
-  // Route middleware to ensure authentication
-  function ensureAuth(req, res, next) {
-    if (!req.isAuthenticated()) {
-      return res.redirect('/home');
-    }
-    return next();
-  }
 
 }())
