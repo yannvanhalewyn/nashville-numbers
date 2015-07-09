@@ -5,12 +5,13 @@
   var include     = require('include');
 
   // Controllers
-  var UserSession = include('/controllers/user_session_controller');
-  var Dashboard   = include('/controllers/dashboard_controller');
-  var Sheets      = include('/controllers/sheet_controller');
-  var Friends     = include('/routes/friends');
-  var Hubs        = include('/controllers/hub_controller');
-  var Explore     = include('/controllers/explore_controller');
+  var UserSession = include('/controllers/user_session_controller')
+    , Dashboard   = include('/controllers/dashboard_controller')
+    , Sheets      = include('/controllers/sheet_controller')
+    , Friends     = include('/routes/friends')
+    , Users       = include('/routes/users')
+    , Hubs        = include('/controllers/hub_controller')
+    , Explore     = include('/controllers/explore_controller')
 
   // Middlewares
   var ensureAuth = include('/middlewares/auth');
@@ -48,11 +49,12 @@
     app.route('/explore').get(ensureAuth, Explore.index);
 
 /*
- * =======
- * FRIENDS
- * =======
+ * =============
+ * USERS/FRIENDS
+ * =============
  */
-    app.use('/friends', Friends);
+    app.use('/users/:user_id/friends', Friends);
+    app.use('/users', Users);
 /*
  * =========
  * RESOURCES

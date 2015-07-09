@@ -2,11 +2,12 @@
 
   "use strict";
 
-  var FriendsRouter = require('express').Router();
+  var FriendsRouter = require('express').Router({mergeParams: true});
+  var ensureAuth = require('../middlewares/auth');
 
-  FriendsRouter.get('/friends', function(req, res) {
-    res.render('friends');
-  });
+  var FriendsController = require('../controllers/friends_controller');
+
+  FriendsRouter.get('/', ensureAuth, FriendsController.index);
 
   module.exports = FriendsRouter;
 
