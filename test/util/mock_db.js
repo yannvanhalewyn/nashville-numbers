@@ -1,5 +1,7 @@
 'use strict';
 
+// NOTE This is now outdated since I moved away from MongoDB
+
 process.env.NODE_ENV = 'test';
 
 var config = require('../../config');
