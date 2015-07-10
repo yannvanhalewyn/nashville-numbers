@@ -18,8 +18,20 @@
     },
 
     edit: function(req, res) {
+      // Get the requested sheet
       return Sheet.findById(req.params.sheet_id).then(function(sheet) {
-        res.render('sheet', {state: sheet.properties.data, dbid: sheet._id});
+
+        // Check if requester is the author
+        return sheet.author().then(function(author) {
+          if (req.user._id != author._id) {
+            // Not the author: Redirect to sheets
+            return res.redirect('/users/me/sheets');
+          }
+          // Author: render the edit template
+          res.render('sheet', {state: sheet.properties.data, dbid: sheet._id});
+        });
+
+      // Catch any errors in finding the sheet or author (or elsewhere for the matter)
       }).catch(function(err) {
         res.redirect('/users/me/sheets'); // Not found
       });
@@ -34,6 +46,10 @@
 
     // PUT#update
     update: function(req, res) {
+      return Sheet.findById(req.params.sheet_id).then(function(sheet) {
+        sheet.update({data: JSON.stringify(req.body)});
+        res.sendStatus(200);
+      }).catch(console.error);
       // // Validate params. Is this necessary?
       // if(!req.params || !req.body || !req.user) return res.sendStatus(422);
       // if(!/^([a-fA-F0-9]){24}$/.test(req.params.id)) return res.sendStatus(404);

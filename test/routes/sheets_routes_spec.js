@@ -5,6 +5,7 @@ var include   = require('include')
   , sinonChai = require('sinon-chai')
   , expect    = chai.expect
   , db        = include('/config/db')
+  , Sheet     = include('/models/sheet')
 chai.use(sinonChai);
 
 // Clear DB
@@ -128,14 +129,14 @@ describe('SHEETCONTROLLER', function() {
 
     // TODO Maybe redirect to the show page of the sheet if public, else
     // redirect to dashboard with a flash message
-    context.skip("when requesting user isn't the author", function() {
-      it("redirects to /sheets --", function(done) {
+    context("when requesting user isn't the author", function() {
+      it("redirects to /sheets a ", function(done) {
         login(this.userB, req);
         var id = this.sheets.userA[0]._id;
         req.url = "/" + id + "/edit";
         Router(reqres.req(req), res);
         res.on('end', function() {
-          expect(res.redirect).to.have.been.calledWith("/");
+          expect(res.redirect).to.have.been.calledWith("/users/me/sheets");
           done();
         });
       });
@@ -209,9 +210,43 @@ describe('SHEETCONTROLLER', function() {
    * ==========
    */
   describe('PUT#update', function() {
+    before(function() {
+      return Factory('sheet').then(function(entities) {
+        this.user1 = entities.user;
+        this.sheet = entities.sheet;
+      }.bind(this));
+    });
+
+    var dummyData = {
+      main: {title: "oldTitle", sections: ["section1", "section2", "section3"]},
+      sections: {section1: {foo: "bar"}}
+    };
+
+    beforeEach(function() {
+      req.method = 'PUT';
+      req.body = dummyData;
+    });
+
     context("with correct user logged in", function() {
+      beforeEach(function() {
+        login(this.userA, req);
+      });
+
       context("with valid sheetID", function() {
+        beforeEach(function(done) {
+          req.url = "/" + this.sheet._id;
+          Router(reqres.req(req), res);
+          res.on('end', done);
+        });
+
+        it("responds with a 200", function() {
+          expect(res.sendStatus).to.have.been.calledWith(200);
+        });
+
         it("updates the sheet.data in the DB", function() {
+          return Sheet.findById(this.sheet._id).then(function(sheet) {
+            expect(sheet.properties.data).to.eql(JSON.stringify(dummyData));
+          });
         });
 
         it("updates the sheets title and artist in the DB", function() {
@@ -229,31 +264,6 @@ describe('SHEETCONTROLLER', function() {
         it("sends a 404 (1)", function() {
         });
       }); // End of context 'with invalid sheet id'
-
-      context("with mising params object", function() {
-        it("sends a 422 (2)", function() {
-        });
-      }); // End of context 'with missing sheet id'
-
-      context("with missing params.id", function() {
-        it("sends a 404 (2)", function() {
-        });
-      }); // End of context 'with missing sheet id'
-
-      context("with missing body", function() {
-        it("sends a 422 (3)", function() {
-        });
-      }); // End of context 'with missing data'
-
-      context("with empty body", function() {
-        it("sends a 422 (4)", function() {
-        });
-      }); // End of context 'with missing data'
-
-      context.skip("with invalid data", function() {
-        it("sends a 406", function() {
-        });
-      }); // End of context 'with invalid data'
     }); // End of context 'with valid user logged in'
 
     context("with no user logged in", function() {
