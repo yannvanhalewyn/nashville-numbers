@@ -2,8 +2,10 @@
 
   "use strict";
 
-  var db = require('../config/db')
-    , _ = require('lodash')
+  var include = require('include')
+    , db     = require('../config/db')
+    , _      = require('lodash')
+    , Cypher = include('/helpers/cypher')
 
 /*
  * ===========
@@ -73,6 +75,15 @@
     return db.query("MATCH (p:Person) WHERE id(p) = {id} RETURN p", {id: id})
     .then(function(result) {
       return new User(result[0].p);
+    });
+  }
+
+  User.findAndUpdateOrCreate = function(mergeParams, params) {
+    var query = Cypher.merge('p', 'Person', mergeParams);
+    query += Cypher.set('p', params);
+    query += "RETURN p";
+    return db.query(query, _.assign(mergeParams, params)).then(function(res) {
+      return new User(res[0].p);
     });
   }
 

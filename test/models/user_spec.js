@@ -87,5 +87,55 @@ describe('User', function() {
         expect(this.foundUser.sheets).not.to.be.undefined;
       });
     }); // End of describe '#findById'
+
+    describe('#findAndUpdateOrCreate()', function() {
+      context("when none is found", function() {
+        it("creates a new user", function() {
+          return User.findAndUpdateOrCreate({name: "Yann"})
+          .then(function(user) {
+            return db.query("MATCH (p:Person {name: {name}}) RETURN p", {name: "Yann"})
+            .then(function(found) {
+              expect(found.length).to.eql(1);
+              expect(found[0].p.properties.name).to.eql(user.properties.name);
+            });
+          });
+        });
+      }); // End of context 'when none is found'
+
+      context("when a user exists", function() {
+        it("doesn't create a new user", function() {
+          return User.findAndUpdateOrCreate({name: "Yann"}).then(function(firstUser) {
+            return User.findAndUpdateOrCreate({name: "Yann"}).then(function(secondUser) {
+              expect(firstUser._id).to.eql(secondUser._id);
+            });
+          });
+        });
+      }); // End of context 'when a user exists'
+
+      describe('updateParams', function() {
+        context("when no user yet exists", function() {
+          it("persists those properties", function() {
+            return User.findAndUpdateOrCreate({name: "theName"}, {age: 23, lastName: "lname"})
+            .then(function(createdUser) {
+              expect(createdUser.properties.age).to.eql(23);
+              expect(createdUser.properties.lastName).to.eql("lname");
+            });
+          });
+        }); // End of context 'when no user yes exists'
+
+        context("when a user already existsd", function() {
+          beforeEach(function() {
+            return Factory('user', {provider_id: 12345});
+          });
+
+          it("persists those properties a", function() {
+            return User.findAndUpdateOrCreate({provider_id: 12345}, {firstName: "lala"})
+            .then(function(updatedUser) {
+              expect(updatedUser.properties.firstName).to.eql("lala");
+            });
+          });
+        }); // End of context 'when a user already existsd'
+      }); // End of describe 'updateParams'
+    }); // End of describe '#find()'
   }); // End of describe 'STATICS'
 }); // End of describe 'User'
