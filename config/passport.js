@@ -28,14 +28,15 @@
         var providerData = profile._json;
         providerData.accessToken = accessToken;
         providerData.refreshToken = refreshToken;
-        User.create({
+        User.findAndUpdateOrCreate({
+          provider_id: profile.id
+        },{
           firstName: profile.name.givenName,
           lastName: profile.name.familyName,
           displayName: profile.name.displayName,
           userName: profile.username,
           picture: profile.photos ? profile.photos[0].value : '/img/faces/unknown-user.png',
           provider: 'facebook',
-          provider_id: profile.id,
           providerData: providerData
         }).then(function(newUser) {done(null, newUser)}).catch(done);
       }
