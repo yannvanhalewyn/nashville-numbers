@@ -66,7 +66,7 @@
     var query = Cypher.match('s', 'Sheet');
     query += Cypher.whereIdIs('s', 'id');
     query += "RETURN s";
-    return db.query(query, {id: id}).then(function(response) {
+    return db.query(query, {id: parseInt(id)}).then(function(response) {
       if (_.isEmpty(response)) throw "Could not find sheet with id " + id;
       return new Sheet(response[0].s)
     });

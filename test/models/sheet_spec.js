@@ -33,7 +33,6 @@ describe('Sheet', function() {
 
     it("stores a relationship to the user", function() {
       return Sheet.create(this.params).then(function(sheet) {
-        console.log(sheet);
         return db.query(
           "MATCH (p:Person)-[:AUTHORED]->(s:Sheet) WHERE id(s) = {sid} RETURN p",
           {sid: sheet._id}
@@ -93,7 +92,7 @@ describe('Sheet', function() {
 
   // STATIC
   describe('.findById()', function() {
-    context("when found", function() {
+    context("when valid id", function() {
       beforeEach(function() {
         return Factory('sheet').then(function(entities) {
           this.createdSheet = entities.sheet;
@@ -113,6 +112,17 @@ describe('Sheet', function() {
         expect(this.foundSheet).to.eql(this.createdSheet);
       });
     }); // End of context 'when found'
+
+    context("when id is a string", function() {
+      it("finds the correct sheet anyway", function() {
+        return Factory('sheet').then(function(entities) {
+          this.createdSheet = entities.sheet;
+          return Sheet.findById(this.createdSheet._id.toString()).then(function(foundSheet) {
+            expect(foundSheet).not.to.be.empty;
+          }.bind(this));
+        }.bind(this));
+      });
+    }); // End of context 'when id is a string'
 
     context("when not found", function() {
       it("throws a not found error", function(done) {
