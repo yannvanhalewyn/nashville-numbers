@@ -87,4 +87,26 @@ describe('Sheet', function() {
       }.bind(this));
     });
   }); // End of describe '#destroy()'
+
+  // STATIC
+  describe('.findById()', function() {
+    beforeEach(function() {
+      return Factory('sheet').then(function(entities) {
+        this.createdSheet = entities.sheet;
+        return Sheet.findById(this.createdSheet._id).then(function(foundSheet) {
+          this.foundSheet = foundSheet;
+        }.bind(this));
+      }.bind(this));
+    });
+
+    it("returns an instance of Sheet", function() {
+      expect(this.foundSheet).not.to.be.undefined;
+      expect(this.foundSheet).to.be.an.instanceof(Sheet);
+    });
+
+    it("returns the searched for sheet", function() {
+      expect(this.foundSheet).to.eql(this.createdSheet);
+      expect(this.foundSheet).to.eql(this.createdSheet);
+    });
+  }); // End of describe '.findById()'
 }); // End of describe 'Sheet'

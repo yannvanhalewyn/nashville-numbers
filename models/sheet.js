@@ -1,8 +1,10 @@
 (function() {
 
   // var moment = require('moment');
-  var db = require('../config/db')
-    , _ = require('lodash')
+  var include = require('include')
+    , db      = require('../config/db')
+    , _       = require('lodash')
+    , Cypher  = include('/helpers/cypher')
 
   var DEFAULT = {
     title: "title",
@@ -64,6 +66,17 @@
       return new Sheet(res[0].s);
     });
   }
+
+  Sheet.findById = function(id) {
+    var query = Cypher.match('s', 'Sheet');
+    query += Cypher.whereIdIs('s', 'id');
+    query += "RETURN s";
+    return db.query(query, {id: id}).then(function(response) {
+      return new Sheet(response[0].s)
+    });
+  }
+
+  Sheet.findById(100);
 
   module.exports = Sheet;
 

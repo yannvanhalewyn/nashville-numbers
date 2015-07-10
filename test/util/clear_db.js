@@ -6,7 +6,7 @@
 
   afterEach(function() {
     return db.query(
-      "MATCH (s:Sheet {title: {title}}) OPTIONAL MATCH (s)-[r]-() DELETE s,r",
+      "MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r",
       {title: "The title"}
     )
   });

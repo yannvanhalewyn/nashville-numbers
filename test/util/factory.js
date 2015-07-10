@@ -4,9 +4,9 @@
 
   var include = require('include')
     , _       = require('lodash')
-    , Chance = require('chance')
+    , Chance  = require('chance')
     , User    = include('/models/user')
-    , Sheet = include('/models/sheet')
+    , Sheet   = include('/models/sheet')
 
   var chance = new Chance();
   chance.mixin({
