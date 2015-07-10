@@ -8,11 +8,7 @@
     if (!params) return "";
     var queries = [];
     _.forEach(params, function(val, key) {
-      if (_.isNumber(val)) {
-        queries.push(key + ":{" + key + "}");
-      } else {
-        queries.push(key + ":'{" + key + "}'");
-      }
+      queries.push(key + ":{" + key + "}");
     });
     return "{" + queries.join(',') + "}";
   }
@@ -41,7 +37,7 @@
     },
 
     set: function(varname, params) {
-      if (!params || _.isEmpty(params)) throw "Can't set an empty params list!";
+      if (!params || _.isEmpty(params)) return "";
       return "SET " + _paramsToSetString(varname, params) + " ";
     },
 

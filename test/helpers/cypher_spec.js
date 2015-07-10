@@ -13,7 +13,7 @@ describe('CYPHER', function() {
     context("when one param is given", function() {
       it("returns MATCH (l:label {param: {param}})", function() {
         expect(Cypher.match('p', 'Person', {name: "Yann"})).to.eql(
-          "MATCH (p:Person{name:'{name}'}) "
+          "MATCH (p:Person{name:{name}}) "
         );
       });
     }); // End of context 'when one param is given'
@@ -22,17 +22,9 @@ describe('CYPHER', function() {
       it("returns an valid string containing every param", function() {
         expect(Cypher.match('p', 'Person', {
           name: "theName", lastName: "theLastName", foo: "Bar"
-        })).to.eql("MATCH (p:Person{name:'{name}',lastName:'{lastName}',foo:'{foo}'}) ");
+        })).to.eql("MATCH (p:Person{name:{name},lastName:{lastName},foo:{foo}}) ");
       });
     }); // End of context 'when many params are given'
-
-    context("when a param is a number", function() {
-      it("doesn't surround the value with quotes", function() {
-        expect(Cypher.match('p', 'Person', {name: "Fred", age: 23})).to.eql(
-          "MATCH (p:Person{name:'{name}',age:{age}}) "
-        );
-      });
-    }); // End of context 'when a param is a number'
   }); // End of describe '#match()'
 
   describe('#where()', function() {
@@ -56,19 +48,19 @@ describe('CYPHER', function() {
       });
     }); // End of context 'when a param is a number'
 
-    it("throws when no params are given", function() {
-      expect(Cypher.set.bind(Cypher, 'x')).to.throw();
+    it("returns an empty string when no params are given", function() {
+      expect(Cypher.set('x')).to.eql("");
     });
 
-    it("throws when params object is empty", function() {
-      expect(Cypher.set.bind(Cypher, 'x', {})).to.throw();
+    it("returns an empty string when params object is empty", function() {
+      expect(Cypher.set('x', {})).to.eql("")
     });
   }); // End of describe '#set()'
 
   describe('#merge()', function() {
     it("returns MERGE (x:label {prop: {prop}})", function() {
       expect(Cypher.merge('x', 'Label', {name: "theName", age: 23})).to.eql(
-        "MERGE (x:Label{name:'{name}',age:{age}}) "
+        "MERGE (x:Label{name:{name},age:{age}}) "
       );
     });
 
