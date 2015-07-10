@@ -23,6 +23,12 @@ describe('User', function() {
         expect(user.properties.lastName).to.eql("Vanhalewyn");
       });
     });
+
+    it("returns an instace of User", function() {
+      return User.create(this.validParams).then(function(user) {
+        expect(user).to.be.an.instanceof(User);
+      })
+    });
   }); // End of context 'instantiation'
 
   describe('#createSheet()', function() {
@@ -30,6 +36,9 @@ describe('User', function() {
       return Factory('user').then(function(user) {
         this.user = user;
         return user.createSheet({title: "theTitle", artist: "theArtist", visibility: "private"})
+        .then(function(sheet) {
+          this.sheet = sheet;
+        }.bind(this))
       }.bind(this))
     });
 
@@ -44,6 +53,20 @@ describe('User', function() {
         expect(res[0].s.properties.title).to.eql("theTitle");
       }.bind(this))
     });
+
+    it("returns a sheet object", function() {
+      expect(this.sheet).to.be.an.instanceof(include('/models/sheet'));
+    });
+
+    context("with missing params", function() {
+      it("sets those params to the default", function() {
+        return this.user.createSheet({}).then(function(sheet) {
+          expect(sheet.properties.visibility).to.eql("public");
+          expect(sheet.properties.title).to.eql("title");
+          expect(sheet.properties.artist).to.eql("artist");
+        });
+      });
+    }); // End of context 'with missing params'
   }); // End of describe '#createSheet()'
 
   describe('#sheets()', function() {
@@ -85,10 +108,17 @@ describe('User', function() {
 
       it("returns an actual user object WITH the prototype methods", function() {
         expect(this.foundUser.sheets).not.to.be.undefined;
+        expect(this.foundUser).to.be.an.instanceof(User);
       });
     }); // End of describe '#findById'
 
     describe('#findAndUpdateOrCreate()', function() {
+      it("returns an instance of User", function() {
+        return User.findAndUpdateOrCreate({name: "Yann"}).then(function(user) {
+          expect(user).to.be.an.instanceof(User);
+        });
+      });
+
       context("when none is found", function() {
         it("creates a new user", function() {
           return User.findAndUpdateOrCreate({name: "Yann"})

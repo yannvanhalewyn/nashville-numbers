@@ -6,6 +6,7 @@
     , db     = require('../config/db')
     , _      = require('lodash')
     , Cypher = include('/helpers/cypher')
+    , Sheet = include('/models/sheet') // For sheet instantiation
 
 /*
  * ===========
@@ -22,7 +23,8 @@
  * ========
  */
   User.prototype.createSheet = function(params) {
-    params.uid = this._id;
+    var defaults = {title: "title", artist: "artist", visibility: "public"};
+    params = _.assign({}, defaults, {uid: this._id}, params);
     return db.query(
       "MATCH (p:Person) WHERE id(p) = {uid}" +
       "CREATE (s:Sheet {" +
@@ -31,8 +33,10 @@
         "visibility: {visibility}" +
       "})," +
       "(p)-[r:AUTHORED]->(s)" +
-      "RETURN p,s,r", params
-    );
+      "RETURN s", params
+    ).then(function(res) {
+      return new Sheet(res[0].s);
+    });
   };
 
   User.prototype.sheets = function() {

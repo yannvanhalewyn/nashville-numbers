@@ -47,6 +47,8 @@
   // Should I check if the UID is an existing user?
   // ACTUALLY it doesn't go through with the query if MATCH finds nothing.
   // GOD I LOVE neo4j!! It does my error handling (missing uid), invalid uid,
+  // Actually I think I don't even need this function, only users instantiate
+  // sheets through createSheet
   Sheet.create = function(params) {
     params = _.assign({}, DEFAULT, params);
     return db.query(
