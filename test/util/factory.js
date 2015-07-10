@@ -4,9 +4,9 @@
 
   var include = require('include')
     , _       = require('lodash')
-    , Chance = require('chance')
+    , Chance  = require('chance')
     , User    = include('/models/user')
-    , Sheet = include('/models/sheet')
+    , Sheet   = include('/models/sheet')
 
   var chance = new Chance();
   chance.mixin({
@@ -37,12 +37,13 @@
         if (params && params.uid) {
           return Sheet.create(_.assign(chance.sheet(), params));
         } else {
-          return Factory('user').then(function(user) {
+          return Factory('user').then(function(params, user) {
+            var params = _.assign(chance.sheet(), {uid: user._id}, params)
             return Sheet.create(_.assign(chance.sheet(), {uid: user._id}, params))
             .then(function(sheet) {
               return {user: user, sheet: sheet}; // The awesome final touch!!
             });
-          }).catch(console.error);
+          }.bind(this, params)).catch(console.error); // Bind is the hack needed to pass the params on
         }
         break;
 

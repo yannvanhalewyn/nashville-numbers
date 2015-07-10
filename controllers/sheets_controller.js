@@ -12,19 +12,9 @@
 
     // GET#index
     index: function(req, res) {
-      // Double check the user (if id exists but invalid, the error block
-      // below will run
-      if (!req.user) return res.sendStatus(422);
-      if (!req.user._id) return res.sendStatus(401);
-
-      // Find sheets and render sheets templte
-      return Sheet.find({authorID: req.user._id}).exec()
-      .then(function(sheets) {
-        res.render('sheets', {
-          active_sheets: true,
-          sheets: sheets
-        });
-      }, function(err) {res.redirect('/')});
+      req.user.sheets().then(function(sheets) {
+        res.render('sheets', {sheets: sheets});
+      });
     },
 
     // GET#show
@@ -46,19 +36,19 @@
       }, function(err) {res.redirect('/')});
     },
 
+    edit: function(req, res) {
+      return Sheet.findById(req.params.sheet_id).then(function(sheet) {
+        res.render('sheet', {state: sheet.properties.data});
+      }).catch(function(err) {
+        res.redirect('/users/me/sheets'); // Not found
+      });
+    },
+
     // POST#create
     create: function(req, res) {
-      if (!req.body.title) return res.sendStatus(400);
-      if (!req.user) return res.sendStatus(403);
-      return new Sheet({
-        title: req.body.title,
-        artist: req.body.artist,
-        authorID: req.user._id,
-      }).save()
-      .then(function(newSheet) {
-        var url = ('/sheets/' + newSheet._id).toString();
-        res.redirect(url);
-      }, function(err) { res.redirect('/home'); });
+      return req.user.createSheet(req.body).then(function(sheet) {
+        res.redirect('/users/me/sheets/' + sheet._id + '/edit');
+      }).catch(console.error);
     },
 
     // PUT#update

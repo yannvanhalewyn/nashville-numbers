@@ -7,7 +7,6 @@
   "use strict";
 
   var include = require('include')
-    , mongoose = require('mongoose')
 
   var FriendController = {
 

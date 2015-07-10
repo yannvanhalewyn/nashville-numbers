@@ -12,7 +12,8 @@ describe('Sheet', function() {
         title: "theTitle",
         artist: "theArtist",
         visibility: 'public',
-        uid: user._id
+        uid: user._id,
+        data: "FOOBAR"
       };
       done();
     }.bind(this))
@@ -26,6 +27,7 @@ describe('Sheet', function() {
         expect(sheet.properties.title).to.eql("theTitle");
         expect(sheet.properties.artist).to.eql("theArtist");
         expect(sheet.properties.visibility).to.eql("public");
+        expect(sheet.properties.data).to.eql("FOOBAR");
       });
     });
 
@@ -87,4 +89,48 @@ describe('Sheet', function() {
       }.bind(this));
     });
   }); // End of describe '#destroy()'
-}); // End of describe 'Sheet'
+
+  // STATIC
+  describe('.findById()', function() {
+    context("when valid id", function() {
+      beforeEach(function() {
+        return Factory('sheet').then(function(entities) {
+          this.createdSheet = entities.sheet;
+          return Sheet.findById(this.createdSheet._id).then(function(foundSheet) {
+            this.foundSheet = foundSheet;
+          }.bind(this));
+        }.bind(this));
+      });
+
+      it("returns an instance of Sheet", function() {
+        expect(this.foundSheet).not.to.be.undefined;
+        expect(this.foundSheet).to.be.an.instanceof(Sheet);
+      });
+
+      it("returns the searched for sheet", function() {
+        expect(this.foundSheet).to.eql(this.createdSheet);
+        expect(this.foundSheet).to.eql(this.createdSheet);
+      });
+    }); // End of context 'when found'
+
+    context("when id is a string", function() {
+      it("finds the correct sheet anyway", function() {
+        return Factory('sheet').then(function(entities) {
+          this.createdSheet = entities.sheet;
+          return Sheet.findById(this.createdSheet._id.toString()).then(function(foundSheet) {
+            expect(foundSheet).not.to.be.empty;
+          }.bind(this));
+        }.bind(this));
+      });
+    }); // End of context 'when id is a string'
+
+    context("when not found", function() {
+      it("throws a not found error", function(done) {
+        return Sheet.findById(9999).then(done, function(err) {
+          expect(err).to.eql("Could not find sheet with id 9999");
+          done();
+        }).catch(done);
+      });
+    }); // End of context 'when not found'
+  }); // End of describe '.findById()'
+}); // End of describe 'Shewhen sheet is not found

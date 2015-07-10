@@ -23,6 +23,12 @@ describe('User', function() {
         expect(user.properties.lastName).to.eql("Vanhalewyn");
       });
     });
+
+    it("returns an instace of User", function() {
+      return User.create(this.validParams).then(function(user) {
+        expect(user).to.be.an.instanceof(User);
+      })
+    });
   }); // End of context 'instantiation'
 
   describe('#createSheet()', function() {
@@ -30,6 +36,9 @@ describe('User', function() {
       return Factory('user').then(function(user) {
         this.user = user;
         return user.createSheet({title: "theTitle", artist: "theArtist", visibility: "private"})
+        .then(function(sheet) {
+          this.sheet = sheet;
+        }.bind(this))
       }.bind(this))
     });
 
@@ -44,6 +53,20 @@ describe('User', function() {
         expect(res[0].s.properties.title).to.eql("theTitle");
       }.bind(this))
     });
+
+    it("returns a sheet object", function() {
+      expect(this.sheet).to.be.an.instanceof(include('/models/sheet'));
+    });
+
+    context("with missing params", function() {
+      it("sets those params to the default", function() {
+        return this.user.createSheet({}).then(function(sheet) {
+          expect(sheet.properties.visibility).to.eql("public");
+          expect(sheet.properties.title).to.eql("title");
+          expect(sheet.properties.artist).to.eql("artist");
+        });
+      });
+    }); // End of context 'with missing params'
   }); // End of describe '#createSheet()'
 
   describe('#sheets()', function() {
@@ -61,23 +84,88 @@ describe('User', function() {
     it("returns an array of all sheets related to the user", function() {
       return this.userA.sheets().then(function(sheets) {
         expect(sheets.length).to.eql(2);
-        expect(sheets[1].s._id).to.eql(this.sheetA._id); // Might later throw error, not sure
-        expect(sheets[0].s._id).to.eql(this.sheetB._id); // how neo4j orders responses.
+        expect(sheets[1]._id).to.eql(this.sheetA._id); // Might later throw error, not sure
+        expect(sheets[0]._id).to.eql(this.sheetB._id); // how neo4j orders responses.
       }.bind(this));
     });
-
   }); // End of describe '#sheets()'
 
   describe('STATICS', function() {
     describe('#findById', function() {
-      it("returns the searched for user object", function() {
+      beforeEach(function() {
         return Factory('user').then(function(createdUser) {
+          this.createdUser = createdUser;
           return User.findById(createdUser._id).then(function(foundUser) {
-            expect(createdUser._id).to.eql(foundUser._id);
-            expect(createdUser.properties).to.eql(foundUser.properties);
-          })
-        })
+            this.foundUser = foundUser;
+          }.bind(this))
+        }.bind(this))
+      });
+
+      it("returns the searched for user object", function() {
+        expect(this.createdUser._id).to.eql(this.foundUser._id);
+        expect(this.createdUser.properties).to.eql(this.foundUser.properties);
+      });
+
+      it("returns an actual user object WITH the prototype methods", function() {
+        expect(this.foundUser.sheets).not.to.be.undefined;
+        expect(this.foundUser).to.be.an.instanceof(User);
       });
     }); // End of describe '#findById'
+
+    describe('#findAndUpdateOrCreate()', function() {
+      it("returns an instance of User", function() {
+        return User.findAndUpdateOrCreate({name: "Yann"}).then(function(user) {
+          expect(user).to.be.an.instanceof(User);
+        });
+      });
+
+      context("when none is found", function() {
+        it("creates a new user", function() {
+          return User.findAndUpdateOrCreate({name: "Yann"})
+          .then(function(user) {
+            return db.query("MATCH (p:Person {name: {name}}) RETURN p", {name: "Yann"})
+            .then(function(found) {
+              expect(found.length).to.eql(1);
+              expect(found[0].p.properties.name).to.eql(user.properties.name);
+            });
+          });
+        });
+      }); // End of context 'when none is found'
+
+      context("when a user exists", function() {
+        it("doesn't create a new user", function() {
+          return User.findAndUpdateOrCreate({name: "Yann"}).then(function(firstUser) {
+            return User.findAndUpdateOrCreate({name: "Yann"}).then(function(secondUser) {
+              expect(firstUser._id).to.eql(secondUser._id);
+            });
+          });
+        });
+      }); // End of context 'when a user exists'
+
+      describe('updateParams', function() {
+        context("when no user yet exists", function() {
+          it("persists those properties", function() {
+            return User.findAndUpdateOrCreate({name: "theName"}, {age: 23, lastName: "lname"})
+            .then(function(createdUser) {
+              expect(createdUser.properties.age).to.eql(23);
+              expect(createdUser.properties.lastName).to.eql("lname");
+            });
+          });
+        }); // End of context 'when no user yes exists'
+
+        context("when a user already existsd", function() {
+          beforeEach(function() {
+            return Factory('user', {provider_id: 12345});
+          });
+
+          it("persists those properties a", function() {
+            return User.findAndUpdateOrCreate({provider_id: 12345}, {firstName: "lala"})
+            .then(function(updatedUser) {
+              expect(updatedUser.properties.firstName).to.eql("lala");
+            });
+          });
+        }); // End of context 'when a user already existsd'
+      }); // End of describe 'updateParams'
+    }); // End of describe '#find()'
   }); // End of describe 'STATICS'
 }); // End of describe 'User'
