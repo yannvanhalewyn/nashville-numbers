@@ -61,22 +61,30 @@ describe('User', function() {
     it("returns an array of all sheets related to the user", function() {
       return this.userA.sheets().then(function(sheets) {
         expect(sheets.length).to.eql(2);
-        expect(sheets[1].s._id).to.eql(this.sheetA._id); // Might later throw error, not sure
-        expect(sheets[0].s._id).to.eql(this.sheetB._id); // how neo4j orders responses.
+        expect(sheets[1]._id).to.eql(this.sheetA._id); // Might later throw error, not sure
+        expect(sheets[0]._id).to.eql(this.sheetB._id); // how neo4j orders responses.
       }.bind(this));
     });
-
   }); // End of describe '#sheets()'
 
   describe('STATICS', function() {
     describe('#findById', function() {
-      it("returns the searched for user object", function() {
+      beforeEach(function() {
         return Factory('user').then(function(createdUser) {
+          this.createdUser = createdUser;
           return User.findById(createdUser._id).then(function(foundUser) {
-            expect(createdUser._id).to.eql(foundUser._id);
-            expect(createdUser.properties).to.eql(foundUser.properties);
-          })
-        })
+            this.foundUser = foundUser;
+          }.bind(this))
+        }.bind(this))
+      });
+
+      it("returns the searched for user object", function() {
+        expect(this.createdUser._id).to.eql(this.foundUser._id);
+        expect(this.createdUser.properties).to.eql(this.foundUser.properties);
+      });
+
+      it("returns an actual user object WITH the prototype methods", function() {
+        expect(this.foundUser.sheets).not.to.be.undefined;
       });
     }); // End of describe '#findById'
   }); // End of describe 'STATICS'

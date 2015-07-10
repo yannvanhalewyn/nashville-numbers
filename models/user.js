@@ -37,7 +37,12 @@
     return db.query(
       "MATCH (p:Person)-[:AUTHORED]->(s:Sheet) WHERE id(p) = {uid} RETURN s",
       {uid: this._id}
-    );
+    ).then(function(res) {
+      // Every entry is stored in 's'. Just move them up a nudge.
+      return res.map(function(entry) {
+        return entry.s;
+      });
+    })
   }
 
 
@@ -67,7 +72,7 @@
   User.findById = function(id) {
     return db.query("MATCH (p:Person) WHERE id(p) = {id} RETURN p", {id: id})
     .then(function(result) {
-      return result[0].p;
+      return new User(result[0].p);
     });
   }
 
