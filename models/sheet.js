@@ -53,16 +53,11 @@
   // sheets through createSheet
   Sheet.create = function(params) {
     params = _.assign({}, DEFAULT, params);
-    return db.query(
-      "MATCH (p:Person) WHERE id(p) = {uid} " +
-      "CREATE (s:Sheet {" +
-        "title: {title}," +
-        "artist: {artist}," +
-        "visibility: {visibility}" +
-      "})," +
-      "(p)-[:AUTHORED]->(s)" +
-      "RETURN s", params)
-    .then(function(res) {
+    var query = Cypher.match('p', 'Person');
+    query += Cypher.whereIdIs('p', 'uid');
+    query += Cypher.create('s', 'Sheet', _.omit(params, 'uid'));
+    query += ",(p)-[:AUTHORED]->(s) RETURN s";
+    return db.query(query, params).then(function(res) {
       return new Sheet(res[0].s);
     });
   }

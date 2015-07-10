@@ -12,7 +12,8 @@ describe('Sheet', function() {
         title: "theTitle",
         artist: "theArtist",
         visibility: 'public',
-        uid: user._id
+        uid: user._id,
+        data: "FOOBAR"
       };
       done();
     }.bind(this))
@@ -26,11 +27,13 @@ describe('Sheet', function() {
         expect(sheet.properties.title).to.eql("theTitle");
         expect(sheet.properties.artist).to.eql("theArtist");
         expect(sheet.properties.visibility).to.eql("public");
+        expect(sheet.properties.data).to.eql("FOOBAR");
       });
     });
 
     it("stores a relationship to the user", function() {
       return Sheet.create(this.params).then(function(sheet) {
+        console.log(sheet);
         return db.query(
           "MATCH (p:Person)-[:AUTHORED]->(s:Sheet) WHERE id(s) = {sid} RETURN p",
           {sid: sheet._id}
