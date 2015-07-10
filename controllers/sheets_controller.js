@@ -33,6 +33,7 @@
 
       // Catch any errors in finding the sheet or author (or elsewhere for the matter)
       }).catch(function(err) {
+        console.log(err);
         res.redirect('/users/me/sheets'); // Not found
       });
     },

@@ -27,7 +27,6 @@ describe('Sheet', function() {
         expect(sheet.properties.title).to.eql("theTitle");
         expect(sheet.properties.artist).to.eql("theArtist");
         expect(sheet.properties.visibility).to.eql("public");
-        expect(sheet.properties.data).to.eql("FOOBAR");
       });
     });
 
