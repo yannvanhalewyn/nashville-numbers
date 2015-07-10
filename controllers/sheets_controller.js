@@ -36,10 +36,18 @@
       }, function(err) {res.redirect('/')});
     },
 
+    edit: function(req, res) {
+      return Sheet.findById(req.params.sheet_id).then(function(sheet) {
+        res.render('sheet', {state: sheet.properties.data});
+      }).catch(function(err) {
+        res.redirect('/users/me/sheets'); // Not found
+      });
+    },
+
     // POST#create
     create: function(req, res) {
       return req.user.createSheet(req.body).then(function(sheet) {
-        res.redirect('/sheets/' + sheet._id);
+        res.redirect('/users/me/sheets/' + sheet._id + '/edit');
       }).catch(console.error);
     },
 

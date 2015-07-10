@@ -22,6 +22,7 @@ describe('SHEETCONTROLLER', function() {
 
   beforeEach(function() {
     req = {isAuthenticated: function() {return false} };
+    res = null;
     res = reqres.res();
   });
 
@@ -31,27 +32,8 @@ describe('SHEETCONTROLLER', function() {
    * =========
    */
   describe('GET#index', function() {
-    // Create 2 users: userA and userB. Each of them has 2 sheets, a public and a
-    // private one.
-    // We now have this.userA, this.userB, this.sheets.userA, this.sheets.userB to ref to.
     before(function() {
-      this.sheets = {};
-      return Factory('sheet').then(function(objs) {
-        this.userA = objs.user;
-        this.sheets.userA = [objs.sheet];
-        return Factory('sheet', {uid: this.userA._id, visibility: 'private'})
-        .then(function(sheet2) {
-          this.sheets.userA.push(sheet2);
-          return Factory('sheet').then(function(objs) {
-            this.userB = objs.user;
-            this.sheets.userB = [objs.sheet];
-            return Factory('sheet', {uid: this.userB._id, visibility: 'private'})
-            .then(function(privateSheet) {
-              this.sheets.userB.push(privateSheet);
-            }.bind(this));
-          }.bind(this));
-        }.bind(this));
-      }.bind(this))
+      return seed.bind(this)();
     });
 
     beforeEach(function() {
@@ -97,54 +79,56 @@ describe('SHEETCONTROLLER', function() {
 
   /*
    * ========
-   * GET#SHOW
+   * GET#EDIT
    * ========
    */
-  describe('GET#show', function() {
+  describe('GET#edit', function() {
+    beforeEach(function() {
+      return seed.bind(this)();
+    });
+
     context("with correct logged in user", function() {
+      beforeEach(function() {
+        login(this.userA, req)
+      });
+
       context("with valid sheetid", function() {
+        beforeEach(function(done) {
+          var id = this.sheets.userA[1]._id; // A1 has the data
+          req.url = "/" + id + "/edit";
+          Router(reqres.req(req), res);
+          res.on('end', done);
+        });
+
         it("renders the sheet template", function() {
+          expect(res.render).to.have.been.calledWith("sheet");
         });
 
-        it("sends along the correct sheet data", function() {
+        it("sends along the correct sheet data", function(done) {
+          return db.query("MATCH (s:Sheet) RETURN s").then(function() {
+            var data = this.sheets.userA[1].properties.data;
+            expect(res.render).to.have.been.calledWith('sheet', {state: data});
+            done();
+          }.bind(this), done).catch(done);
         });
       });
+
+      context("with missing or invalid sheetid", function() {
+        it("redirects to /sheets --", function(done) {
+          req.url = "/9999/edit"; // Missing sheet
+          Router(reqres.req(req), res);
+          res.on('end', function() {
+            expect(res.redirect).to.have.been.calledWith("/users/me/sheets");
+            done();
+          });
+        });
+      }); // End of context 'with missing or invalid sheetid'
     });
 
-    context("when another user is requesting", function() {
-      context("when the requested sheet is public", function() {
-        it("renders the sheet template with the correct data but readonly", function() {
-        });
-      }); // End of context 'when the requested sheet is public'
-
-      context("when the requested sheet is private", function() {
-        it("redirects to /sheets (1)", function() {
-        });
-      }); // End of context 'when the requested sheet is private'
-    }); // End of context 'when another user is requesting'
-
-    context("when user property is inexistant", function() {
-      it("it sends a 422 (1)", function() {
+    context("when requesting user isn't the author", function() {
+      it("redirects to /sheets", function() {
       });
-    });
-
-    context("when user property is invalid", function() {
-      it("it sends a 401", function() {
-      });
-    });
-
-    // NOTE come back later, is this necessary?
-    context.skip("With an invalid logged in user ID", function() {
-      context("with no sheet id", function() {
-        it("redirects to /", function() {
-        });
-      });
-
-      context("with a sheet id", function() {
-        it("redirects to /", function() {
-        });
-      });
-    }); // End of with invalid logged in userID
+    }); // End of context 'when requesting user isn't the author'
   }); // End of GET#show
 
   /*
@@ -191,7 +175,7 @@ describe('SHEETCONTROLLER', function() {
         return db.query(
           "MATCH (s:Sheet {title: {title}}) RETURN s", {title: "The title"}
         ).then(function(response) {
-          var url = "/sheets/" + response[0].s._id;
+          var url = "/users/me/sheets/" + response[0].s._id + "/edit";
           expect(res.redirect).to.have.been.calledWith(url);
         })
       });
@@ -360,9 +344,32 @@ describe('SHEETCONTROLLER', function() {
  * ===============
  */
 // Modifies the res object to pass passport authentication
-function login(user, res) {
-  res.isAuthenticated = function() {
+function login(user, req) {
+  req.isAuthenticated = function() {
     return true;
   }
-  res.user = user;
+  req.user = user;
+}
+
+// Create 2 users: userA and userB. Each of them has 2 sheets, a public and a
+// private one.
+// We now have this.userA, this.userB, this.sheets.userA, this.sheets.userB as refs
+function seed() {
+  this.sheets = {};
+  return Factory('sheet').then(function(objs) {
+    this.userA = objs.user;
+    this.sheets.userA = [objs.sheet];
+    return Factory('sheet', {uid: this.userA._id, visibility: 'private', data: "FOOBAR"})
+    .then(function(sheet2) {
+      this.sheets.userA.push(sheet2);
+      return Factory('sheet').then(function(objs) {
+        this.userB = objs.user;
+        this.sheets.userB = [objs.sheet];
+        return Factory('sheet', {uid: this.userB._id, visibility: 'private'})
+        .then(function(privateSheet) {
+          this.sheets.userB.push(privateSheet);
+        }.bind(this));
+      }.bind(this));
+    }.bind(this));
+  }.bind(this))
 }

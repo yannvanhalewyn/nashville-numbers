@@ -55,6 +55,7 @@
  */
     app.use('/users/:user_id/friends', Friends);
     app.use('/users', Users);
+    app.use('/users/me/sheets'/* call custom middleware here */,  Sheets);
     app.use('/users/:user_id/sheets', Sheets);
   };
 

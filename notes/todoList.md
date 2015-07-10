@@ -12,6 +12,12 @@ TODO BUG: When entered a chord like ('h'), the box shadow dissapears but no
      chord
 TODO is 17 a bug or lack of superscrip?
 
+BEFORE DEPLOYMENT
+=================
+Check out react pure mixin. You get a performance boost if you follow some
+rules.
+
+
 TIPS
 ====
 
