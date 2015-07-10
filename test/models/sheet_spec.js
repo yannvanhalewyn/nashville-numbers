@@ -93,23 +93,34 @@ describe('Sheet', function() {
 
   // STATIC
   describe('.findById()', function() {
-    beforeEach(function() {
-      return Factory('sheet').then(function(entities) {
-        this.createdSheet = entities.sheet;
-        return Sheet.findById(this.createdSheet._id).then(function(foundSheet) {
-          this.foundSheet = foundSheet;
+    context("when found", function() {
+      beforeEach(function() {
+        return Factory('sheet').then(function(entities) {
+          this.createdSheet = entities.sheet;
+          return Sheet.findById(this.createdSheet._id).then(function(foundSheet) {
+            this.foundSheet = foundSheet;
+          }.bind(this));
         }.bind(this));
-      }.bind(this));
-    });
+      });
 
-    it("returns an instance of Sheet", function() {
-      expect(this.foundSheet).not.to.be.undefined;
-      expect(this.foundSheet).to.be.an.instanceof(Sheet);
-    });
+      it("returns an instance of Sheet", function() {
+        expect(this.foundSheet).not.to.be.undefined;
+        expect(this.foundSheet).to.be.an.instanceof(Sheet);
+      });
 
-    it("returns the searched for sheet", function() {
-      expect(this.foundSheet).to.eql(this.createdSheet);
-      expect(this.foundSheet).to.eql(this.createdSheet);
-    });
+      it("returns the searched for sheet", function() {
+        expect(this.foundSheet).to.eql(this.createdSheet);
+        expect(this.foundSheet).to.eql(this.createdSheet);
+      });
+    }); // End of context 'when found'
+
+    context("when not found", function() {
+      it("throws a not found error", function(done) {
+        return Sheet.findById(9999).then(done, function(err) {
+          expect(err).to.eql("Could not find sheet with id 9999");
+          done();
+        }).catch(done);
+      });
+    }); // End of context 'when not found'
   }); // End of describe '.findById()'
-}); // End of describe 'Sheet'
+}); // End of describe 'Shewhen sheet is not found
