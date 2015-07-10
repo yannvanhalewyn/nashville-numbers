@@ -73,4 +73,21 @@ describe('CYPHER', function() {
     });
   }); // End of describe '#merge()'
 
+  describe('#create()', function() {
+    context("when one param is given", function() {
+      it("returns CREATE (l:label {param: {param}})", function() {
+        expect(Cypher.create('p', 'Person', {name: "Yann"})).to.eql(
+          "CREATE (p:Person{name:{name}}) "
+        );
+      });
+    }); // End of context 'when one param is given'
+
+    context("when many params are given", function() {
+      it("returns an valid string containing every param", function() {
+        expect(Cypher.create('p', 'Person', {
+          name: "theName", lastName: "theLastName", foo: "Bar"
+        })).to.eql("CREATE (p:Person{name:{name},lastName:{lastName},foo:{foo}}) ");
+      });
+    }); // End of context 'when many params are given'
+  }); // End of describe '#create()'
 }); // End of describe 'CYPHER'

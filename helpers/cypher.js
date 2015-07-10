@@ -44,6 +44,10 @@
     merge: function(varname, label, params) {
       if (!params || _.isEmpty(params)) throw "Should not MERGE without params!";
       return "MERGE (" + varname + ":" + label + _paramsToMatchString(params) + ") ";
+    },
+
+    create: function(varname, label, params) {
+      return "CREATE (" + varname + ":" + label + _paramsToMatchString(params) + ") ";
     }
   }
 
