@@ -31,6 +31,14 @@ describe('Sheet', function() {
       });
     });
 
+    it("stores JSON data with correct main values", function() {
+      return Sheet.create(this.params).then(function(sheet) {
+        var data = JSON.parse(sheet.properties.data);
+        expect(data.main.title).to.eql("theTitle");
+        expect(data.main.artist).to.eql("theArtist");
+      });
+    });
+
     it("stores a relationship to the user", function() {
       return Sheet.create(this.params).then(function(sheet) {
         return db.query(

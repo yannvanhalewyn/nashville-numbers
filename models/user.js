@@ -25,18 +25,7 @@
   User.prototype.createSheet = function(params) {
     var defaults = {title: "title", artist: "artist", visibility: "public"};
     params = _.assign({}, defaults, {uid: this._id}, params);
-    return db.query(
-      "MATCH (p:Person) WHERE id(p) = {uid}" +
-      "CREATE (s:Sheet {" +
-        "title: {title}," +
-        "artist: {artist}," +
-        "visibility: {visibility}" +
-      "})," +
-      "(p)-[r:AUTHORED]->(s)" +
-      "RETURN s", params
-    ).then(function(res) {
-      return new Sheet(res[0].s);
-    });
+    return Sheet.create(params);
   };
 
   User.prototype.sheets = function() {

@@ -52,7 +52,8 @@
   // Actually I think I don't even need this function, only users instantiate
   // sheets through createSheet
   Sheet.create = function(params) {
-    params = _.assign({}, DEFAULT, params);
+    var jsonString = JSON.stringify({main: {title: params.title, artist: params.artist}});
+    params = _.assign({}, DEFAULT, params, {data: jsonString});
     var query = Cypher.match('p', 'Person');
     query += Cypher.whereIdIs('p', 'uid');
     query += Cypher.create('s', 'Sheet', _.omit(params, 'uid'));
