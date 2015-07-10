@@ -38,17 +38,9 @@
 
     // POST#create
     create: function(req, res) {
-      if (!req.body.title) return res.sendStatus(400);
-      if (!req.user) return res.sendStatus(403);
-      return new Sheet({
-        title: req.body.title,
-        artist: req.body.artist,
-        authorID: req.user._id,
-      }).save()
-      .then(function(newSheet) {
-        var url = ('/sheets/' + newSheet._id).toString();
-        res.redirect(url);
-      }, function(err) { res.redirect('/home'); });
+      return req.user.createSheet(req.body).then(function(sheet) {
+        res.redirect('/sheets/' + sheet._id);
+      }).catch(console.error);
     },
 
     // PUT#update

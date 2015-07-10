@@ -8,6 +8,7 @@
   var SheetsRouter = require('express').Router({mergeParams: true});
 
   SheetsRouter.get('/', ensureAuth, SheetsController.index);
+  SheetsRouter.post('/', ensureAuth, SheetsController.create);
 
   module.exports = SheetsRouter;
 
