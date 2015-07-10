@@ -98,6 +98,21 @@ describe('Sheet', function() {
     });
   }); // End of describe '#destroy()'
 
+  describe('#author()', function() {
+    beforeEach(function() {
+      return Factory('sheet').then(function(entities) {
+        this.sheet = entities.sheet;
+        this.user = entities.user;
+      }.bind(this));
+    });
+
+    it("returns the correct author", function() {
+      return this.sheet.author().then(function(author) {
+        expect(author).to.eql(this.user);
+      }.bind(this));
+    });
+  }); // End of describe '#author()'
+
   // STATIC
   describe('.findById()', function() {
     context("when valid id", function() {

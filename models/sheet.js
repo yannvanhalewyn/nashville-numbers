@@ -5,6 +5,7 @@
     , db      = require('../config/db')
     , _       = require('lodash')
     , Cypher  = include('/helpers/cypher')
+    , User    = include('/models/user')
 
   var DEFAULT = {
     title: "title",
@@ -39,6 +40,14 @@
       "MATCH (s:Sheet) WHERE id(s) = {sid} " +
       "OPTIONAL MATCH s-[r]-() DELETE s,r", {sid: this._id}
     );
+  }
+
+  Sheet.prototype.author = function() {
+    return db.query(
+      "MATCH (s:Sheet)<-[:AUTHORED]-(p:Person) WHERE id(s) = {sid} RETURN p", {sid: this._id}
+    ).then(function(result) {
+      return new User(result[0].p);
+    });
   }
 
 /*
