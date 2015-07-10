@@ -107,7 +107,8 @@ describe('SHEETCONTROLLER', function() {
         it("sends along the correct sheet data", function(done) {
           return db.query("MATCH (s:Sheet) RETURN s").then(function() {
             var data = this.sheets.userA[1].properties.data;
-            expect(res.render).to.have.been.calledWith('sheet', {state: data});
+            var dbid = this.sheets.userA[1]._id;
+            expect(res.render).to.have.been.calledWith('sheet', {state: data, dbid: dbid});
             done();
           }.bind(this), done).catch(done);
         });
@@ -125,8 +126,18 @@ describe('SHEETCONTROLLER', function() {
       }); // End of context 'with missing or invalid sheetid'
     });
 
-    context("when requesting user isn't the author", function() {
-      it("redirects to /sheets", function() {
+    // TODO Maybe redirect to the show page of the sheet if public, else
+    // redirect to dashboard with a flash message
+    context.skip("when requesting user isn't the author", function() {
+      it("redirects to /sheets --", function(done) {
+        login(this.userB, req);
+        var id = this.sheets.userA[0]._id;
+        req.url = "/" + id + "/edit";
+        Router(reqres.req(req), res);
+        res.on('end', function() {
+          expect(res.redirect).to.have.been.calledWith("/");
+          done();
+        });
       });
     }); // End of context 'when requesting user isn't the author'
   }); // End of GET#show
@@ -200,19 +211,13 @@ describe('SHEETCONTROLLER', function() {
   describe('PUT#update', function() {
     context("with correct user logged in", function() {
       context("with valid sheetID", function() {
-        it("sends a 200", function() {
-        });
-
-        // Not sure if nececessary TODO come back after working on front-end
-        it.skip("sends the new data back over", function() {
-        });
-
         it("updates the sheet.data in the DB", function() {
         });
 
         it("updates the sheets title and artist in the DB", function() {
         });
 
+        // MAYBE, test it
         it("saving twice doesn't send a 403", function() {
         });
 

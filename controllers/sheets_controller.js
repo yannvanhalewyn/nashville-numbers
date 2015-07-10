@@ -17,28 +17,9 @@
       });
     },
 
-    // GET#show
-    show: function(req, res) {
-      // Double check again (this is just for peace of mind)
-      if (!req.user) return res.sendStatus(422);
-      if (!req.user._id) return res.sendStatus(401);
-      if (!req.params) return res.redirect('/sheets');
-
-      // Find the sheet
-      return Sheet.findById(req.params.id).exec()
-      .then(function(sheet) {
-        var isAuthor = sheet.authorID.equals(req.user._id);
-        if ((!isAuthor) && sheet.visibility === 'private') {
-          return res.redirect('/sheets');
-        }
-        return res.render('sheet', { active_sheets: true, state: sheet.data,
-                                readOnly: !isAuthor });
-      }, function(err) {res.redirect('/')});
-    },
-
     edit: function(req, res) {
       return Sheet.findById(req.params.sheet_id).then(function(sheet) {
-        res.render('sheet', {state: sheet.properties.data});
+        res.render('sheet', {state: sheet.properties.data, dbid: sheet._id});
       }).catch(function(err) {
         res.redirect('/users/me/sheets'); // Not found
       });
@@ -52,26 +33,24 @@
     },
 
     // PUT#update
-    // TODO get rid of those 24bit hex regexes!
-    // mongoose query promises wont hand me error callbacks for some reason.. :(
     update: function(req, res) {
-      // Validate params. Is this necessary?
-      if(!req.params || !req.body || !req.user) return res.sendStatus(422);
-      if(!/^([a-fA-F0-9]){24}$/.test(req.params.id)) return res.sendStatus(404);
-      if(!/^([a-fA-F0-9]){24}$/.test(req.user._id)) return res.sendStatus(401);
-      if(!req.body.main) return res.sendStatus(406);
-
-      return Sheet.update(
-        {_id: req.params.id, authorID: req.user._id},
-        {$set: {
-          data: JSON.stringify(req.body),
-          title: req.body.main.title,
-          artist: req.body.main.artist
-        }}
-      ).exec()
-      .then(function(db_response) {
-        db_response.n === 0 ? res.sendStatus(403) : res.status(200).send('foo');
-      });
+      // // Validate params. Is this necessary?
+      // if(!req.params || !req.body || !req.user) return res.sendStatus(422);
+      // if(!/^([a-fA-F0-9]){24}$/.test(req.params.id)) return res.sendStatus(404);
+      // if(!/^([a-fA-F0-9]){24}$/.test(req.user._id)) return res.sendStatus(401);
+      // if(!req.body.main) return res.sendStatus(406);
+      //
+      // return Sheet.update(
+      //   {_id: req.params.id, authorID: req.user._id},
+      //   {$set: {
+      //     data: JSON.stringify(req.body),
+      //     title: req.body.main.title,
+      //     artist: req.body.main.artist
+      //   }}
+      // ).exec()
+      // .then(function(db_response) {
+      //   db_response.n === 0 ? res.sendStatus(403) : res.status(200).send('foo');
+      // });
     },
 
     // DELETE#destroy

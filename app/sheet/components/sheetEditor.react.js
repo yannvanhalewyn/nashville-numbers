@@ -31,7 +31,7 @@
     render: function() {
       return (
         <div className="sheet-editor">
-          <SheetControlPanel dbid={this.state.dbid}/>
+          <SheetControlPanel dbid={this.props.dbid}/>
           <h1 className="sheet-title">
             {this.state.title} <small className="artist">{this.state.artist}</small>
           </h1>

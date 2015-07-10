@@ -11,8 +11,16 @@ try {
   SheetStore.setDefaultData();
 }
 
+try {
+  var dbid = document.getElementById('dbid').value;
+  SheetStore.setDBID(dbid);
+} catch(e) {
+  console.log("ERROR");
+  console.log(e);
+}
+
 React.render(
-  <SheetEditor />,
+  <SheetEditor dbid={dbid}/>,
   document.getElementById('sheet-container')
 );
 
