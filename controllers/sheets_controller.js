@@ -12,19 +12,9 @@
 
     // GET#index
     index: function(req, res) {
-      // Double check the user (if id exists but invalid, the error block
-      // below will run
-      if (!req.user) return res.sendStatus(422);
-      if (!req.user._id) return res.sendStatus(401);
-
-      // Find sheets and render sheets templte
-      return Sheet.find({authorID: req.user._id}).exec()
-      .then(function(sheets) {
-        res.render('sheets', {
-          active_sheets: true,
-          sheets: sheets
-        });
-      }, function(err) {res.redirect('/')});
+      req.user.sheets().then(function(sheets) {
+        res.render('sheets', {sheets: sheets});
+      });
     },
 
     // GET#show
