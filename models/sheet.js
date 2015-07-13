@@ -21,6 +21,13 @@
  * INSTANCE
  * ========
  */
+
+  /**
+   * Updates the sheet in the database with the new params.
+   *
+   * @param {object} params The new params that want to be updated.
+   * @return {Sheet} An updated instance of the Sheet
+   */
   Sheet.prototype.update = function(params) {
     var setTemplate = "s.{key} = '{val}'"
     var queries = [];
@@ -34,6 +41,10 @@
     );
   }
 
+  /**
+   * Destroys the sheet in the database that matches the instance's ID.
+   *
+   */
   Sheet.prototype.destroy = function() {
     return db.query(
       "MATCH (s:Sheet) WHERE id(s) = {sid} " +
@@ -41,6 +52,11 @@
     );
   }
 
+  /**
+   * Finds the author of the Sheet
+   *
+   * @return {User} An instance of User containing the properties of the sheet's author.
+   */
   Sheet.prototype.author = function() {
     return db.query(
       "MATCH (s:Sheet)<-[:AUTHORED]-(p:Person) WHERE id(s) = {sid} RETURN p", {sid: this._id}
@@ -55,11 +71,13 @@
  * STATIC
  * ======
  */
-  // Should I check if the UID is an existing user?
-  // ACTUALLY it doesn't go through with the query if MATCH finds nothing.
-  // GOD I LOVE neo4j!! It does my error handling (missing uid), invalid uid,
-  // Actually I think I don't even need this function, only users instantiate
-  // sheets through createSheet
+
+  /**
+   * Creates a new sheet in the database.
+   *
+   * @param {object} params The params with which the new sheet will be created.
+   * @return {Sheet} The newly create instance of Sheet.
+   */
   Sheet.create = function(params) {
     params = _.assign({}, DEFAULT, params);
     params.data = JSON.stringify({main: {title: params.title, artist: params.artist}});
@@ -72,6 +90,13 @@
     });
   }
 
+  /**
+   * Finds a sheet in the database based on the given ID.
+   *
+   * @param {number/string} id The ID of the sheet we're trying to find in the database.
+   * @return {Sheet} An instance of Sheet containing the properties of the found object.
+   * @throws {Error} When no sheet has been found by that ID.
+   */
   Sheet.findById = function(id) {
     var query = Cypher.match('s', 'Sheet');
     query += Cypher.whereIdIs('s', 'id');
