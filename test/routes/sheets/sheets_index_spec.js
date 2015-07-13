@@ -28,7 +28,7 @@ describe('SHEETCONTROLLER', function() {
    * =========
    */
   describe('GET#index', function() {
-    before(function() {
+    beforeEach(function() {
       return seed.bind(this)();
     });
 
@@ -49,7 +49,7 @@ describe('SHEETCONTROLLER', function() {
         });
 
         it("sends along userA's sheets", function() {
-          var sentSheets = res.render.firstCall.args[1].sheets;
+          var sentSheets = res.render.lastCall.args[1].sheets;
           expect(sentSheets.length).to.eql(2);
           expect(sentSheets[0]._id).to.equal(this.sheets.userA[1]._id);
           expect(sentSheets[1]._id).to.equal(this.sheets.userA[0]._id);
