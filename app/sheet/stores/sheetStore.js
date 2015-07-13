@@ -58,7 +58,7 @@
     saveSheet: function() {
       var data = SheetStoreDataManager.getData();
       $.ajax({
-        url: '/sheets/' + this.dbid,
+        url: '/users/me/sheets/' + this.dbid,
         method: "PUT",
         contentType: 'application/json',
         data: JSON.stringify(data.toJS())
