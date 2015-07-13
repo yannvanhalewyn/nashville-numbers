@@ -82,8 +82,6 @@
     });
   }
 
-  Sheet.findById(100);
-
   module.exports = Sheet;
 
 }())

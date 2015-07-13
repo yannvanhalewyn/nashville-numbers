@@ -1,11 +1,5 @@
 (function() {
 
-  // TODO Maybe put validateMandatoryFields(req, field) in own handle error
-  // method, and then redirect or respond based on the error. That method could
-  // be put at the end of the promise chain
-  // NOTE Currently I feel like big violator of SRP. Every method is performing
-  // too many checks on the params. I should extract all the validation logic to
-  // middleware, and write specs for those.
   var Sheet = require('../models/sheet');
 
   module.exports = {
@@ -33,7 +27,6 @@
 
       // Catch any errors in finding the sheet or author (or elsewhere for the matter)
       }).catch(function(err) {
-        console.log(err);
         res.redirect('/users/me/sheets'); // Not found
       });
     },
@@ -47,41 +40,39 @@
 
     // PUT#update
     update: function(req, res) {
+      // Find the sheet by it's ID
       return Sheet.findById(req.params.sheet_id).then(function(sheet) {
-        sheet.update({data: JSON.stringify(req.body)});
-        res.sendStatus(200);
-      }).catch(console.error);
-      // // Validate params. Is this necessary?
-      // if(!req.params || !req.body || !req.user) return res.sendStatus(422);
-      // if(!/^([a-fA-F0-9]){24}$/.test(req.params.id)) return res.sendStatus(404);
-      // if(!/^([a-fA-F0-9]){24}$/.test(req.user._id)) return res.sendStatus(401);
-      // if(!req.body.main) return res.sendStatus(406);
-      //
-      // return Sheet.update(
-      //   {_id: req.params.id, authorID: req.user._id},
-      //   {$set: {
-      //     data: JSON.stringify(req.body),
-      //     title: req.body.main.title,
-      //     artist: req.body.main.artist
-      //   }}
-      // ).exec()
-      // .then(function(db_response) {
-      //   db_response.n === 0 ? res.sendStatus(403) : res.status(200).send('foo');
-      // });
-    },
 
-    // DELETE#destroy
-    destroy: function(req, res) {
-      if(!req.params || !req.user) return res.sendStatus(422);
-      return Sheet.remove({_id: req.params.id, authorID: req.user._id}).exec()
-      .then(function(db_response) {
-        if (db_response.result.n === 0) return res.sendStatus(404);
-        if (req.accepts('html')) return res.redirect('/sheets');
-        res.status(200);
-        return req.user.sheets.then(res.send);
-      }, function(err) {
-        return res.sendStatus(401);
+        // Find the sheet's author TODO double db call
+        return sheet.author().then(function(author) {
+
+          // If the found sheet's author is the user
+          if (author._id === req.user._id) {
+            // Update the sheet with sent in params
+            return sheet.update({
+              title: req.body.main.title,
+              artist: req.body.main.artist,
+              data: JSON.stringify(req.body),
+            })
+            // Then respond with 200 if successfull
+            .then(function() {
+              return res.sendStatus(200);
+            });
+
+          // Else send a 403
+          } else {
+            res.status(403)
+            return res.send("You're not the author of this sheet.");
+          }
+        });
+
+      // Catches any errors in findById
+      }).catch(function(err) {
+        // If not found, 404 will be sent
+        res.status(404);
+        return res.send(err);
       });
     }
+
   };
 }())
