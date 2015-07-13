@@ -41,6 +41,15 @@
     );
   }
 
+  Sheet.prototype.author = function() {
+    return db.query(
+      "MATCH (s:Sheet)<-[:AUTHORED]-(p:Person) WHERE id(s) = {sid} RETURN p", {sid: this._id}
+    ).then(function(result) {
+      var User = include('/models/user')
+      return new User(result[0].p);
+    });
+  }
+
 /*
  * ======
  * STATIC
@@ -52,8 +61,8 @@
   // Actually I think I don't even need this function, only users instantiate
   // sheets through createSheet
   Sheet.create = function(params) {
-    var jsonString = JSON.stringify({main: {title: params.title, artist: params.artist}});
-    params = _.assign({}, DEFAULT, params, {data: jsonString});
+    params = _.assign({}, DEFAULT, params);
+    params.data = JSON.stringify({main: {title: params.title, artist: params.artist}});
     var query = Cypher.match('p', 'Person');
     query += Cypher.whereIdIs('p', 'uid');
     query += Cypher.create('s', 'Sheet', _.omit(params, 'uid'));
@@ -72,8 +81,6 @@
       return new Sheet(response[0].s)
     });
   }
-
-  Sheet.findById(100);
 
   module.exports = Sheet;
 

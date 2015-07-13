@@ -10,6 +10,7 @@
   SheetsRouter.get('/', ensureAuth, SheetsController.index);
   SheetsRouter.get('/:sheet_id/edit', ensureAuth, SheetsController.edit);
   SheetsRouter.post('/', ensureAuth, SheetsController.create);
+  SheetsRouter.put('/:sheet_id', ensureAuth, SheetsController.update);
 
   module.exports = SheetsRouter;
 
