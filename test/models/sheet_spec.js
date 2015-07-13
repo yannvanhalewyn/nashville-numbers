@@ -1,99 +1,158 @@
-var util = require('../util');
-
-var Sheet  = require('../../models/sheet');
-var User   = require('../../models/user');
-var expect = require('chai').expect;
-
-var USER;
+var include = require('include')
+  , expect  = require('chai').expect
+  , Sheet   = include('/models/sheet')
+  , Factory = include('/test/util/factory')
+  , db = include('/config/db')
 
 describe('Sheet', function() {
   beforeEach(function(done) {
-    var validUserParams = {firstName: "Yann", provider_id: '1', provider: 'facebook'};
-    User.create(validUserParams)
-    .then(function(user) {
-      USER = user;
+    Factory('user').then(function(user) {
+      this.user = user;
+      this.params = {
+        title: "theTitle",
+        artist: "theArtist",
+        visibility: 'public',
+        uid: user._id,
+        data: "FOOBAR"
+      };
       done();
-    });
+    }.bind(this))
   });
 
-  describe('#instantiation', function() {
-    it('is successful', function(done) {
-      new Sheet({title: "Baby", artist: "Justin Bieber", authorID: USER._id}).save(done);
-    });
-
-    it('fails when no title', function(done) {
-      return Sheet.create({artist: "Justin Bieber", authorID: USER._id})
-      .then(function(data) { done("Should not get called here") },
-            function(err) { done() });
-    });
-
-    it('fails with empty title', function(done) {
-      return Sheet.create({title: "", authorID: USER._id})
-      .then(function(data) { done("Should not get called here") },
-            function(err) { done() });
-    });
-
-    it('fails with no authorID title', function(done) {
-      return Sheet.create({title: "foo"})
-      .then(function(data) { done("Should not get called here") },
-            function(err) { done() });
-    });
-
-    it('fails with invalid authorID title', function(done) {
-      return Sheet.create({title: "foo", authorID: "invalid"})
-      .then(function(data) { done("Should not get called here") },
-            function(err) { done() });
-    });
-
-    it('sets the visibility to public', function() {
-      return Sheet.create({title: "foo", authorID: USER._id})
-      .then(function(data) {
-        expect(data.visibility).to.eql('public');
+  describe("instantiation", function() {
+    it("stores the information", function() {
+      return Sheet.create(this.params)
+      .then(function(sheet) {
+        expect(sheet._id).to.be.above(0);
+        expect(sheet.properties.title).to.eql("theTitle");
+        expect(sheet.properties.artist).to.eql("theArtist");
+        expect(sheet.properties.visibility).to.eql("public");
       });
     });
 
-    it('sets the timestamps time to current time', function() {
-      return Sheet.create({title: "foo", authorID: USER._id})
-      .then(function(data) {
-        console.log(data.updated_at);
-        expect(Date.now() - data.created_at).to.be.below(200);
-        expect(Date.now() - data.updated_at).to.be.below(200);
+    it("stores JSON data with correct main values", function() {
+      return Sheet.create(this.params).then(function(sheet) {
+        var data = JSON.parse(sheet.properties.data);
+        expect(data.main.title).to.eql("theTitle");
+        expect(data.main.artist).to.eql("theArtist");
       });
     });
-  });
 
-  describe('#updating', function() {
-    it('refreshes the updated_at variable', function() {
-      return Sheet.create({title: "foo", updated_at: Date.now() - 1000 * 60, authorID: USER._id})
-      .then(function(data) {
-        data.update({artist: "bar"});
-        expect(Date.now() - data.updated_at).to.be.below(100);
-      });
+    it("stores a relationship to the user", function() {
+      return Sheet.create(this.params).then(function(sheet) {
+        return db.query(
+          "MATCH (p:Person)-[:AUTHORED]->(s:Sheet) WHERE id(s) = {sid} RETURN p",
+          {sid: sheet._id}
+        ).then(function(res) {
+          expect(res[0].p._id).to.eql(this.user._id);
+        }.bind(this));
+      }.bind(this));
     });
-  });
 
-  describe ('virtual', function() {
-    describe('#createAtInWords', function() {
-      it('returns a correct sentence', function() {
-        return Sheet.create({title: "foo", created_at: Date.now() - 1000 * 60 * 60 * 2,
-                            authorID: USER._id})
-        .then(function(data) {
-          expect(data.createdAtInWords).to.eql("2 hours ago");
+    context("with missing params", function() {
+      it("sets the default title, artist and visibility", function() {
+        return Sheet.create({uid: this.user._id})
+        .then(function(sheet) {
+          expect(sheet.properties.title).to.eql("title");
+          expect(sheet.properties.artist).to.eql("artist");
+          expect(sheet.properties.visibility).to.eql("public");
+        });
+      });
+
+      it("throws when uid is missing", function(done) {
+        return Sheet.create().then(done, function(err) {
+          done(); // This done will pass, if the first on is called it will throw because params
+        });
+      });
+    }); // End of context 'with missing params'
+  }); // End of describe 'instantiation'
+
+  describe("#update()", function() {
+    it("stores the updated data", function() {
+      return Sheet.create(this.params).then(function(sheet) {
+        return sheet.update({title: "updated-title", artist: "updated-artist"}).then(function() {
+          return db.query("MATCH (s:Sheet) WHERE id(s) = {sid} RETURN s", {sid: sheet._id})
+          .then(function(updatedSheet) {
+            expect(updatedSheet[0].s.properties.title).to.eql("updated-title");
+            expect(updatedSheet[0].s.properties.artist).to.eql("updated-artist");
+          });
         });
       });
     });
+  }); // End of describe '#update()'
 
-    describe('#author', function() {
-      it('returns the correct author', function() {
-        return Sheet.create({title: "foo", authorID: USER._id})
-        .then(function(sheet) {
-          return sheet.author.then(function(author) {
-            expect(author.firstName).to.eql("Yann");
-            expect(author._id).to.eql(USER._id);
-            expect(author.provider_id).to.eql(USER.provider_id);
-          });
-        })
-      });
+  describe('#destroy()', function() {
+    beforeEach(function() {
+      return Sheet.create(this.params).then(function(sheet) {
+        this.sheet = sheet;
+        return sheet.destroy()
+      }.bind(this));
     });
-  });
-});
+
+    it("Has deleted the sheet from the database", function() {
+      return db.query("MATCH (s:Sheet) WHERE id(s) = {sid} RETURN s", {sid: this.sheet._id})
+      .then(function(res) {
+        expect(res.length).to.eql(0);
+      }.bind(this));
+    });
+  }); // End of describe '#destroy()'
+
+  describe('#author()', function() {
+    beforeEach(function() {
+      return Factory('sheet').then(function(entities) {
+        this.sheet = entities.sheet;
+        this.user = entities.user;
+      }.bind(this));
+    });
+
+    it("returns the correct author", function() {
+      return this.sheet.author().then(function(author) {
+        expect(author).to.eql(this.user);
+      }.bind(this));
+    });
+  }); // End of describe '#author()'
+
+  // STATIC
+  describe('.findById()', function() {
+    context("when valid id", function() {
+      beforeEach(function() {
+        return Factory('sheet').then(function(entities) {
+          this.createdSheet = entities.sheet;
+          return Sheet.findById(this.createdSheet._id).then(function(foundSheet) {
+            this.foundSheet = foundSheet;
+          }.bind(this));
+        }.bind(this));
+      });
+
+      it("returns an instance of Sheet", function() {
+        expect(this.foundSheet).not.to.be.undefined;
+        expect(this.foundSheet).to.be.an.instanceof(Sheet);
+      });
+
+      it("returns the searched for sheet", function() {
+        expect(this.foundSheet).to.eql(this.createdSheet);
+        expect(this.foundSheet).to.eql(this.createdSheet);
+      });
+    }); // End of context 'when found'
+
+    context("when id is a string", function() {
+      it("finds the correct sheet anyway", function() {
+        return Factory('sheet').then(function(entities) {
+          this.createdSheet = entities.sheet;
+          return Sheet.findById(this.createdSheet._id.toString()).then(function(foundSheet) {
+            expect(foundSheet).not.to.be.empty;
+          }.bind(this));
+        }.bind(this));
+      });
+    }); // End of context 'when id is a string'
+
+    context("when not found", function() {
+      it("throws a not found error", function(done) {
+        return Sheet.findById(9999).then(done, function(err) {
+          expect(err).to.eql("Could not find sheet with id 9999");
+          done();
+        }).catch(done);
+      });
+    }); // End of context 'when not found'
+  }); // End of describe '.findById()'
+}); // End of describe 'Shewhen sheet is not found

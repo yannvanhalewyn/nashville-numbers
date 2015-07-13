@@ -33,6 +33,9 @@ CONTROLLERS
 - Should my controller validate creating data, or my model? or both?
 - Maybe look over the response codes, just read test output, especially in
   sheet#update! I feel like everything is a 403
+- Should I try/catch JSON.parse on frontend, or make sure data is valid on
+  back-end?
+- Why do I have so many questions in 'controllers'?
 
 TESTING
 -------

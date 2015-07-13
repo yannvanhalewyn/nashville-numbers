@@ -45,11 +45,11 @@
       SheetDispatcher.dispatch({actionType: SheetConstants.DELETE_SELECTED_SECTION});
     },
 
-    storeChordRefAsSelected: function(chordID, barID) {
+    storeChordRefAsSelected: function(chordID, parentIDs) {
       SheetDispatcher.dispatch({
         actionType: SheetConstants.STORE_CHORD_REF_AS_SELECTED,
         chordID: chordID,
-        barID: barID
+        parentIDs: parentIDs
       })
     }
 

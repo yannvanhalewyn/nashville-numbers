@@ -1,5 +1,5 @@
 <h1>My Sheets</h1>
-<form action="/sheets" method="POST">
+<form action="/users/me/sheets" method="POST">
   <label for="title">Title</label>
   <input id="title" type="text" name="title">
   <label for="artist">Artist</lavel>
@@ -10,11 +10,11 @@
 <div class="sheets-listing clearFloats">
   {{#each sheets}}
   <div class="sheet-list-entry">
-    <a href="/sheets/{{this.id}}">
+    <a href="/users/me/sheets/{{this._id}}/edit">
       <div class="block-thumb"><span class="fa fa-file-o"></span></div>
       <div class="block-info">
-        <div class="title">{{this.title}}</div>
-        <div class="artist">{{this.artist}}</div>
+        <div class="title">{{this.properties.title}}</div>
+        <div class="artist">{{this.properties.artist}}</div>
         <div class="info">
           <span class="fa fa-globe"></span> public <em>modified
             {{this.createdAtInWords}}</em>

@@ -3,15 +3,20 @@ TODOLIST
 
 ShortTerm
 ---------
-TODO Make tabbing through append new bars if needed
 TODO Chord spacing (should be straight forward)
 TODO Deleting bar should select the previous one
   -- Maybe add a prop for focus
 TODO Add undo stack. Is pretty simple -> command pattern, that book will pay off!
+TODO BUG: When entered a chord like ('h'), the box shadow dissapears but no
+     chord appears. Thats because it thinks it's content is full, while it's a bad
+     chord
+TODO is 17 a bug or lack of superscrip?
 
-Before deployment
------------------
-- Set autoindexing to false for mongoose models (http://mongoosejs.com/docs/guide.html)
+BEFORE DEPLOYMENT
+=================
+Check out react pure mixin. You get a performance boost if you follow some
+rules.
+
 
 TIPS
 ====

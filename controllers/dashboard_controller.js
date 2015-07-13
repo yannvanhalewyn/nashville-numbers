@@ -3,7 +3,7 @@
   var DashboardController = {
     index: function(req, res) {
       res.render("dashboard", {
-        active: {active_dashboard: true},
+        active_dashboard: true,
         user: req.user
       });
     }

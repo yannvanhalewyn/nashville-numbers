@@ -3,7 +3,7 @@
   ExploreController = {
 
     index: function(req, res) {
-      res.render('explore', {active: {active_explore: true}});
+      res.render('explore', {active_explore: true});
     }
 
   };

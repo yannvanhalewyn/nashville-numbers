@@ -1,6 +1,6 @@
 <div class="dock">
     <div class="user-avatar">
-        <img class="avatar" src="https://avatars3.githubusercontent.com/u/11170603?v=3&s=70" alt="">
+      <img class="avatar" src="{{user.properties.picture}}" alt="profile_picture">
     </div>
 
     <a href="/dashboard" class="dock-elem {{#if active_dashboard}}active{{/if}}">
@@ -8,7 +8,7 @@
         <i class="fa fa-dashboard"></i>
         <div href="#">Dashboard</div>
     </a>
-    <a href="/sheets" class="dock-elem {{#if active_sheets}}active{{/if}}">
+    <a href="/users/me/sheets" class="dock-elem {{#if active_sheets}}active{{/if}}">
         <div class="pointer-left"></div>
         <i class="fa fa-music fa-NN-sheets"></i>
         <div>Sheets</div>
@@ -25,7 +25,7 @@
     </a>
 
     <div class="floor-wrap">
-        <a href="/friends" class="dock-elem {{#if active_friends}}active{{/if}}">
+        <a href="/users/me/friends" class="dock-elem {{#if active_friends}}active{{/if}}">
             <div class="pointer-left"></div>
             <i class="fa fa-thumbs-up"></i>
             <div>Friends</div>

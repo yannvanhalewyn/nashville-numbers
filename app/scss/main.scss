@@ -1,6 +1,8 @@
+$MAIN_BG: #f6f6f6;
+
 body {
     margin: 0px;
-    background: #f6f6f6;
+    background: $MAIN_BG;
     font-family: 'Raleway', sans-serif;
 }
 
@@ -16,6 +18,7 @@ a {
 .main-content {
   padding-left: 90px;
 }
+
 
 /* UTILITY
  ----------------- */
@@ -51,6 +54,43 @@ a {
     &.btn-orange {
         background: rgba(255,152,0,.75);
         color: white;
+    }
+
+    &.btn-red {
+        background: #A55;
+    }
+}
+
+.outer-modal {
+    position: absolute;
+    height: 0%;
+    width: 100%;
+
+    .modal {
+        text-align: center;
+        padding-bottom: 20px;
+        background: #efefef;
+        border-radius: 0 0 10px 5px;
+
+        h1 { margin-bottom: 10px; }
+        .btn { margin: 0 10px; }
+
+        &.modal-inverted {
+            color: white;
+            background: #103542;
+            box-shadow: inset -10px 0 5px -5px rgba(0,0,0,.12);
+
+            h1 { color: white; }
+            .btn:hover { box-shadow: none; }
+        }
+
+        // SLIDING OUT
+        transition-duration: .4s;
+        transform: translate(0, -100%);
+        &.modal-active {
+            transform: translate(0, 0);
+            box-shadow: 0px 2px 10px #999;
+        }
     }
 }
 

@@ -1,126 +1,171 @@
-var util = require('../util');
+var include = require('include')
+  , expect  = require('chai').expect
+  , User    = include('/models/user')
+  , Factory = include('/test/util/factory')
+  , db = include('/config/db')
 
-var User     = require('../../models/user');
-var Sheet    = require('../../models/sheet');
-var expect   = require('chai').expect;
-var Q        = require('q');
-var _        = require('lodash');
-
-var authData = {provider_id: "123", provider: "facebook", firstName: "Claudius"};
-var authData2 = {provider_id: "123", provider: "facebook", firstName: "Cesar"};
-
-describe("User", function() {
-  describe ("#registerFacebookuser()", function() {
-    context("if no user existing user found", function() {
-      it ("creates a new user ", function() {
-        return User.registerFacebookUser(authData)
-        .then(function() {return User.count();})
-        .then(function(count) { expect(count).to.eql(1); })
-      });
-
-      it ("returns a promise for the new user", function() {
-        return User.registerFacebookUser(authData)
-        .then(function(promisedUser) {
-          expect(promisedUser.firstName).to.eql("Claudius");
-          expect(promisedUser.provider_id).to.eql(authData.provider_id);
-        })
-      });
-    });
-
-    context("when a user already existed with the supllied provider_id", function() {
-      it ("doesn't create a new user", function() {
-        return User.create(authData)
-        .then(function() {return User.registerFacebookUser(authData)})
-        .then(function() {return User.count();})
-        .then(function(count) {expect(count).to.eql(1); })
-      });
-
-      // NOTE: This thing is weird, lost 2 hours trying to figure it out.
-      // Try removing 'if(result) return result' bit in user code
-      it ("returns a promise for the existing user", function(done) {
-        User.create(authData, function() {
-          User.findOne(authData).exec().then(function(data) {
-            var originalID = data._id;
-            User.registerFacebookUser(authData2)
-            .then(function(promisedUser){
-              expect(promisedUser._id).to.eql(originalID);
-              done();
-            })
-          });
-        });
-      });
-    });
-
-    context("when given data is invalid", function() {
-      it('resolves in the error promise', function(done) {
-        return User.registerFacebookUser({foo: 'bar'})
-        .then(function(data) { done("Should not get called here") },
-              function(err) { done()  });
-      });
-    })
+describe('User', function() {
+  beforeEach(function() {
+    this.validParams = {
+      firstName: "Yann",
+      lastName: "Vanhalewyn",
+      provider_id: 1234,
+      provider: "facebook"
+    };
   });
 
-  var validUserParams = {firstName: "Yann", provider_id: '1', provider: 'facebook'};
-
-  describe ('#sheets', function() {
-    var USER;
-    var SHEETS;
-
-    beforeEach(function(done) {
-      User.create(validUserParams)
+  context("instantiation", function() {
+    it("stores a valid object", function() {
+      return User.create(this.validParams)
       .then(function(user) {
-        USER = user;
-        Q.all([
-          Sheet.create({title: "song1", authorID: user._id}),
-          Sheet.create({title: "song2", authorID: user._id}),
-          Sheet.create({title: "song3", authorID: user._id})
-        ]).then(function(sheets) {
-          SHEETS = sheets;
-          done();
-        }, console.error)
-      });
-    });
-    it('returns the array of sheets', function() {
-      return USER.sheets.then(function(result) {
-        var foundSheets = result.map(function(s) {
-          return _.pick(s, ['title', 'authorID']);
-        });
-        var targetSheets = SHEETS.map(function(s) {
-          return _.pick(s, ['title', 'authorID']);
-        });
-        expect(foundSheets).to.eql(targetSheets);
-      });
-    });
-  });
-
-  describe ('#createSheet()', function() {
-    var USER;
-    var SHEET;
-
-    beforeEach(function(done) {
-      new User(validUserParams).save()
-      .then(function(user) {
-        USER = user;
-        user.createSheet({title: "FOOBAR"})
-        .then(function(newSheet) {
-          SHEET = newSheet;
-          done()
-        }, done);
+        expect(user._id).to.be.above(0);
+        expect(user.properties.firstName).to.eql("Yann");
+        expect(user.properties.lastName).to.eql("Vanhalewyn");
       });
     });
 
-    it('creates a new sheet', function() {
-      return Sheet.count().then(function(count) {
-        expect(count).to.eql(1);
+    it("returns an instace of User", function() {
+      return User.create(this.validParams).then(function(user) {
+        expect(user).to.be.an.instanceof(User);
       })
     });
+  }); // End of context 'instantiation'
 
-    it('adds the correct authorID', function() {
-      expect(SHEET.authorID).to.eql(USER._id);
+  describe('#createSheet()', function() {
+    beforeEach(function() {
+      return Factory('user').then(function(user) {
+        this.user = user;
+        return user.createSheet({title: "theTitle", artist: "theArtist", visibility: "private"})
+        .then(function(sheet) {
+          this.sheet = sheet;
+        }.bind(this))
+      }.bind(this))
     });
 
-    it('sets the params', function() {
-      expect(SHEET.title).to.eql("FOOBAR");
+    it("creates a new sheet with a relationship to the user", function() {
+      // Check with the db
+      return db.query(
+        "MATCH (p:Person)-[:AUTHORED]->(s:Sheet) WHERE id(p) = {uid} RETURN p,s",
+        {uid: this.user._id}
+      ).then(function(res) {
+        expect(res.length).to.eql(1);
+        expect(res[0].p._id).to.eql(this.user._id);
+        expect(res[0].s.properties.title).to.eql("theTitle");
+      }.bind(this))
     });
-  });
-});
+
+    it("returns a sheet object", function() {
+      expect(this.sheet).to.be.an.instanceof(include('/models/sheet'));
+    });
+
+    context("with missing params", function() {
+      it("sets those params to the default", function() {
+        return this.user.createSheet({}).then(function(sheet) {
+          expect(sheet.properties.visibility).to.eql("public");
+          expect(sheet.properties.title).to.eql("title");
+          expect(sheet.properties.artist).to.eql("artist");
+        });
+      });
+    }); // End of context 'with missing params'
+  }); // End of describe '#createSheet()'
+
+  describe('#sheets()', function() {
+    beforeEach(function() {
+      return Factory('sheet').then(function(objs) {
+        this.userA = objs.user;
+        this.sheetA = objs.sheet;
+        return Factory('sheet', {uid: this.userA._id}).then(function(sheetB) {
+          this.sheetB = sheetB;
+          return Factory('sheet'); // Add a sheet that's not userA's
+        }.bind(this));
+      }.bind(this))
+    });
+
+    it("returns an array of all sheets related to the user", function() {
+      return this.userA.sheets().then(function(sheets) {
+        expect(sheets.length).to.eql(2);
+        expect(sheets[1]._id).to.eql(this.sheetA._id); // Might later throw error, not sure
+        expect(sheets[0]._id).to.eql(this.sheetB._id); // how neo4j orders responses.
+      }.bind(this));
+    });
+  }); // End of describe '#sheets()'
+
+  describe('STATICS', function() {
+    describe('#findById', function() {
+      beforeEach(function() {
+        return Factory('user').then(function(createdUser) {
+          this.createdUser = createdUser;
+          return User.findById(createdUser._id).then(function(foundUser) {
+            this.foundUser = foundUser;
+          }.bind(this))
+        }.bind(this))
+      });
+
+      it("returns the searched for user object", function() {
+        expect(this.createdUser._id).to.eql(this.foundUser._id);
+        expect(this.createdUser.properties).to.eql(this.foundUser.properties);
+      });
+
+      it("returns an actual user object WITH the prototype methods", function() {
+        expect(this.foundUser.sheets).not.to.be.undefined;
+        expect(this.foundUser).to.be.an.instanceof(User);
+      });
+    }); // End of describe '#findById'
+
+    describe('#findAndUpdateOrCreate()', function() {
+      it("returns an instance of User", function() {
+        return User.findAndUpdateOrCreate({name: "Yann"}).then(function(user) {
+          expect(user).to.be.an.instanceof(User);
+        });
+      });
+
+      context("when none is found", function() {
+        it("creates a new user", function() {
+          return User.findAndUpdateOrCreate({name: "Yann"})
+          .then(function(user) {
+            return db.query("MATCH (p:Person {name: {name}}) RETURN p", {name: "Yann"})
+            .then(function(found) {
+              expect(found.length).to.eql(1);
+              expect(found[0].p.properties.name).to.eql(user.properties.name);
+            });
+          });
+        });
+      }); // End of context 'when none is found'
+
+      context("when a user exists", function() {
+        it("doesn't create a new user", function() {
+          return User.findAndUpdateOrCreate({name: "Yann"}).then(function(firstUser) {
+            return User.findAndUpdateOrCreate({name: "Yann"}).then(function(secondUser) {
+              expect(firstUser._id).to.eql(secondUser._id);
+            });
+          });
+        });
+      }); // End of context 'when a user exists'
+
+      describe('updateParams', function() {
+        context("when no user yet exists", function() {
+          it("persists those properties", function() {
+            return User.findAndUpdateOrCreate({name: "theName"}, {age: 23, lastName: "lname"})
+            .then(function(createdUser) {
+              expect(createdUser.properties.age).to.eql(23);
+              expect(createdUser.properties.lastName).to.eql("lname");
+            });
+          });
+        }); // End of context 'when no user yes exists'
+
+        context("when a user already existsd", function() {
+          beforeEach(function() {
+            return Factory('user', {provider_id: 12345});
+          });
+
+          it("persists those properties a", function() {
+            return User.findAndUpdateOrCreate({provider_id: 12345}, {firstName: "lala"})
+            .then(function(updatedUser) {
+              expect(updatedUser.properties.firstName).to.eql("lala");
+            });
+          });
+        }); // End of context 'when a user already existsd'
+      }); // End of describe 'updateParams'
+    }); // End of describe '#find()'
+  }); // End of describe 'STATICS'
+}); // End of describe 'User'
