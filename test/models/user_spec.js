@@ -1,211 +1,171 @@
-var include = require('include');
-var expect  = require('chai').expect;
-var Q       = require('q');
-var _       = require('lodash');
-var util    = include('/test/util/mock_db');
-var User    = include('/models/user');
-var Sheet   = include('/models/sheet');
-var Factory = include('/test/util/factory');
+var include = require('include')
+  , expect  = require('chai').expect
+  , User    = include('/models/user')
+  , Factory = include('/test/util/factory')
+  , db = include('/config/db')
 
-var authData = {provider_id: "123", provider: "facebook", firstName: "Claudius"};
-var authData2 = {provider_id: "123", provider: "facebook", firstName: "Cesar"};
-
-describe("User", function() {
-  describe ("#registerFacebookuser()", function() {
-    context("if no user existing user found", function() {
-      it ("creates a new user ", function() {
-        return User.registerFacebookUser(authData)
-        .then(function() {return User.count();})
-        .then(function(count) { expect(count).to.eql(1); })
-      });
-
-      it ("returns a promise for the new user", function() {
-        return User.registerFacebookUser(authData)
-        .then(function(promisedUser) {
-          expect(promisedUser.firstName).to.eql("Claudius");
-          expect(promisedUser.provider_id).to.eql(authData.provider_id);
-        })
-      });
-    });
-
-    context("when a user already existed with the supllied provider_id", function() {
-      it ("doesn't create a new user", function() {
-        return User.create(authData)
-        .then(function() {return User.registerFacebookUser(authData)})
-        .then(function() {return User.count();})
-        .then(function(count) {expect(count).to.eql(1); })
-      });
-
-      // NOTE: This thing is weird, lost 2 hours trying to figure it out.
-      // Try removing 'if(result) return result' bit in user code
-      it ("returns a promise for the existing user", function(done) {
-        User.create(authData, function() {
-          User.findOne(authData).exec().then(function(data) {
-            var originalID = data._id;
-            User.registerFacebookUser(authData2)
-            .then(function(promisedUser){
-              expect(promisedUser._id).to.eql(originalID);
-              done();
-            })
-          });
-        });
-      });
-    });
-
-    context("when given data is invalid", function() {
-      it('resolves in the error promise', function(done) {
-        return User.registerFacebookUser({foo: 'bar'})
-        .then(function(data) { done("Should not get called here") },
-              function(err) { done()  });
-      });
-    })
+describe('User', function() {
+  beforeEach(function() {
+    this.validParams = {
+      firstName: "Yann",
+      lastName: "Vanhalewyn",
+      provider_id: 1234,
+      provider: "facebook"
+    };
   });
 
-  var validUserParams = {firstName: "Yann", provider_id: '1', provider: 'facebook'};
-
-  describe ('#sheets', function() {
-    var USER;
-    var SHEETS;
-
-    beforeEach(function() {
-      return User.create(validUserParams)
+  context("instantiation", function() {
+    it("stores a valid object", function() {
+      return User.create(this.validParams)
       .then(function(user) {
-        this.user = user;
-        return Q.all([
-          Sheet.create({title: "song1", authorID: user._id}),
-          Sheet.create({title: "song2", authorID: user._id}),
-          Sheet.create({title: "song3", authorID: user._id})
-        ]).then(function(sheets) {
-          this.sheets = sheets;
-        }.bind(this), console.error)
-      }.bind(this));
+        expect(user._id).to.be.above(0);
+        expect(user.properties.firstName).to.eql("Yann");
+        expect(user.properties.lastName).to.eql("Vanhalewyn");
+      });
     });
 
-    it('returns the array of sheets', function() {
-      return this.user.sheets.then(function(result) {
-        var foundSheets = result.map(function(s) {
-          return _.pick(s, ['title', 'authorID']);
-        });
-        var targetSheets = this.sheets.map(function(s) {
-          return _.pick(s, ['title', 'authorID']);
-        });
-        expect(foundSheets).to.eql(targetSheets);
-      }.bind(this));
+    it("returns an instace of User", function() {
+      return User.create(this.validParams).then(function(user) {
+        expect(user).to.be.an.instanceof(User);
+      })
     });
-  });
+  }); // End of context 'instantiation'
 
-  describe ('#createSheet()', function() {
-    var USER;
-    var SHEET;
-
+  describe('#createSheet()', function() {
     beforeEach(function() {
-      return Factory.build('User')
-      .then(function(user) {
+      return Factory('user').then(function(user) {
         this.user = user;
-        return user.createSheet({title: "FOOBAR"})
+        return user.createSheet({title: "theTitle", artist: "theArtist", visibility: "private"})
         .then(function(sheet) {
           this.sheet = sheet;
         }.bind(this))
       }.bind(this))
     });
 
-    it('creates a new sheet', function() {
-      return Sheet.count().then(function(count) {
-        expect(count).to.eql(1);
-      })
-    });
-
-    it('adds the correct authorID', function() {
-      expect(this.sheet.authorID).to.eql(this.user._id);
-    });
-
-    it('sets the params', function() {
-      expect(this.sheet.title).to.eql("FOOBAR");
-    });
-
-    it('persists to the db', function() {
-      return Sheet.findOne({title: "FOOBAR"})
-      .then(function(sheet) {
-        expect(sheet).to.not.be.undefined;
-      });
-    })
-  });
-
-  describe('friends', function() {
-    beforeEach(function() {
-      return Factory.createList('User', 2)
-      .then(function(users) {
-        this.userA = users[0];
-        this.userB = users[1]
+    it("creates a new sheet with a relationship to the user", function() {
+      // Check with the db
+      return db.query(
+        "MATCH (p:Person)-[:AUTHORED]->(s:Sheet) WHERE id(p) = {uid} RETURN p,s",
+        {uid: this.user._id}
+      ).then(function(res) {
+        expect(res.length).to.eql(1);
+        expect(res[0].p._id).to.eql(this.user._id);
+        expect(res[0].s.properties.title).to.eql("theTitle");
       }.bind(this))
     });
 
-    describe('#addFriend()', function() {
-      context("when supplied friend id is a valid user", function() {
-        beforeEach(function() {
-          return this.userA.addFriend(this.userB._id);
-        });
+    it("returns a sheet object", function() {
+      expect(this.sheet).to.be.an.instanceof(include('/models/sheet'));
+    });
 
-        it("adds that id to the friends list", function() {
-          expect(this.userA.friend_ids.length).to.eql(1);
-          expect(this.userA.friend_ids[0]).to.equal(this.userB._id);
-        });
-
-        it("persists the friendship", function() {
-          return User.findById(this.userA._id)
-          .then(function(user) {
-            expect(user.friend_ids.length).to.eql(1);
-          });
-        })
-
-        context("when userA already has userB as a friend", function() {
-          it("doesn't duplicate the entry", function() {
-            this.userA.addFriend(this.userB._id);
-            expect(this.userA.friend_ids.length).to.eql(1);
-          });
-        }); // End of context 'when userA already has userB as a friend'
-      }); // End of context 'when supplied friend id is a valid user'
-
-      context("when supplied friendID is not a valid Mongo id", function() {
-        it("doesn't add it", function() {
-          this.userA.addFriend("invalid");
-          expect(this.userA.friend_ids.length).to.eql(0);
-        });
-      }); // End of context 'when supplied friendID is not a valid Mongo id'
-    }); // End of describe '#addFriend()'
-
-    describe('#removeFriend', function() {
-      beforeEach(function() {
-        return this.userA.addFriend(this.userB._id)
-        .then(this.userA.removeFriend.bind(this.userA, this.userB._id))
-      });
-      it("removes the friendID", function() {
-        expect(this.userA.friend_ids.length).to.eql(0);
-      });
-
-      it("persists the change", function() {
-        return User.findById(this.userA._id)
-        .then(function(db_user) {
-          expect(db_user.friend_ids.length).to.eql(0);
+    context("with missing params", function() {
+      it("sets those params to the default", function() {
+        return this.user.createSheet({}).then(function(sheet) {
+          expect(sheet.properties.visibility).to.eql("public");
+          expect(sheet.properties.title).to.eql("title");
+          expect(sheet.properties.artist).to.eql("artist");
         });
       });
-    }); // End of describe '#removeFriend'
+    }); // End of context 'with missing params'
+  }); // End of describe '#createSheet()'
 
-    describe('.friends virtual accessor', function() {
-      beforeEach(function() {
-        return this.userA.addFriend(this.userB._id);
-      });
-
-      it("returns an array of all the users friends", function() {
-        return this.userA.getFriends().exec()
-        .then(function(friends) {
-          var target = [_.pick(this.userB, ['firstName', 'lastName'])];
-          var found = friends.map(function(f) {
-            return _.pick(f, ['firstName', 'lastName']);
-          });
-          expect(found).to.eql(target);
+  describe('#sheets()', function() {
+    beforeEach(function() {
+      return Factory('sheet').then(function(objs) {
+        this.userA = objs.user;
+        this.sheetA = objs.sheet;
+        return Factory('sheet', {uid: this.userA._id}).then(function(sheetB) {
+          this.sheetB = sheetB;
+          return Factory('sheet'); // Add a sheet that's not userA's
         }.bind(this));
+      }.bind(this))
+    });
+
+    it("returns an array of all sheets related to the user", function() {
+      return this.userA.sheets().then(function(sheets) {
+        expect(sheets.length).to.eql(2);
+        expect(sheets[1]._id).to.eql(this.sheetA._id); // Might later throw error, not sure
+        expect(sheets[0]._id).to.eql(this.sheetB._id); // how neo4j orders responses.
+      }.bind(this));
+    });
+  }); // End of describe '#sheets()'
+
+  describe('STATICS', function() {
+    describe('#findById', function() {
+      beforeEach(function() {
+        return Factory('user').then(function(createdUser) {
+          this.createdUser = createdUser;
+          return User.findById(createdUser._id).then(function(foundUser) {
+            this.foundUser = foundUser;
+          }.bind(this))
+        }.bind(this))
       });
-    }); // End of describe '.friends virtual accessor'
-  }); // End of describe 'friends'
-});
+
+      it("returns the searched for user object", function() {
+        expect(this.createdUser._id).to.eql(this.foundUser._id);
+        expect(this.createdUser.properties).to.eql(this.foundUser.properties);
+      });
+
+      it("returns an actual user object WITH the prototype methods", function() {
+        expect(this.foundUser.sheets).not.to.be.undefined;
+        expect(this.foundUser).to.be.an.instanceof(User);
+      });
+    }); // End of describe '#findById'
+
+    describe('#findAndUpdateOrCreate()', function() {
+      it("returns an instance of User", function() {
+        return User.findAndUpdateOrCreate({name: "Yann"}).then(function(user) {
+          expect(user).to.be.an.instanceof(User);
+        });
+      });
+
+      context("when none is found", function() {
+        it("creates a new user", function() {
+          return User.findAndUpdateOrCreate({name: "Yann"})
+          .then(function(user) {
+            return db.query("MATCH (p:Person {name: {name}}) RETURN p", {name: "Yann"})
+            .then(function(found) {
+              expect(found.length).to.eql(1);
+              expect(found[0].p.properties.name).to.eql(user.properties.name);
+            });
+          });
+        });
+      }); // End of context 'when none is found'
+
+      context("when a user exists", function() {
+        it("doesn't create a new user", function() {
+          return User.findAndUpdateOrCreate({name: "Yann"}).then(function(firstUser) {
+            return User.findAndUpdateOrCreate({name: "Yann"}).then(function(secondUser) {
+              expect(firstUser._id).to.eql(secondUser._id);
+            });
+          });
+        });
+      }); // End of context 'when a user exists'
+
+      describe('updateParams', function() {
+        context("when no user yet exists", function() {
+          it("persists those properties", function() {
+            return User.findAndUpdateOrCreate({name: "theName"}, {age: 23, lastName: "lname"})
+            .then(function(createdUser) {
+              expect(createdUser.properties.age).to.eql(23);
+              expect(createdUser.properties.lastName).to.eql("lname");
+            });
+          });
+        }); // End of context 'when no user yes exists'
+
+        context("when a user already existsd", function() {
+          beforeEach(function() {
+            return Factory('user', {provider_id: 12345});
+          });
+
+          it("persists those properties a", function() {
+            return User.findAndUpdateOrCreate({provider_id: 12345}, {firstName: "lala"})
+            .then(function(updatedUser) {
+              expect(updatedUser.properties.firstName).to.eql("lala");
+            });
+          });
+        }); // End of context 'when a user already existsd'
+      }); // End of describe 'updateParams'
+    }); // End of describe '#find()'
+  }); // End of describe 'STATICS'
+}); // End of describe 'User'

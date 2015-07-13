@@ -25,6 +25,10 @@
       SheetStoreDataManager.setData(defaultData);
     },
 
+    setDBID: function(dbid) {
+      this.dbid = dbid;
+    },
+
     emitChange: function() {
       this.emit(CHANGE_EVENT);
     },
@@ -53,9 +57,8 @@
     // Networking
     saveSheet: function() {
       var data = SheetStoreDataManager.getData();
-      var dbid = data.getIn(['main', 'dbid']);
       $.ajax({
-        url: '/sheets/' + dbid,
+        url: '/users/me/sheets/' + this.dbid,
         method: "PUT",
         contentType: 'application/json',
         data: JSON.stringify(data.toJS())

@@ -7,9 +7,9 @@
   // Controllers
   var UserSession = include('/controllers/user_session_controller')
     , Dashboard   = include('/controllers/dashboard_controller')
-    , Sheets      = include('/controllers/sheet_controller')
-    , Friends     = include('/routes/friends')
-    , Users       = include('/routes/users')
+    , Sheets      = include('/routers/sheets')
+    , Friends     = include('/routers/friends')
+    , Users       = include('/routers/users')
     , Hubs        = include('/controllers/hub_controller')
     , Explore     = include('/controllers/explore_controller')
 
@@ -49,22 +49,14 @@
     app.route('/explore').get(ensureAuth, Explore.index);
 
 /*
- * =============
- * USERS/FRIENDS
- * =============
+ * ====================
+ * USERS/FRIENDS/SHEETS
+ * ====================
  */
     app.use('/users/:user_id/friends', Friends);
     app.use('/users', Users);
-/*
- * =========
- * RESOURCES
- * =========
- */
-    app.route('/sheets').get(ensureAuth, Sheets.index)
-                        .post(Sheets.create);
-    app.route('/sheets/:id').get(ensureAuth, Sheets.show)
-                            .put(ensureAuth, Sheets.update)
-                            .delete(ensureAuth, Sheets.destroy)
+    app.use('/users/me/sheets'/* call custom middleware here */,  Sheets);
+    app.use('/users/:user_id/sheets', Sheets);
   };
 
   module.exports = routes;

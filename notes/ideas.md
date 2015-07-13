@@ -12,7 +12,14 @@ Quick Ideas
   (see PointSystem.md)
 - Add the ability to make playlists (maybe even with a next button)
 - In Hubs, make a setlist and get to play those sheets in order
-- Add ability to 'fork' an existing public readonly sheet
+- Add ability to 'fork' an existing public readonly sheet // Actually that's a bad idea.
+- Think of names for the permissions in a hub. A peasant can't do anything, a
+  lord can edit, a king can edit, add and delete sheets and a God can do anything,
+  even manage people's permissions, rename the hub and rule the world.
+- When in a HUB, you can have either self made sheets, or ref an existing public
+  sheet! (warn the user that if the public sheet's owner updates it, it will
+  affect the hub, maybe offer a lock of some sort?)
+- Abitity to favorite (or like) an existing public sheet for easy referal
 
 
 Marketing
