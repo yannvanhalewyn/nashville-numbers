@@ -37,7 +37,8 @@
   /**
    * Returns an array of sheets that have a AUTHORED (by) relationship to the user.
    *
-   * @return {Sheet} An instance of Sheet containing the params of the newly created persisted sheet.
+   * @return {Sheet} An instance of Sheet containing the params of the newly created
+   * persisted sheet.
    */
   User.prototype.sheets = function() {
     return db.query(
@@ -49,6 +50,33 @@
         return entry.s;
       });
     })
+  }
+
+  User.prototype.sendFriendRequest = function(friendID) {
+    return db.query(
+      "MATCH (u:Person), (f:Person) WHERE id(u) = {uid} AND id(f) = {fid}" +
+      "CREATE UNIQUE (u)-[:SENT]->(r:FriendRequest)-[:TO]->(f) ",
+      {uid: this._id, fid: friendID}
+    );
+  }
+
+  User.prototype.acceptFriend = function(friendID) {
+    return db.query(
+      "MATCH (f:Person)-[rs:SENT]->(r:FriendRequest)-[rt:TO]->(u:Person) " +
+      "WHERE id(u) = {uid} AND id(f) = {fid} " +
+      "DELETE rs,rt,r " +
+      "CREATE (u)-[:FRIEND]->(f)",
+      {uid: this._id, fid: friendID}
+    );
+  }
+
+  User.prototype.deleteFriend = function(friendID) {
+    return db.query(
+      "MATCH (u:Person)-[r:FRIEND]-(f:Person) " +
+      "WHERE id(u) = {uid} AND id(f) = {fid} " +
+      "DELETE r ",
+      {uid: this._id, fid: friendID}
+    );
   }
 
 

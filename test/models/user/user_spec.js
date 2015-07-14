@@ -4,6 +4,8 @@ var include = require('include')
   , Factory = include('/test/util/factory')
   , db = include('/config/db')
 
+include('/test/util/clear_db');
+
 describe('User', function() {
   beforeEach(function() {
     this.validParams = {
