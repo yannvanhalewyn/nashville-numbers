@@ -5,13 +5,14 @@
   var include     = require('include');
 
   // Controllers
-  var UserSession = include('/controllers/user_session_controller')
-    , Dashboard   = include('/controllers/dashboard_controller')
-    , Sheets      = include('/routers/sheets')
-    , Friends     = include('/routers/friends')
-    , Users       = include('/routers/users')
-    , Hubs        = include('/controllers/hub_controller')
-    , Explore     = include('/controllers/explore_controller')
+  var UserSession    = include('/controllers/user_session_controller')
+    , Dashboard      = include('/controllers/dashboard_controller')
+    , Sheets         = include('/routers/sheets')
+    , Friends        = include('/routers/friends')
+    , FriendRequests = include('/routers/friend_requests')
+    , Users          = include('/routers/users')
+    , Hubs           = include('/controllers/hub_controller')
+    , Explore        = include('/controllers/explore_controller')
 
   // Middlewares
   var ensureAuth = include('/middlewares/auth');
@@ -53,10 +54,11 @@
  * USERS/FRIENDS/SHEETS
  * ====================
  */
-    app.use('/users/:user_id/friends', Friends);
     app.use('/users', Users);
     app.use('/users/me/sheets'/* call custom middleware here */,  Sheets);
     app.use('/users/:user_id/sheets', Sheets);
+    app.use('/users/:user_id/friends', Friends);
+    app.use('/users/:user_id/friends/requests', FriendRequests);
   };
 
   module.exports = routes;
