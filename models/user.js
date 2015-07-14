@@ -109,7 +109,22 @@
     .then(function(res) {
       return new User(res[0].p);
     });
-  }
+  };
+
+  User.findByName = function(query) {
+    var whereClauses = query.split(" ").map(function(word) {
+      return 'fullname =~ "(?i).*' + word + '.*"';
+    }).join(" AND ")
+    return db.query(
+      "MATCH (p:Person) " +
+      "WITH p, p.firstName + ' ' + p.lastName AS fullname " +
+      "WHERE " + whereClauses + " RETURN p"
+    ).then(function(result) {
+      return result.map(function(entry) {
+        return entry.p
+      });
+    });
+  };
 
   /**
    * Finds a user by it's ID.

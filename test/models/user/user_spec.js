@@ -1,8 +1,11 @@
-var include = require('include')
-  , expect  = require('chai').expect
-  , User    = include('/models/user')
-  , Factory = include('/test/util/factory')
-  , db = include('/config/db')
+var include    = require('include')
+  , chaiThings = require('chai-things')
+  , chai       = require('chai')
+  , User       = include('/models/user')
+  , Factory    = include('/test/util/factory')
+  , db         = include('/config/db')
+  , expect     = chai.expect
+chai.use(chaiThings)
 
 include('/test/util/clear_db');
 
@@ -93,7 +96,50 @@ describe('User', function() {
   }); // End of describe '#sheets()'
 
   describe('STATICS', function() {
-    describe('#findById', function() {
+    describe('.findByName()', function() {
+      beforeEach(function() {
+        return Factory('user', {firstName: "John", lastName: "Appleseed"}).then(function(JA) {
+          return Factory('user', {firstName: "Johnathan", lastName: "Glee"}).then(function(JG) {
+            return Factory('user', {firstName: "Fred", lastName: "Gleese"}).then(function(FG) {
+              this.JA = JA;
+              this.JG = JG;
+              this.FG = FG;
+            }.bind(this))
+          }.bind(this))
+        }.bind(this));
+      });
+
+      context("When the search param is part of the firstName of multiple users", function() {
+        it("finds all those users (1)", function() {
+          return User.findByName("john").then(function(result) {
+            expect(result.length).to.eql(2);
+            expect(result).to.contain.an.item.with.property('_id', this.JA._id);
+            expect(result).to.contain.an.item.with.property('_id', this.JG._id);
+          }.bind(this))
+        });
+      }); // End of context 'When the search param is part of the firstName of multiple users'
+
+      context("when the search param is part of the lastName of multiple users", function() {
+        it("finds all those users (2)", function() {
+          return User.findByName("lEe").then(function(result) {
+            expect(result.length).to.eql(2);
+            expect(result).to.contain.an.item.with.property('_id', this.JG._id);
+            expect(result).to.contain.an.item.with.property('_id', this.FG._id);
+          }.bind(this))
+        });
+      }); // End of context 'when the search param is part of the lastName of multiple users'
+
+      context("when the search param contains a part of firstName/lastName", function() {
+        it("finds that user", function() {
+          return User.findByName("ohN Lee").then(function(result) {
+            expect(result.length).to.eql(1);
+            expect(result).to.contain.an.item.with.property('_id', this.JG._id);
+          }.bind(this))
+        });
+      }); // End of context 'when the search param contains a part of firstName/lastName'
+    }); // End of describe '.find()'
+
+    describe('.findById', function() {
       beforeEach(function() {
         return Factory('user').then(function(createdUser) {
           this.createdUser = createdUser;
@@ -112,9 +158,9 @@ describe('User', function() {
         expect(this.foundUser.sheets).not.to.be.undefined;
         expect(this.foundUser).to.be.an.instanceof(User);
       });
-    }); // End of describe '#findById'
+    }); // End of describe '.findById'
 
-    describe('#findAndUpdateOrCreate()', function() {
+    describe('.findAndUpdateOrCreate()', function() {
       it("returns an instance of User", function() {
         return User.findAndUpdateOrCreate({name: "Yann"}).then(function(user) {
           expect(user).to.be.an.instanceof(User);
@@ -168,6 +214,6 @@ describe('User', function() {
           });
         }); // End of context 'when a user already existsd'
       }); // End of describe 'updateParams'
-    }); // End of describe '#find()'
+    }); // End of describe '.find()'
   }); // End of describe 'STATICS'
 }); // End of describe 'User'
