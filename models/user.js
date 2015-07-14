@@ -60,13 +60,13 @@
     );
   }
 
-  User.prototype.acceptFriend = function(friendID) {
+  User.prototype.acceptFriendRequest = function(requestID) {
     return db.query(
       "MATCH (f:Person)-[rs:SENT]->(r:FriendRequest)-[rt:TO]->(u:Person) " +
-      "WHERE id(u) = {uid} AND id(f) = {fid} " +
+      "WHERE id(r) = {rid} " +
       "DELETE rs,rt,r " +
       "CREATE (u)-[:FRIEND]->(f)",
-      {uid: this._id, fid: parseInt(friendID)}
+      {rid: requestID}
     );
   }
 

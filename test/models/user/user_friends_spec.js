@@ -62,10 +62,10 @@ describe('USER#friends', function() {
       beforeEach(function() {
         return db.query(
           "MATCH (a:Person), (b:Person) WHERE id(a) = {aid} AND id(b) = {bid} " +
-          "CREATE (b)-[:SENT]->(r:FriendRequest)-[:TO]->(a)",
+          "CREATE (b)-[:SENT]->(r:FriendRequest)-[:TO]->(a) RETURN r",
           {aid: this.userA._id, bid: this.userB._id}
-        ).then(function() {
-          return this.userA.acceptFriend(this.userB._id.toString());
+        ).then(function(result) {
+          return this.userA.acceptFriendRequest(result[0].r._id);
         }.bind(this));
       });
 
