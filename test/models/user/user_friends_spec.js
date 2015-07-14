@@ -19,8 +19,8 @@ describe('USER#friends', function() {
 
   describe('#sendFriendRequest()', function() {
     context("when no relation pre-exists", function() {
-      beforeEach(function() {
-        return this.userA.sendFriendRequest(this.userB._id);
+      beforeEach(function() {                // toString to simulate data from req
+        return this.userA.sendFriendRequest(this.userB._id.toString());
       });
 
       it("creates a new friendRequest node from userA to userB", function() {
@@ -65,7 +65,7 @@ describe('USER#friends', function() {
           "CREATE (b)-[:SENT]->(r:FriendRequest)-[:TO]->(a)",
           {aid: this.userA._id, bid: this.userB._id}
         ).then(function() {
-          return this.userA.acceptFriend(this.userB._id);
+          return this.userA.acceptFriend(this.userB._id.toString());
         }.bind(this));
       });
 
@@ -112,7 +112,7 @@ describe('USER#friends', function() {
           "CREATE (a)-[:FRIEND]->(b)",
           {aid: this.userA._id, bid: this.userB._id}
         ).then(function() {
-          return this.userA.deleteFriend(this.userB._id);
+          return this.userA.deleteFriend(this.userB._id.toString());
         }.bind(this));
       });
 

@@ -56,7 +56,7 @@
     return db.query(
       "MATCH (u:Person), (f:Person) WHERE id(u) = {uid} AND id(f) = {fid}" +
       "CREATE UNIQUE (u)-[:SENT]->(r:FriendRequest)-[:TO]->(f) ",
-      {uid: this._id, fid: friendID}
+      {uid: this._id, fid: parseInt(friendID)}
     );
   }
 
@@ -66,7 +66,7 @@
       "WHERE id(u) = {uid} AND id(f) = {fid} " +
       "DELETE rs,rt,r " +
       "CREATE (u)-[:FRIEND]->(f)",
-      {uid: this._id, fid: friendID}
+      {uid: this._id, fid: parseInt(friendID)}
     );
   }
 
@@ -75,7 +75,7 @@
       "MATCH (u:Person)-[r:FRIEND]-(f:Person) " +
       "WHERE id(u) = {uid} AND id(f) = {fid} " +
       "DELETE r ",
-      {uid: this._id, fid: friendID}
+      {uid: this._id, fid: parseInt(friendID)}
     );
   }
 
