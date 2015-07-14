@@ -189,4 +189,19 @@ describe('USER#friends', function() {
       });
     }); // End of context 'when actually friends'
   }); // End of describe '#deleteFriend'
+
+  describe('#getOpenFriendRequests', function() {
+    beforeEach(function() {
+      return this.userB.sendFriendRequest(this.userA._id).then(function(request) {
+        this.request = request;
+      })
+    });
+
+    it("returns the requests", function() {
+      return this.userA.getOpenFriendRequests().then(function(result) {
+        expect(result.length).to.eql(1);
+        expect(result[0]._id).to.eql(this.request._id);
+      })
+    });
+  }); // End of describe '#getOpenFriendRequests'
 }); // End of describe 'USER#friends'

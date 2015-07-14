@@ -93,7 +93,7 @@
   /**
    * Deletes a FRIEND relationship to user with given friendID.
    *
-   * @param {string/number} friendID The ID of the FRIEND to whom we wish to delete 
+   * @param {string/number} friendID The ID of the FRIEND to whom we wish to delete
    * the relationship.
    */
   User.prototype.deleteFriend = function(friendID) {
@@ -103,6 +103,20 @@
       "DELETE r ",
       {uid: this._id, fid: parseInt(friendID)}
     );
+  }
+
+  /**
+   * Returns a list of all open incoming friend requests.
+   *
+   * @return {array} An array of FriendRequest node objects.
+   */
+  User.prototype.getOpenFriendRequests = function() {
+    return db.query(
+      "MATCH (u:Person)<-[:TO]-(r:FriendRequest) " +
+      "WHERE id(u) = {uid} RETURN r", {uid: this._id}
+    ).then(function(results) {
+      return results.map(function(result) { return result.r });
+    })
   }
 
 
