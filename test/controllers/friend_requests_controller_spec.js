@@ -4,6 +4,7 @@ var include    = require('include')
   , sinonChai  = require('sinon-chai')
   , expect     = chai.expect
   , reqres     = require('reqres')
+  , Q          = require('q')
   , login      = include('/test/util/login')
   , Factory    = include('/test/util/factory')
   , Controller = include('/controllers/friend_requests_controller')
@@ -23,6 +24,21 @@ describe('FRIEND_REQUESTS_CONTROLLER', function() {
       this.userA = userA;
     }.bind(this));
   });
+
+  // GET/INDEX
+  describe('GET#index', function() {
+    var dummyRequests = [{_id: 1}, {_id: 2}];
+    beforeEach(function(done) {
+      sinon.stub(this.userA, 'getOpenFriendRequests').returns(Q(dummyRequests));
+      req.user = this.userA;
+      Controller.index(req, res);
+      res.on('end', done);
+    });
+
+    it("returns an array of all the logged in users open friend request", function() {
+      expect(res.json).to.have.been.calledWith(dummyRequests);
+    });
+  }); // End of describe 'GET#index'
 
   // POST/CREATE
   describe('POST#create', function() {
