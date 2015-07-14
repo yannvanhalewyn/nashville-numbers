@@ -25,7 +25,7 @@
 
     renderUserSuggestion: function(user) {
       return (
-        <p>{user._id} - {user.attributes.firstName}</p>
+        <p>{user._id} - {user.properties.firstName} {user.properties.lastName}</p>
       )
     },
 

@@ -2,12 +2,13 @@
 
   "use strict";
 
+  var User = require('../models/user');
+
   var UsersController = {
     index: function(req, res) {
-      res.json([
-        {_id: 1, attributes: {firstName: "Jean"}}, 
-        {_id: 2, attributes: {firstName: "Bob"}},
-      ]);
+      User.findByName(req.query.search).then(function(foundUsers) {
+        res.json(foundUsers);
+      })
     },
 
     show: function(req, res) {

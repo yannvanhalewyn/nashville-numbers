@@ -19,7 +19,7 @@
     dispatchCallback: function(payload) {
       switch (payload.actionType) {
         case Constants.SEARCH_FOR_USERS:
-          this.fetch({data: {search: "Foo"}});
+          this.fetch({data: {search: payload.searchValue}});
           break;
 
         default:

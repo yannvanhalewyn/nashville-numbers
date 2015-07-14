@@ -6,15 +6,10 @@
 
   "use strict";
 
-  var include = require('include')
-
   var FriendController = {
 
-    index: function(req, res, next) {
-      return req.user.getFriends().exec()
-      .then(function(friends) {
-        res.render('friends', {friends: friends});
-      });
+    index: function(req, res) {
+      res.render('friends');
     }
   };
 
