@@ -55,9 +55,11 @@
   User.prototype.sendFriendRequest = function(friendID) {
     return db.query(
       "MATCH (u:Person), (f:Person) WHERE id(u) = {uid} AND id(f) = {fid}" +
-      "CREATE UNIQUE (u)-[:SENT]->(r:FriendRequest)-[:TO]->(f) ",
+      "CREATE UNIQUE (u)-[:SENT]->(r:FriendRequest)-[:TO]->(f) RETURN r",
       {uid: this._id, fid: parseInt(friendID)}
-    );
+    ).then(function(result) {
+      return result[0].r;
+    })
   }
 
   User.prototype.acceptFriendRequest = function(requestID) {

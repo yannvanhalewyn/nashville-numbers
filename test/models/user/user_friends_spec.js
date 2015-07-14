@@ -20,7 +20,10 @@ describe('USER#friends', function() {
   describe('#sendFriendRequest()', function() {
     context("when no relation pre-exists", function() {
       beforeEach(function() {                // toString to simulate data from req
-        return this.userA.sendFriendRequest(this.userB._id.toString());
+        return this.userA.sendFriendRequest(this.userB._id.toString())
+        .then(function(result) {
+          this.result = result;
+        }.bind(this));
       });
 
       it("creates a new friendRequest node from userA to userB", function() {
@@ -31,6 +34,10 @@ describe('USER#friends', function() {
           expect(result[0].u._id).to.eql(this.userA._id);
           expect(result[0].f._id).to.eql(this.userB._id);
         }.bind(this));
+      });
+
+      it("returns the request object", function() {
+        expect(this.result._id).not.to.be.undefined;
       });
     }); // End of context 'when no relation pre-exists'
 
