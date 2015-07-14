@@ -8,6 +8,7 @@
   var FriendRequestsController = require('../controllers/friend_requests_controller');
 
   FriendRequestsRouter.post('/', ensureAuth, FriendRequestsController.create)
+  FriendRequestsRouter.put('/:request_id', ensureAuth, FriendRequestsController.create)
 
   module.exports = FriendRequestsRouter;
 
