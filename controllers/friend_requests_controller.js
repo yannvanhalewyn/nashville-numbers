@@ -4,7 +4,7 @@
 
   var FriendRequestsController = {
     create: function(req, res) {
-      req.user.sendFriendRequest(req.body.other_uid).then(function() {
+      req.user.sendFriendRequest(req.body.other_user_id).then(function() {
         res.sendStatus(200);
       });
     },

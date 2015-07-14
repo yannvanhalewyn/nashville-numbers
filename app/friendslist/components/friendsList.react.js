@@ -9,7 +9,10 @@
     render: function() {
       return (
         <div>
-          <LiveUserSearch store={this.props.userStore}/>
+          <LiveUserSearch
+            userStore={this.props.userStore}
+            friendRequestStore={this.props.friendRequestStore}
+          />
           <h1>Your Friends</h1>
           <p>Some list of friends goes here</p>
         </div>

@@ -4,12 +4,12 @@
 
   var Backbone   = require('backbone')
     , Dispatcher = require('../dispatcher/usersDispatcher')
-    , Constants  = require('../actions/searchActions').constants
+    , Constants  = require('../actions/friendActions').constants
 
   var UserModel = Backbone.Model.extend({});
 
   var UserCollection = Backbone.Collection.extend({
-    module: UserModel,
+    model: UserModel,
     url: "/users",
 
     initialize: function() {

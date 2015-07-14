@@ -4,28 +4,33 @@
 
   var React     = require('react')
     , SearchBar = require('./searchBar.react')
-    , SearchActions = require('../actions/searchActions')
+    , FriendActions = require('../actions/friendActions')
+    , FriendSuggestion = require('./friendSuggestion.react')
 
   var LiveUserSearchComponent = React.createClass({
     getInitialState: function() {
-      return { users: this.props.store.getUsers() }
+      return { users: this.props.userStore.getUsers() }
     },
 
     componentWillMount: function() {
-      this.props.store.on('update', this.update);
+      this.props.userStore.on('update', this.update);
     },
 
     componentWillUnmount: function() {
-      this.props.store.off('update', this.update);
+      this.props.userStore.off('update', this.update);
     },
 
     update: function(foo) {
-      this.setState({users: this.props.store.getUsers()})
+      this.setState({users: this.props.userStore.getUsers()})
     },
 
-    renderUserSuggestion: function(user) {
+    renderFriendSuggestion: function(user) {
       return (
-        <p>{user._id} - {user.properties.firstName} {user.properties.lastName}</p>
+        <FriendSuggestion
+          firstName={user.properties.firstName}
+          lastName={user.properties.lastName}
+          _id={user._id}
+        />
       )
     },
 
@@ -33,14 +38,14 @@
       return (
         <div>
           <SearchBar onInput={this._onInput}/>
-          {this.state.users.map(this.renderUserSuggestion)}
+          {this.state.users.map(this.renderFriendSuggestion)}
         </div>
       )
     },
 
     _onInput: function(e) {
       var value = e.target.value;
-      SearchActions.searchForUsers(value);
+      FriendActions.searchForUsers(value);
     }
   })
 

@@ -36,7 +36,7 @@ describe('FRIEND_REQUESTS_CONTROLLER', function() {
         login(this.userA, req);
         return Factory('user').then(function(otherUser) {
           this.userB = otherUser;
-          req.body = { other_uid: otherUser._id }
+          req.body = { other_user_id: otherUser._id }
           Controller.create(req, res);
           res.on('end', done)
         }.bind(this));
