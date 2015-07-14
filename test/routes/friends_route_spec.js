@@ -35,7 +35,7 @@ describe('FRIENDSROUTES', function() {
       expect(res.render).to.have.been.calledWith('friends');
     });
 
-    it("returns the logged in user's friendslist", function(done) {
+    it("returns the logged in user's friendslist", function() {
     });
   }); // End of describe 'GET#index'
 }); // End of describe 'FRIENDSROUTES'

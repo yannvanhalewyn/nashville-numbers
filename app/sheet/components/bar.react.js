@@ -28,7 +28,6 @@
               />
     },
 
-    // TODO auto delete bars when emptied
     render: function() {
       var classes = classNames({
         bar: true,
