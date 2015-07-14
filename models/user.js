@@ -52,6 +52,15 @@
     })
   }
 
+  /**
+   * Sends a friendrequest to the user with given id.
+   * This doesn't create a FriendRequest if:
+   * - userA is already friends with userB
+   * - There already is a request from userA to userB
+   *
+   * @param {string/number} friendID The ID of the friend to whom we want to send the request.
+   * @return {object} The FriendRequest node that was created (empty if none)
+   */
   User.prototype.sendFriendRequest = function(friendID) {
     return db.query(
       "MATCH (u:Person), (f:Person) " +
@@ -60,22 +69,33 @@
       {uid: this._id, fid: parseInt(friendID)}
     ).then(function(result) {
       if (_.isEmpty(result)) {
-        return [];
+        return {};
       }
       return result[0].r;
     })
   }
 
+  /**
+   * Accepts a friendRequest with the given ID.
+   *
+   * @param {string/number} requestID The ID of the request node.
+   */
   User.prototype.acceptFriendRequest = function(requestID) {
     return db.query(
       "MATCH (f:Person)-[rs:SENT]->(r:FriendRequest)-[rt:TO]->(u:Person) " +
-      "WHERE id(r) = {rid} " +
+      "WHERE id(u) = {uid} AND id(r) = {rid} " +
       "DELETE rs,rt,r " +
       "CREATE (u)-[:FRIEND]->(f)",
-      {rid: requestID}
+      {uid: this._id, rid: parseInt(requestID)}
     );
   }
 
+  /**
+   * Deletes a FRIEND relationship to user with given friendID.
+   *
+   * @param {string/number} friendID The ID of the FRIEND to whom we wish to delete 
+   * the relationship.
+   */
   User.prototype.deleteFriend = function(friendID) {
     return db.query(
       "MATCH (u:Person)-[r:FRIEND]-(f:Person) " +

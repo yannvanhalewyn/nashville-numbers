@@ -107,7 +107,7 @@ describe('USER#friends', function() {
           "CREATE (b)-[:SENT]->(r:FriendRequest)-[:TO]->(a) RETURN r",
           {aid: this.userA._id, bid: this.userB._id}
         ).then(function(result) {
-          return this.userA.acceptFriendRequest(result[0].r._id);
+          return this.userA.acceptFriendRequest(result[0].r._id.toString());
         }.bind(this));
       });
 
@@ -143,6 +143,26 @@ describe('USER#friends', function() {
         });
       });
     }); // End of context 'when no relationship is pending'
+
+    context("when userC accepts a request between userA and userB", function() {
+      beforeEach(function() {
+        return Factory('user').then(function(userC) {
+          return this.userA.sendFriendRequest(this.userB._id).then(function(request) {
+            return userC.acceptFriendRequest(request._id);
+          })
+        }.bind(this))
+      });
+
+      it("obviously doesn't execute", function() {
+        return db.query(
+          "MATCH (a:Person)-[r:FRIEND]-(b:Person) " +
+          "WHERE id(a) = {aid} AND id(b) = {bid} RETURN r",
+          {aid: this.userA._id, bid: this.userB._id}
+        ).then(function(result) {
+          expect(result.length).to.eql(0);
+        });
+      });
+    }); // End of context 'when userC accepts a request between userA and userB'
   }); // End of describe '#acceptFriendRequest()'
 
   describe('#deleteFriend', function() {
@@ -168,6 +188,5 @@ describe('USER#friends', function() {
         })
       });
     }); // End of context 'when actually friends'
-
   }); // End of describe '#deleteFriend'
 }); // End of describe 'USER#friends'
