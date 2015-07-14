@@ -43,25 +43,60 @@ describe('USER#friends', function() {
 
     context("when a request node already exists", function() {
       beforeEach(function() {
-        return this.userA.sendFriendRequest(this.userB._id).then(function() {
-          return this.userA.sendFriendRequest(this.userB._id);
-        }.bind(this))
+        return this.userA.sendFriendRequest(this.userB._id);
       });
 
-      it("doesn't create multiple relationships", function() {
-        return db.query(
-          "MATCH (u:Person), (u)-[:SENT]->(r:FriendRequest)-[:TO]->(f) RETURN r",
-          {aid: this.userA._id, bid: this.userB._id}
-        ).then(function(result) {
-          expect(result.length).to.eql(1);
+      context("when that node has the same target user", function() {
+        beforeEach(function() {
+          return this.userA.sendFriendRequest(this.userB._id);
         });
-      });
+
+        it("doesn't create another friendrequest node", function() {
+          return db.query(
+            "MATCH (u:Person), (u)-[:SENT]->(r:FriendRequest)-[:TO]->(f) RETURN r"
+          ).then(function(result) {
+            expect(result.length).to.eql(1);
+          });
+        });
+      }); // End of context 'when that node has the same target user'
+
+      context("when that node has a different target user", function() {
+        beforeEach(function() {
+          return Factory('user').then(function(userC) {
+            return this.userA.sendFriendRequest(userC._id);
+          }.bind(this))
+        });
+
+        it("creates a new request node", function() {
+          return db.query(
+            "MATCH (u:Person), (u)-[:SENT]->(r:FriendRequest)-[:TO]->(f) RETURN r"
+          ).then(function(result) {
+            expect(result.length).to.eql(2);
+            expect(result[0]).not.to.eql(result[1]);
+          });
+        });
+      }); // End of context 'when that node has a different target user'
     }); // End of context 'when a request is already pending'
 
-    context("when userB is already a friend", function() {
-      it("doesn't reset the relationship", function() {
+    context("when users are already friends", function() {
+      beforeEach(function() {
+        return db.query(
+          "MATCH (a:Person), (b:Person) WHERE id(a) = {aid} AND id(b) = {bid} " +
+          "CREATE (b)-[:FRIENDS]->(a)",
+          {aid: this.userA._id, bid: this.userB._id}
+        ).then(function(result) {
+          return this.userA.sendFriendRequest(this.userB._id);
+        }.bind(this));
       });
-    }); // End of context 'when userB is already a friend'
+
+      it("doesn't create a new friendRequest", function() {
+        return db.query(
+          "MATCH (u:Person), (u)-[:SENT]->(r:FriendRequest)-[:TO]->(f) RETURN r"
+        ).then(function(result) {
+          expect(result.length).to.eql(0);
+        });
+      });
+    }); // End of context 'when users are already friends'
   }); // End of describe '#sendFriendRequest()'
 
   describe('#acceptFriendRequest()', function() {

@@ -54,10 +54,14 @@
 
   User.prototype.sendFriendRequest = function(friendID) {
     return db.query(
-      "MATCH (u:Person), (f:Person) WHERE id(u) = {uid} AND id(f) = {fid}" +
-      "CREATE UNIQUE (u)-[:SENT]->(r:FriendRequest)-[:TO]->(f) RETURN r",
+      "MATCH (u:Person), (f:Person) " +
+      "WHERE NOT (u)-[:FRIENDS]-(f) AND id(u) = {uid} AND id(f) = {fid}" +
+      "MERGE (u)-[:SENT]->(r:FriendRequest)-[:TO]->(f) RETURN r",
       {uid: this._id, fid: parseInt(friendID)}
     ).then(function(result) {
+      if (_.isEmpty(result)) {
+        return [];
+      }
       return result[0].r;
     })
   }
@@ -111,6 +115,12 @@
     });
   };
 
+  /**
+   * Finds a user by it's fullname given a collection of words that each get matched
+   *
+   * @param {string} query A string with words to be matched
+   * @return {array} The array of users that have a matching full name
+   */
   User.findByName = function(query) {
     var whereClauses = query.split(" ").map(function(word) {
       return 'fullname =~ "(?i).*' + word + '.*"';
