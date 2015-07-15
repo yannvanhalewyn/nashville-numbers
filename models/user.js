@@ -64,7 +64,7 @@
   User.prototype.sendFriendRequest = function(friendID) {
     return db.query(
       "MATCH (u:Person), (f:Person) " +
-      "WHERE NOT (u)-[:FRIENDS]-(f) AND id(u) = {uid} AND id(f) = {fid}" +
+      "WHERE NOT (u)-[:FRIEND]-(f) AND id(u) = {uid} AND id(f) = {fid}" +
       "MERGE (u)-[:SENT]->(r:FriendRequest)-[:TO]->(f) RETURN r",
       {uid: this._id, fid: parseInt(friendID)}
     ).then(function(result) {
@@ -116,6 +116,29 @@
       "MATCH (sender:Person)-[:SENT]->(request:FriendRequest)-[:TO]->(u:Person) " +
       "WHERE id(u) = {uid} RETURN request,sender", {uid: this._id}
     );
+  }
+
+  /**
+   * Gets the current friendship status between the user and another user.
+   *
+   * @param {string/number} friendID The ID of the other user we're querrying the friendship with.
+   * @return {object} The object describing the friend relationship. It has
+   * three properties: the friendship relationship, the sentRequest and the
+   * receivedRequest. Each or all of those are null when inexistant.
+   */
+  User.prototype.getFriendship = function(friendID) {
+    return db.query(
+      "MATCH (u:Person), (f:Person) " +
+      "OPTIONAL MATCH (u)-[friendship:FRIEND]-(f) " +
+      "OPTIONAL MATCH (u)-[:SENT]->(sentRequest:FriendRequest)-[:TO]->(f) " +
+      "OPTIONAL MATCH (f)-[:SENT]->(receivedRequest:FriendRequest)-[:TO]->(u) " +
+      "WITH u,f,friendship,sentRequest,receivedRequest " +
+      "WHERE id(u) = {uid} AND id(f) = {fid} " +
+      "RETURN friendship,sentRequest,receivedRequest",
+      {uid: this._id, fid: parseInt(friendID)}
+    ).then(function(result) {
+      return result[0];
+    });
   }
 
 
