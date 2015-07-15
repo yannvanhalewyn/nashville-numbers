@@ -75,7 +75,7 @@ describe('FRIEND_REQUESTS_CONTROLLER', function() {
 
     context("when friend request is found", function() {
       beforeEach(function(done) {
-        sinon.spy(this.userA, 'acceptFriendRequest');
+        sinon.stub(this.userA, 'acceptFriendRequest').returns(Q({dummyData: true}))
         login(this.userA, req);
         return Factory('user').then(function(otherUser) {
           this.userB = otherUser;
@@ -88,8 +88,11 @@ describe('FRIEND_REQUESTS_CONTROLLER', function() {
       });
 
       it("calls user.acceptFriend with the requestID", function() {
-        expect(res.sendStatus).to.have.been.calledWith(200);
         expect(this.userA.acceptFriendRequest).to.have.been.calledWith(req.params.request_id);
+      });
+
+      it("sends the newly created relationship as json with 'accepted' flag", function() {
+        expect(res.json).to.have.been.calledWith({type: 'accepted', relationship: {dummyData: true}});
       });
     }); // End of context 'when friend request is found'
   }); // End of describe 'PUT#update'

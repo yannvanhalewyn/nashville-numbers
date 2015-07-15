@@ -9,7 +9,7 @@
 
   FriendRequestsRouter.get('/', ensureAuth, FriendRequestsController.index)
   FriendRequestsRouter.post('/', ensureAuth, FriendRequestsController.create)
-  FriendRequestsRouter.put('/:request_id', ensureAuth, FriendRequestsController.create)
+  FriendRequestsRouter.put('/:request_id', ensureAuth, FriendRequestsController.update)
 
   module.exports = FriendRequestsRouter;
 

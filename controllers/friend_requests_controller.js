@@ -16,8 +16,8 @@
     },
 
     update: function(req, res) {
-      req.user.acceptFriendRequest(req.params.request_id).then(function() {
-        res.sendStatus(200);
+      req.user.acceptFriendRequest(req.params.request_id).then(function(relationship) {
+        res.json({type: 'accepted', relationship: relationship});
       });
     }
   }
