@@ -176,8 +176,11 @@
    * @return {User} An instance of User containing the params of the found user.
    */
   User.findById = function(id) {
-    return db.query("MATCH (p:Person) WHERE id(p) = {id} RETURN p", {id: id})
+    return db.query("MATCH (p:Person) WHERE id(p) = {id} RETURN p", {id: parseInt(id)})
     .then(function(result) {
+      if (_.isEmpty(result)) {
+        throw "Could not find user with id " + id;
+      }
       return new User(result[0].p);
     });
   }

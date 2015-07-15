@@ -140,24 +140,35 @@ describe('User', function() {
     }); // End of describe '.find()'
 
     describe('.findById', function() {
-      beforeEach(function() {
-        return Factory('user').then(function(createdUser) {
-          this.createdUser = createdUser;
-          return User.findById(createdUser._id).then(function(foundUser) {
-            this.foundUser = foundUser;
+      context("When existing userID is provided", function() {
+        beforeEach(function() {
+          return Factory('user').then(function(createdUser) {
+            this.createdUser = createdUser;
+            return User.findById(createdUser._id.toString()).then(function(foundUser) {
+              this.foundUser = foundUser;
+            }.bind(this))
           }.bind(this))
-        }.bind(this))
-      });
+        });
 
-      it("returns the searched for user object", function() {
-        expect(this.createdUser._id).to.eql(this.foundUser._id);
-        expect(this.createdUser.properties).to.eql(this.foundUser.properties);
-      });
+        it("returns the searched for user object", function() {
+          expect(this.createdUser._id).to.eql(this.foundUser._id);
+          expect(this.createdUser.properties).to.eql(this.foundUser.properties);
+        });
 
-      it("returns an actual user object WITH the prototype methods", function() {
-        expect(this.foundUser.sheets).not.to.be.undefined;
-        expect(this.foundUser).to.be.an.instanceof(User);
-      });
+        it("returns an actual user object WITH the prototype methods", function() {
+          expect(this.foundUser.sheets).not.to.be.undefined;
+          expect(this.foundUser).to.be.an.instanceof(User);
+        });
+      }); // End of context 'When existing userID is provided'
+
+      context("When user does not exist", function() {
+        it("throws a 'userNotFound' error", function(done) {
+          User.findById("999").then(done, function(err) {
+            expect(err).to.eql("Could not find user with id 999");
+            done();
+          });
+        });
+      }); // End of context 'When user does not exist'
     }); // End of describe '.findById'
 
     describe('.findAndUpdateOrCreate()', function() {
