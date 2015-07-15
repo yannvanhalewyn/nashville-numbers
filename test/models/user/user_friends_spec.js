@@ -60,6 +60,20 @@ describe('USER#friends', function() {
         });
       }); // End of context 'when that node has the same target user'
 
+      context("when that node is coming in from the other user", function() {
+        beforeEach(function() {
+          return this.userB.sendFriendRequest(this.userA._id);
+        });
+
+        it("doesn't create a cross request", function() {
+          return db.query(
+            "MATCH (u:Person)-[]->(r:FriendRequest)-[]->(f:Person) RETURN r"
+          ).then(function(result) {
+            expect(result.length).to.eql(1);
+          });
+        });
+      }); // End of context 'when that node is coming in from the other user'
+
       context("when that node has a different target user", function() {
         beforeEach(function() {
           return Factory('user').then(function(userC) {

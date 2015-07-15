@@ -57,6 +57,7 @@
    * This doesn't create a FriendRequest if:
    * - userA is already friends with userB
    * - There already is a request from userA to userB
+   * - There already is a request from userB to userA
    *
    * @param {string/number} friendID The ID of the friend to whom we want to send the request.
    * @return {object} The FriendRequest node that was created (empty if none)
@@ -64,7 +65,7 @@
   User.prototype.sendFriendRequest = function(friendID) {
     return db.query(
       "MATCH (u:Person), (f:Person) " +
-      "WHERE NOT (u)-[:FRIEND]-(f) AND id(u) = {uid} AND id(f) = {fid}" +
+      "WHERE NOT (u)-[:FRIEND]-(f) AND NOT (u)--(:FriendRequest)--(f) AND id(u) = {uid} AND id(f) = {fid}" +
       "MERGE (u)-[:SENT]->(r:FriendRequest)-[:TO]->(f) RETURN r",
       {uid: this._id, fid: parseInt(friendID)}
     ).then(function(result) {
