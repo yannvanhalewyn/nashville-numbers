@@ -17,6 +17,12 @@ describe('USER#friends', function() {
     }.bind(this));
   });
 
+
+/*
+ * =================
+ * sendFriendRequest
+ * =================
+ */
   describe('#sendFriendRequest()', function() {
     context("when no relation pre-exists", function() {
       beforeEach(function() {                // toString to simulate data from req
@@ -113,6 +119,12 @@ describe('USER#friends', function() {
     }); // End of context 'when users are already friends'
   }); // End of describe '#sendFriendRequest()'
 
+
+/*
+ * =====================
+ * acceptFriendRequest()
+ * =====================
+ */
   describe('#acceptFriendRequest()', function() {
     context("when there is a request from userB to userA", function() {
       beforeEach(function() {
@@ -192,6 +204,75 @@ describe('USER#friends', function() {
     }); // End of context 'when userC accepts a request between userA and userB'
   }); // End of describe '#acceptFriendRequest()'
 
+/*
+ * ====================
+ * destroyFriendRequest
+ * ====================
+ */
+  describe('#destroyFriendRequest()', function() {
+    context("when there is a request from userB to userA", function() {
+      beforeEach(function() {
+        return db.query(
+          "MATCH (a:Person), (b:Person) WHERE id(a) = {aid} AND id(b) = {bid} " +
+          "CREATE (b)-[:SENT]->(r:FriendRequest)-[:TO]->(a) RETURN r",
+          {aid: this.userA._id, bid: this.userB._id}
+        ).then(function(result) {
+          this.request = result[0].r;
+        }.bind(this));
+      });
+
+      it("userA can delete the request", function() {
+        return this.userA.destroyFriendRequest(this.request._id).then(function() {
+          return db.query(
+            "MATCH (b)-[:SENT]->(r:FriendRequest)-[:TO]->(a) " +
+              "WHERE id(a) = {aid} AND id(b) = {bid} RETURN r",
+            {aid: this.userA._id, bid: this.userB._id}
+          ).then(function(response) {
+            expect(response.length).to.eql(0);
+          })
+        }.bind(this))
+      });
+
+      it("userB can delete the request", function() {
+        return this.userB.destroyFriendRequest(this.request._id).then(function() {
+          return db.query(
+            "MATCH (b)-[:SENT]->(r:FriendRequest)-[:TO]->(a) " +
+              "WHERE id(a) = {aid} AND id(b) = {bid} RETURN r",
+            {aid: this.userA._id, bid: this.userB._id}
+          ).then(function(response) {
+            expect(response.length).to.eql(0);
+          })
+        }.bind(this))
+      });
+    }); // End of context 'when the relationship is already pending'
+
+    context("when userC destroys a request between userA and userB", function() {
+      beforeEach(function() {
+        return Factory('user').then(function(userC) {
+          return this.userA.sendFriendRequest(this.userB._id).then(function(request) {
+            return userC.destroyFriendRequest(request._id);
+          })
+        }.bind(this))
+      });
+
+      it("obviously doesn't execute", function() {
+        return db.query(
+          "MATCH (a:Person)-[]-(r:FriendRequest)-[]-(b:Person) " +
+          "WHERE id(a) = {aid} AND id(b) = {bid} RETURN r",
+          {aid: this.userA._id, bid: this.userB._id}
+        ).then(function(result) {
+          expect(result.length).to.eql(1);
+        });
+      });
+    }); // End of context 'when userC accepts a request between userA and userB'
+  }); // End of describe '#acceptFriendRequest()'
+
+
+/*
+ * ============
+ * deleteFriend
+ * ============
+ */
   describe('#deleteFriend', function() {
     context("when actually friends", function() {
       beforeEach(function() {
@@ -239,6 +320,12 @@ describe('USER#friends', function() {
     });
   }); // End of describe '#getOpenFriendRequests'
 
+
+/*
+ * =============
+ * getFriendship
+ * =============
+ */
   describe('#getFriendship', function() {
     context("when user A is friends with user B", function() {
       beforeEach(function() {

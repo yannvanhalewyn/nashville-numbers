@@ -98,6 +98,19 @@
   }
 
   /**
+   * Destroys a friendRequest with the given ID.
+   *
+   * @param {string/number} requestID The ID of the request node.
+   */
+  User.prototype.destroyFriendRequest = function(requestID) {
+    return db.query(
+      "MATCH (f:Person)-[rs]-(r:FriendRequest)-[rt]-(u:Person) " +
+      "WHERE id(u) = {uid} AND id(r) = {rid} " +
+      "DELETE rs,rt,r ", {uid: this._id, rid: parseInt(requestID)}
+    )
+  }
+
+  /**
    * Deletes a FRIEND relationship to user with given friendID.
    *
    * @param {string/number} friendID The ID of the FRIEND to whom we wish to delete
