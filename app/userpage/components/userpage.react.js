@@ -32,6 +32,10 @@
           this.setState({friendship: {sentRequest: update.get('request')}});
           break;
 
+        case 'accepted':
+          this.setState({friendship: {friendship: update.get('relationship')}})
+          break;
+
         default:
           console.error("Got invalid update type " + update.get("type"));
           break;

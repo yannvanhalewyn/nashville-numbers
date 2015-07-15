@@ -21,6 +21,16 @@
           FriendRequest.send(this.get("_id"));
           break;
 
+        case Constants.ACCEPT_FRIEND_REQUEST:
+          var requestID = this.get("friendship").receivedRequest._id;
+          FriendRequest.accept(requestID);
+          break;
+
+        case Constants.DECLINE_FRIEND_REQUEST:
+          var requestID = this.get("friendship").receivedRequest._id;
+          FriendRequest.decline(requestID);
+          break;
+
         default:
           console.error("No such action -- " + payload.actionType);
           break;
