@@ -200,8 +200,15 @@ describe('USER#friends', function() {
     it("returns the requests", function() {
       return this.userA.getOpenFriendRequests().then(function(result) {
         expect(result.length).to.eql(1);
-        expect(result[0]._id).to.eql(this.request._id);
+        expect(result[0].request._id).to.eql(this.request._id);
       })
+    });
+
+    it("returns an embedded user object from whom the request is coming", function() {
+      return this.userA.getOpenFriendRequests().then(function(result) {
+        expect(result.length).to.eql(1);
+        expect(result[0].sender._id).to.eql(this.userB._id);
+      }.bind(this))
     });
   }); // End of describe '#getOpenFriendRequests'
 }); // End of describe 'USER#friends'

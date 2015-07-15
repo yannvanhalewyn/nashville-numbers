@@ -108,15 +108,14 @@
   /**
    * Returns a list of all open incoming friend requests.
    *
-   * @return {array} An array of FriendRequest node objects.
+   * @return {array} An array of FriendRequest objects containing request as the
+   * request node, sender as the user initiating the request.
    */
   User.prototype.getOpenFriendRequests = function() {
     return db.query(
-      "MATCH (u:Person)<-[:TO]-(r:FriendRequest) " +
-      "WHERE id(u) = {uid} RETURN r", {uid: this._id}
-    ).then(function(results) {
-      return results.map(function(result) { return result.r });
-    })
+      "MATCH (sender:Person)-[:SENT]->(request:FriendRequest)-[:TO]->(u:Person) " +
+      "WHERE id(u) = {uid} RETURN request,sender", {uid: this._id}
+    );
   }
 
 
