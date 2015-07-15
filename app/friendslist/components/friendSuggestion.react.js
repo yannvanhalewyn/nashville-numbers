@@ -12,13 +12,8 @@
           <div className="name">
             {this.props.firstName} {this.props.lastName}
           </div>
-          <span className="fa fa-plus" onClick={this._onClick}/>
         </div>
       )
-    },
-
-    _onClick: function() {
-      FriendActions.sendFriendRequest(this.props._id);
     }
   })
 

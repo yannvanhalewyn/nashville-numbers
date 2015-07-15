@@ -9,19 +9,19 @@
 
   var LiveUserSearchComponent = React.createClass({
     getInitialState: function() {
-      return { users: this.props.userStore.getUsers() }
+      return { users: this.props.store.getUsers() }
     },
 
     componentWillMount: function() {
-      this.props.userStore.on('update', this.update);
+      this.props.store.on('update', this.update);
     },
 
     componentWillUnmount: function() {
-      this.props.userStore.off('update', this.update);
+      this.props.store.off('update', this.update);
     },
 
     update: function(foo) {
-      this.setState({users: this.props.userStore.getUsers()})
+      this.setState({users: this.props.store.getUsers()})
     },
 
     renderFriendSuggestion: function(user) {
@@ -45,7 +45,11 @@
 
     _onInput: function(e) {
       var value = e.target.value;
-      FriendActions.searchForUsers(value);
+      if (value.length === 0) {
+        return this.setState({users: []});
+      } else if (value.length > 2) {
+        return FriendActions.searchForUsers(value);
+      }
     }
   })
 

@@ -10,8 +10,7 @@
       return (
         <div>
           <LiveUserSearch
-            userStore={this.props.userStore}
-            friendRequestStore={this.props.friendRequestStore}
+            store={this.props.userStore}
           />
           <h1>Your Friends</h1>
           <p>Some list of friends goes here</p>
