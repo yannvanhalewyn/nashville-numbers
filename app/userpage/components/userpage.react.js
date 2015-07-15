@@ -7,27 +7,44 @@
 
   var UserPageComponent = React.createClass({
     getInitialState: function() {
-      return this.props.store.getState();
+      return this.props.userStore.getState();
     },
 
+    // COULD DO friendrequest on 'request' to have a temporary label
+    // And catch the 'sync' later to set the label
     componentDidMount: function() {
-      this.props.store.on('update sync', this.update);
+      this.props.userStore.on('update sync', this.updateUser);
+      this.props.friendRequestModel.on('sync', this.updateFriendship);
     },
 
     componentDidUnmount: function() {
-      this.props.store.off('update sync', this.update);
+      this.props.userStore.off('update sync', this.updateUser);
+      this.props.friendRequestModel.off('sync', this.updateFriendship);
     },
 
-    update: function() {
-      this.setState({userData: this.props.store.getState()});
+    updateUser: function() {
+      this.setState(this.props.userStore.getState());
+    },
+
+    updateFriendship: function(update) {
+      switch (update.get('type')) {
+        case 'sent':
+          this.setState({friendship: {sentRequest: update.get('request')}});
+          break;
+
+        default:
+          console.error("Got invalid update type " + update.get("type"));
+          break;
+      }
     },
 
     render: function() {
       return (
         <div className="userpage">
           <UserHeader
-            firstName={this.state.properties.firstName}
-            lastName={this.state.properties.lastName}
+            firstName={this.state.userData.firstName}
+            lastName={this.state.userData.lastName}
+            friendship={this.state.friendship}
           />
           <h2>His Sheets</h2>
           <p>Here should be this dude's sheets</p>

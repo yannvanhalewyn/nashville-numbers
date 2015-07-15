@@ -2,12 +2,13 @@
 
   "use strict";
 
-  var React = require('react')
-    , UserPage = require('./components/userpage.react')
-    , UserStore = require('./stores/userStore')
+  var React              = require('react')
+    , UserPage           = require('./components/userpage.react')
+    , UserStore          = require('./stores/userStore')
+    , FriendRequestModel = require('./stores/friendRequestModel')
 
   React.render(
-    <UserPage store={UserStore}/>,
+    <UserPage userStore={UserStore} friendRequestModel={FriendRequestModel}/>,
     document.getElementById('userpage-container')
   );
 
