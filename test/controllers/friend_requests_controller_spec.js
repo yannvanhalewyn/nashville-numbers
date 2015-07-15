@@ -48,7 +48,7 @@ describe('FRIEND_REQUESTS_CONTROLLER', function() {
 
     context("when otherUser is found", function() {
       beforeEach(function(done) {
-        sinon.spy(this.userA, 'sendFriendRequest');
+        sinon.stub(this.userA, 'sendFriendRequest').returns(Q({dummyObject: true}))
         login(this.userA, req);
         return Factory('user').then(function(otherUser) {
           this.userB = otherUser;
@@ -59,8 +59,11 @@ describe('FRIEND_REQUESTS_CONTROLLER', function() {
       });
 
       it("calls sendFriendRequest on userA with id of userB", function() {
-        expect(res.sendStatus).to.have.been.calledWith(200);
         expect(this.userA.sendFriendRequest).to.have.been.calledWith(this.userB._id);
+      });
+
+      it("returns the newly created request as json with 'sent' flag", function() {
+        expect(res.json).to.have.been.calledWith({type: 'sent', request: { dummyObject: true }});
       });
     }); // End of context 'when otherUser is found'
   }); // End of describe 'POST#create'

@@ -114,6 +114,19 @@ gulp.task('sass:watch', function() {
   gulp.watch('app/scss/**/*.scss', ['sass']);
 });
 
+
+/*
+ * =========
+ * TASK seed
+ * =========
+ *
+ * Seeds the databse with some new users
+ */
+gulp.task('seed', function() {
+  require('./test/util/seed_db').bind(this)();
+});
+
+
 /*
  * ======
  * GROUPS
