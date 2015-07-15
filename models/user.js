@@ -79,15 +79,21 @@
    * Accepts a friendRequest with the given ID.
    *
    * @param {string/number} requestID The ID of the request node.
+   * @return {object} the created relationship. An empty object if none created.
    */
   User.prototype.acceptFriendRequest = function(requestID) {
     return db.query(
       "MATCH (f:Person)-[rs:SENT]->(r:FriendRequest)-[rt:TO]->(u:Person) " +
       "WHERE id(u) = {uid} AND id(r) = {rid} " +
       "DELETE rs,rt,r " +
-      "CREATE (u)-[:FRIEND]->(f)",
+      "CREATE (u)-[created:FRIEND]->(f) RETURN created",
       {uid: this._id, rid: parseInt(requestID)}
-    );
+    ).then(function(result) {
+      if (_.isEmpty(result)) {
+        return {};
+      }
+      return result[0].created;
+    });
   }
 
   /**

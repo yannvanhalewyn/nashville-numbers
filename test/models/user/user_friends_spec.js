@@ -107,7 +107,10 @@ describe('USER#friends', function() {
           "CREATE (b)-[:SENT]->(r:FriendRequest)-[:TO]->(a) RETURN r",
           {aid: this.userA._id, bid: this.userB._id}
         ).then(function(result) {
-          return this.userA.acceptFriendRequest(result[0].r._id.toString());
+          return this.userA.acceptFriendRequest(result[0].r._id.toString())
+          .then(function(relationship) {
+            this.returnedRelation = relationship;
+          }.bind(this))
         }.bind(this));
       });
 
@@ -129,6 +132,16 @@ describe('USER#friends', function() {
         ).then(function(result) {
           expect(result.length).to.eql(1);
         });
+      });
+
+      it("returns the newly created realtionship", function() {
+        return db.query(
+          "MATCH (a:Person)-[r:FRIEND]-(b:Person) " +
+          "WHERE id(a) = {aid} AND id(b) = {bid} RETURN r",
+          {aid: this.userA._id, bid: this.userB._id}
+        ).then(function(result) {
+          expect(this.returnedRelation).to.eql(result[0].r);
+        }.bind(this));
       });
     }); // End of context 'when the relationship is already pending'
 
