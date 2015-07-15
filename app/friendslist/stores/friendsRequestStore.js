@@ -19,7 +19,6 @@
     dispatchCallback: function(payload) {
       switch (payload.actionType) {
         case Constants.SEND_FRIEND_REQUEST:
-          console.log(payload.friendID);
           this.create({other_user_id: payload.friendID});
           break;
 

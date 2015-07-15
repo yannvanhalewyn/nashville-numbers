@@ -4,7 +4,6 @@ var include    = require('include')
   , expect     = chai.expect
   , Controller = include('/controllers/friends_controller')
   , reqres     = require('reqres')
-  , login      = include('/test/util/login')
   , Factory    = include('/test/util/factory')
 chai.use(sinonChai);
 
@@ -24,18 +23,12 @@ describe('FRIENDSROUTES', function() {
   describe('GET#index', function() {
     beforeEach(function(done) {
       req.url = "/friends";
-      // return Factory('user').then(function(user) {
-        // login(user, req);
-        res.on('end', done);
-        Controller.index(req, res);
-      // });
+      Controller.index(req, res);
+      res.on('end', done);
     });
 
     it("renders the friends page", function() {
       expect(res.render).to.have.been.calledWith('friends');
-    });
-
-    it("returns the logged in user's friendslist", function() {
     });
   }); // End of describe 'GET#index'
 }); // End of describe 'FRIENDSROUTES'
