@@ -96,4 +96,33 @@ describe('FRIEND_REQUESTS_CONTROLLER', function() {
       });
     }); // End of context 'when friend request is found'
   }); // End of describe 'PUT#update'
+
+  describe('DELETE#destroy', function() {
+    beforeEach(function() {
+      req.method = "PUT"
+    });
+
+    context("when friend request is found", function() {
+      beforeEach(function(done) {
+        sinon.stub(this.userA, 'destroyFriendRequest').returns(Q())
+        req.user = this.userA;
+        return Factory('user').then(function(otherUser) {
+          this.userB = otherUser;
+          return this.userB.sendFriendRequest(this.userA._id).then(function(request) {
+            req.params = { request_id: request._id }
+            Controller.destroy(req, res);
+            res.on('end', done)
+          });
+        }.bind(this));
+      });
+
+      it("calls userA.destroyFriendRequest with the requestID", function() {
+        expect(this.userA.destroyFriendRequest).to.have.been.calledWith(req.params.request_id);
+      });
+
+      it("sends the deleted flag as json", function() {
+        expect(res.json).to.have.been.calledWith({type: "destroyed"});
+      });
+    }); // End of context 'when friend request is found'
+  }); // End of describe 'DELETE#destroy'
 }); // End of describe 'FRIEND_REQUESTS_CONTROLLER'
