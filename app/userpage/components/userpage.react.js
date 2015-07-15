@@ -26,8 +26,8 @@
       this.setState(this.props.userStore.getState());
     },
 
-    updateFriendship: function(update) {
-      switch (update.get('type')) {
+    updateFriendship: function(update, response) {
+      switch (response.type) {
         case 'sent':
           this.setState({friendship: {sentRequest: update.get('request')}});
           break;
@@ -36,8 +36,12 @@
           this.setState({friendship: {friendship: update.get('relationship')}})
           break;
 
+        case 'destroyed':
+          this.setState({friendship: {}})
+          break;
+
         default:
-          console.error("Got invalid update type " + update.get("type"));
+          console.error("Got invalid update type " + response.type);
           break;
       }
     },

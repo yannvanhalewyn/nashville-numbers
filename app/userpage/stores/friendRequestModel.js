@@ -21,7 +21,9 @@
     },
 
     decline: function(requestID) {
-      console.log("DECLINE " + requestID);
+      this.url = "/users/me/friends/requests/" + requestID;
+      this.set('_id', requestID); // Little trick to get backbone to PUT (which accepts the req)
+      this.destroy();
     }
 
   });
