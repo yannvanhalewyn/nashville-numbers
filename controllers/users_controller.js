@@ -2,16 +2,21 @@
 
   "use strict";
 
+  var User = require('../models/user')
+    , _    = require('lodash')
+
   var UsersController = {
     index: function(req, res) {
-      res.json([
-        {_id: 1, attributes: {firstName: "Jean"}}, 
-        {_id: 2, attributes: {firstName: "Bob"}},
-      ]);
+      User.findByName(req.query.search).then(function(foundUsers) {
+        res.json(foundUsers);
+      })
     },
 
     show: function(req, res) {
-      res.send("User " + req.params.user_id + " page.")
+      return req.user.getFriendship(req.target_user._id).then(function(friendship) {
+        var state = _.assign({}, req.target_user, {friendship: friendship});
+        res.render('user', {state: JSON.stringify(state)});
+      });
     }
   }
 

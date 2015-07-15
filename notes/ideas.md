@@ -20,6 +20,16 @@ Quick Ideas
   sheet! (warn the user that if the public sheet's owner updates it, it will
   affect the hub, maybe offer a lock of some sort?)
 - Abitity to favorite (or like) an existing public sheet for easy referal
+- Right next to the 'sign in with facebook' button should be a sign-up button.
+  The button should read:
+  "Or click the 'create yet another account with yet another password to
+  remember and sending over this information to me, a musician, to manage and
+  keep secure instead of a 1000+ smart people company who has been doing this
+  for years meaning I, the musician, am empowered to do as I please with your
+  personal information such as storing it, reading it, using your password for
+  all your other goodies such as previously mentioned Facebook or even banking
+  account you might even give me your car' button."
+- Add a "resume last sheet" button in the top right, just like teamtreehouse.com (resume progress)
 
 
 Marketing

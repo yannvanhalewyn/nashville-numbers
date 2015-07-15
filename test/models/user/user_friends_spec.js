@@ -43,25 +43,60 @@ describe('USER#friends', function() {
 
     context("when a request node already exists", function() {
       beforeEach(function() {
-        return this.userA.sendFriendRequest(this.userB._id).then(function() {
-          return this.userA.sendFriendRequest(this.userB._id);
-        }.bind(this))
+        return this.userA.sendFriendRequest(this.userB._id);
       });
 
-      it("doesn't create multiple relationships", function() {
-        return db.query(
-          "MATCH (u:Person), (u)-[:SENT]->(r:FriendRequest)-[:TO]->(f) RETURN r",
-          {aid: this.userA._id, bid: this.userB._id}
-        ).then(function(result) {
-          expect(result.length).to.eql(1);
+      context("when that node has the same target user", function() {
+        beforeEach(function() {
+          return this.userA.sendFriendRequest(this.userB._id);
         });
-      });
+
+        it("doesn't create another friendrequest node", function() {
+          return db.query(
+            "MATCH (u:Person), (u)-[:SENT]->(r:FriendRequest)-[:TO]->(f) RETURN r"
+          ).then(function(result) {
+            expect(result.length).to.eql(1);
+          });
+        });
+      }); // End of context 'when that node has the same target user'
+
+      context("when that node has a different target user", function() {
+        beforeEach(function() {
+          return Factory('user').then(function(userC) {
+            return this.userA.sendFriendRequest(userC._id);
+          }.bind(this))
+        });
+
+        it("creates a new request node", function() {
+          return db.query(
+            "MATCH (u:Person), (u)-[:SENT]->(r:FriendRequest)-[:TO]->(f) RETURN r"
+          ).then(function(result) {
+            expect(result.length).to.eql(2);
+            expect(result[0]).not.to.eql(result[1]);
+          });
+        });
+      }); // End of context 'when that node has a different target user'
     }); // End of context 'when a request is already pending'
 
-    context("when userB is already a friend", function() {
-      it("doesn't reset the relationship", function() {
+    context("when users are already friends", function() {
+      beforeEach(function() {
+        return db.query(
+          "MATCH (a:Person), (b:Person) WHERE id(a) = {aid} AND id(b) = {bid} " +
+          "CREATE (b)-[:FRIEND]->(a)",
+          {aid: this.userA._id, bid: this.userB._id}
+        ).then(function(result) {
+          return this.userA.sendFriendRequest(this.userB._id);
+        }.bind(this));
       });
-    }); // End of context 'when userB is already a friend'
+
+      it("doesn't create a new friendRequest", function() {
+        return db.query(
+          "MATCH (u:Person), (u)-[:SENT]->(r:FriendRequest)-[:TO]->(f) RETURN r"
+        ).then(function(result) {
+          expect(result.length).to.eql(0);
+        });
+      });
+    }); // End of context 'when users are already friends'
   }); // End of describe '#sendFriendRequest()'
 
   describe('#acceptFriendRequest()', function() {
@@ -72,7 +107,7 @@ describe('USER#friends', function() {
           "CREATE (b)-[:SENT]->(r:FriendRequest)-[:TO]->(a) RETURN r",
           {aid: this.userA._id, bid: this.userB._id}
         ).then(function(result) {
-          return this.userA.acceptFriendRequest(result[0].r._id);
+          return this.userA.acceptFriendRequest(result[0].r._id.toString());
         }.bind(this));
       });
 
@@ -108,6 +143,26 @@ describe('USER#friends', function() {
         });
       });
     }); // End of context 'when no relationship is pending'
+
+    context("when userC accepts a request between userA and userB", function() {
+      beforeEach(function() {
+        return Factory('user').then(function(userC) {
+          return this.userA.sendFriendRequest(this.userB._id).then(function(request) {
+            return userC.acceptFriendRequest(request._id);
+          })
+        }.bind(this))
+      });
+
+      it("obviously doesn't execute", function() {
+        return db.query(
+          "MATCH (a:Person)-[r:FRIEND]-(b:Person) " +
+          "WHERE id(a) = {aid} AND id(b) = {bid} RETURN r",
+          {aid: this.userA._id, bid: this.userB._id}
+        ).then(function(result) {
+          expect(result.length).to.eql(0);
+        });
+      });
+    }); // End of context 'when userC accepts a request between userA and userB'
   }); // End of describe '#acceptFriendRequest()'
 
   describe('#deleteFriend', function() {
@@ -133,6 +188,91 @@ describe('USER#friends', function() {
         })
       });
     }); // End of context 'when actually friends'
-
   }); // End of describe '#deleteFriend'
+
+  describe('#getOpenFriendRequests', function() {
+    beforeEach(function() {
+      return this.userB.sendFriendRequest(this.userA._id).then(function(request) {
+        this.request = request;
+      })
+    });
+
+    it("returns the requests", function() {
+      return this.userA.getOpenFriendRequests().then(function(result) {
+        expect(result.length).to.eql(1);
+        expect(result[0].request._id).to.eql(this.request._id);
+      })
+    });
+
+    it("returns an embedded user object from whom the request is coming", function() {
+      return this.userA.getOpenFriendRequests().then(function(result) {
+        expect(result.length).to.eql(1);
+        expect(result[0].sender._id).to.eql(this.userB._id);
+      }.bind(this))
+    });
+  }); // End of describe '#getOpenFriendRequests'
+
+  describe('#getFriendship', function() {
+    context("when user A is friends with user B", function() {
+      beforeEach(function() {
+        return db.query(
+          "MATCH (a:Person), (b:Person) WHERE id(a) = {aid} AND id(b) = {bid} " +
+          "CREATE (a)-[r:FRIEND]->(b)" +
+          "RETURN r", {aid: this.userA._id, bid: this.userB._id}
+        ).then(function(response) {
+          this.friendship = response[0].r;
+        }.bind(this))
+      });
+
+      it("returns the an object with the friendship relationship and null requests", function() {
+        return this.userA.getFriendship(this.userB._id).then(function(response) {
+          expect(response.sentRequest).to.be.null;
+          expect(response.receivedRequest).to.be.null;
+          expect(response.friendship).to.eql(this.friendship);
+        }.bind(this));
+      });
+    }); // End of context 'when user A is friends with user B'
+
+    context("when User A has no link to user B", function() {
+      it("returns an object with null friendship and null requsts", function() {
+        return this.userA.getFriendship(this.userB._id).then(function(response) {
+          expect(response.sentRequest).to.be.null;
+          expect(response.receivedRequest).to.be.null;
+          expect(response.friendship).to.be.null;
+        });
+      });
+    }); // End of context 'when User A has no link to user B'
+
+    context("when User A has sent a friend request to user B", function() {
+      beforeEach(function() {
+        return this.userA.sendFriendRequest(this.userB._id).then(function(request) {
+          this.request = request;
+        }.bind(this));
+      });
+
+      it("returns and object with a valid sentRequest node", function() {
+        return this.userA.getFriendship(this.userB._id).then(function(result) {
+          expect(result.friendship).to.be.null;
+          expect(result.receivedRequest).to.be.null;
+          expect(result.sentRequest).to.eql(this.request);
+        }.bind(this));
+      });
+    }); // End of context 'when User A has sent a friend request to user B'
+
+    context("when user B has sent a friend request to user A", function() {
+      beforeEach(function() {
+        return this.userB.sendFriendRequest(this.userA._id).then(function(request) {
+          this.request = request;
+        }.bind(this));
+      });
+
+      it("returns an object with a valid received request node", function() {
+        return this.userA.getFriendship(this.userB._id).then(function(result) {
+          expect(result.friendship).to.be.null;
+          expect(result.sentRequest).to.be.null;
+          expect(result.receivedRequest).to.eql(this.request);
+        }.bind(this));
+      });
+    }); // End of context 'when user B has sent a friend request to user A'
+  }); // End of describe '#getFriendshipStatus'
 }); // End of describe 'USER#friends'

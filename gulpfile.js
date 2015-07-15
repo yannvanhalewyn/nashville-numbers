@@ -39,7 +39,11 @@ gulp.task('server', function() {
 gulp.task('watchify', function() {
 
   // The starting files = feature in-points
-  var files = ['./app/sheet/editor.js', './app/friendslist/friendslist.js']
+  var files = [
+    './app/sheet/editor.js',
+    './app/friendslist/friendslist.js',
+    './app/userpage/userpage.js'
+  ];
 
   // Map a task for each file
   var tasks = files.map(function(file) {

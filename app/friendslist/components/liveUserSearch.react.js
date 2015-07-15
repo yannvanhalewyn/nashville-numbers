@@ -4,7 +4,8 @@
 
   var React     = require('react')
     , SearchBar = require('./searchBar.react')
-    , SearchActions = require('../actions/searchActions')
+    , FriendActions = require('../actions/friendActions')
+    , FriendSuggestion = require('./friendSuggestion.react')
 
   var LiveUserSearchComponent = React.createClass({
     getInitialState: function() {
@@ -23,9 +24,13 @@
       this.setState({users: this.props.store.getUsers()})
     },
 
-    renderUserSuggestion: function(user) {
+    renderFriendSuggestion: function(user) {
       return (
-        <p>{user._id} - {user.attributes.firstName}</p>
+        <FriendSuggestion
+          firstName={user.properties.firstName}
+          lastName={user.properties.lastName}
+          _id={user._id}
+        />
       )
     },
 
@@ -33,14 +38,18 @@
       return (
         <div>
           <SearchBar onInput={this._onInput}/>
-          {this.state.users.map(this.renderUserSuggestion)}
+          {this.state.users.map(this.renderFriendSuggestion)}
         </div>
       )
     },
 
     _onInput: function(e) {
       var value = e.target.value;
-      SearchActions.searchForUsers(value);
+      if (value.length === 0) {
+        return this.setState({users: []});
+      } else if (value.length > 2) {
+        return FriendActions.searchForUsers(value);
+      }
     }
   })
 

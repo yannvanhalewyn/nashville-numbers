@@ -22,8 +22,6 @@
       parentIDs: React.PropTypes.object.isRequired
     },
 
-    // TODO maybe handle undefined rawstrings (don't want to have to give it an
-    // empty one on setup || defaultProps?
     getInitialState: function() {
       return {
         value: this.props.rawString,

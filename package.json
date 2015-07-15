@@ -35,6 +35,7 @@
     "browserify": "^10.2.4",
     "browserify-shim": "^3.8.9",
     "chai": "^3.0.0",
+    "chai-things": "^0.2.0",
     "chance": "^0.7.6",
     "gulp": "^3.9.0",
     "gulp-livereload": "^3.8.0",
