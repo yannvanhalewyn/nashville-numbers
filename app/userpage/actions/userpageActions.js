@@ -8,6 +8,7 @@
     SEND_FRIEND_REQUEST: null,
     ACCEPT_FRIEND_REQUEST: null,
     DECLINE_FRIEND_REQUEST: null,
+    CANCEL_FRIEND_REQUEST: null,
     DELETE_FRIEND: null
   });
 
@@ -27,6 +28,12 @@
     declineFriendRequest: function() {
       Dispatcher.dispatch({
         actionType: UserpageConstants.DECLINE_FRIEND_REQUEST
+      });
+    },
+
+    cancelFriendRequest: function() {
+      Dispatcher.dispatch({
+        actionType: UserpageConstants.CANCEL_FRIEND_REQUEST
       });
     },
 

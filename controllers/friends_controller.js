@@ -12,6 +12,12 @@
       res.render('friends');
     },
 
+    show: function(req, res) {
+      req.user.getFriendship(req.params.friend_id).then(function(friendship) {
+        res.json(friendship);
+      });
+    },
+
     destroy: function(req, res) {
       req.user.deleteFriend(req.params.friend_id).then(function() {
         res.json({type: 'destroyed'});

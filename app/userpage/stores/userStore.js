@@ -5,36 +5,44 @@
   var Backbone      = require('backbone')
     , Dispatcher    = require('../dispatcher/userpageDispatcher')
     , Constants     = require('../actions/userpageActions').constants
-    , FriendRequest = require('./friendRequestModel')
     , Friendship    = require('./friendshipModel')
 
   var UserStore = Backbone.Model.extend({
     initialize: function() {
+      // Get initial state from hidden JSON script field
       var jsonState = document.getElementById('initial_state').text;
-      this.attributes = JSON.parse(jsonState);
-      this.url = "/users/" + this.attributes._id;
+      this.set(JSON.parse(jsonState));
+
+      // Setup dispatcher
       this.dispatchToken = Dispatcher.register(this.dispatchCallback.bind(this))
+
+      // Setup friendship model
+      // Target userID and potential friendID are the same!
+      this.friendship = new Friendship({_id: this.get("_id")});
+      this.friendship.fetch();
+
+      // Retrigger a friendship:sync event for react components. This way they
+      // only listen to the store, and don't care about the models behind it.
+      this.friendship.on('sync', this.trigger.bind(this, 'friendship:sync'));
     },
 
     dispatchCallback: function(payload) {
       switch (payload.actionType) {
         case Constants.SEND_FRIEND_REQUEST:
-          FriendRequest.send(this.get("_id"));
+          this.friendship.sendRequest();
           break;
 
         case Constants.ACCEPT_FRIEND_REQUEST:
-          var requestID = this.get("friendship").receivedRequest._id;
-          FriendRequest.accept(requestID);
+          this.friendship.acceptRequest();
           break;
 
         case Constants.DECLINE_FRIEND_REQUEST:
-          var requestID = this.get("friendship").receivedRequest._id;
-          FriendRequest.decline(requestID);
+        case Constants.CANCEL_FRIEND_REQUEST:
+          this.friendship.destroyRequest();
           break;
 
         case Constants.DELETE_FRIEND:
-          var userID = this.get('_id');
-          Friendship.delete(userID);
+          this.friendship.destroy();
           break;
 
         default:
@@ -46,7 +54,7 @@
     getState: function() {
       return {
         userData: this.get("properties"),
-        friendship: this.get("friendship")
+        friendship: this.friendship.attributes // TODO clone this
       }
     }
   });
