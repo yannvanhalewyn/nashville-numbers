@@ -4,49 +4,31 @@
 
   var React      = require('react')
     , UserHeader = require('./userHeader.react')
+    , Backbone = require('backbone')
 
   var UserPageComponent = React.createClass({
     getInitialState: function() {
-      return this.props.userStore.getState();
+      return this.props.store.getState();
     },
 
     // COULD DO friendrequest on 'request' to have a temporary label
     // And catch the 'sync' later to set the label
     componentDidMount: function() {
-      this.props.userStore.on('update sync', this.updateUser);
-      this.props.friendRequestModel.on('sync', this.updateFriendship);
-      this.props.friendshipModel.on('sync', this.updateFriendship);
+      console.log("KAKA");
+      Backbone.listenTo(this.props.store, 'friendship:sync', this.updateFriendship);
+      // this.props.store.listenTo('all', this.foo);
     },
 
     componentDidUnmount: function() {
-      this.props.userStore.off('update sync', this.updateUser);
-      this.props.friendRequestModel.off('sync', this.updateFriendship);
-      this.props.friendshipModel.on('sync', this.updateFriendship);
+      this.props.store.off('sync', this.updateUser);
     },
 
     updateUser: function() {
-      this.setState(this.props.userStore.getState());
+      this.setState(this.props.store.getState());
     },
 
-    updateFriendship: function(update, response) {
-      console.log('sync');
-      switch (response.type) {
-        case 'sent':
-          this.setState({friendship: {sentRequest: update.get('request')}});
-          break;
-
-        case 'accepted':
-          this.setState({friendship: {friendship: update.get('relationship')}})
-          break;
-
-        case 'destroyed':
-          this.setState({friendship: {}})
-          break;
-
-        default:
-          console.error("Got invalid update type " + response.type);
-          break;
-      }
+    updateFriendship: function(sender, updatedValue) {
+      this.setState({friendship: updatedValue});
     },
 
     render: function() {
