@@ -7,7 +7,8 @@
   var UserpageConstants = keyMirror({
     SEND_FRIEND_REQUEST: null,
     ACCEPT_FRIEND_REQUEST: null,
-    DECLINE_FRIEND_REQUEST: null
+    DECLINE_FRIEND_REQUEST: null,
+    DELETE_FRIEND: null
   });
 
   var UserpageActions = {
@@ -26,6 +27,12 @@
     declineFriendRequest: function() {
       Dispatcher.dispatch({
         actionType: UserpageConstants.DECLINE_FRIEND_REQUEST
+      });
+    },
+
+    deleteFriend: function() {
+      Dispatcher.dispatch({
+        actionType: UserpageConstants.DELETE_FRIEND
       });
     }
   }

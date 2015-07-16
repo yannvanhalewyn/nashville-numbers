@@ -6,6 +6,7 @@
     , Dispatcher    = require('../dispatcher/userpageDispatcher')
     , Constants     = require('../actions/userpageActions').constants
     , FriendRequest = require('./friendRequestModel')
+    , Friendship    = require('./friendshipModel')
 
   var UserStore = Backbone.Model.extend({
     initialize: function() {
@@ -29,6 +30,11 @@
         case Constants.DECLINE_FRIEND_REQUEST:
           var requestID = this.get("friendship").receivedRequest._id;
           FriendRequest.decline(requestID);
+          break;
+
+        case Constants.DELETE_FRIEND:
+          var userID = this.get('_id');
+          Friendship.delete(userID);
           break;
 
         default:

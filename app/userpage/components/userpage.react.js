@@ -15,11 +15,13 @@
     componentDidMount: function() {
       this.props.userStore.on('update sync', this.updateUser);
       this.props.friendRequestModel.on('sync', this.updateFriendship);
+      this.props.friendshipModel.on('sync', this.updateFriendship);
     },
 
     componentDidUnmount: function() {
       this.props.userStore.off('update sync', this.updateUser);
       this.props.friendRequestModel.off('sync', this.updateFriendship);
+      this.props.friendshipModel.on('sync', this.updateFriendship);
     },
 
     updateUser: function() {
@@ -27,6 +29,7 @@
     },
 
     updateFriendship: function(update, response) {
+      console.log('sync');
       switch (response.type) {
         case 'sent':
           this.setState({friendship: {sentRequest: update.get('request')}});
