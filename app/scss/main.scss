@@ -16,7 +16,9 @@ a {
 }
 
 .main-content {
-  padding-left: 90px;
+    position: fixed;
+    left: 90px;
+    width: calc(100% - 90px);
 }
 
 

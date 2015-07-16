@@ -5,7 +5,7 @@
   var React     = require('react')
     , SearchBar = require('./searchBar.react')
     , FriendActions = require('../actions/friendActions')
-    , FriendSuggestion = require('./friendSuggestion.react')
+    , FriendSuggestions = require('./friendSuggestions.react')
 
   var LiveUserSearchComponent = React.createClass({
     getInitialState: function() {
@@ -24,30 +24,22 @@
       this.setState({users: this.props.store.getUsers()})
     },
 
-    renderFriendSuggestion: function(user) {
-      return (
-        <FriendSuggestion
-          firstName={user.properties.firstName}
-          lastName={user.properties.lastName}
-          _id={user._id}
-        />
-      )
-    },
-
     render: function() {
       return (
-        <div>
+        <div className="live-user-search">
           <SearchBar onInput={this._onInput}/>
-          {this.state.users.map(this.renderFriendSuggestion)}
+          <FriendSuggestions users={this.state.users} />
         </div>
       )
     },
 
+    // TODO: Optimise this. (eg: when results < 10 cache it and only rerequest when keycount
+    // drops below what it was on cache, when more keys are pressed recalculate from cache.)
     _onInput: function(e) {
       var value = e.target.value;
       if (value.length === 0) {
         return this.setState({users: []});
-      } else if (value.length > 2) {
+      } else if (value.length > 1) {
         return FriendActions.searchForUsers(value);
       }
     }
