@@ -65,9 +65,14 @@ $text-color: #606060;
 			height: 100%;
 		}
 
-		&:hover {
+		&:hover, &:focus {
 			background: #103542;
 			color: #efefef;
+		}
+
+		&:focus {
+			background: #103542;
+			outline: none;
 		}
 	}
 }
