@@ -1,6 +1,8 @@
 <div class="dock">
     <div class="user-avatar">
-      <img class="avatar" src="{{user.properties.picture}}" alt="profile_picture">
+      <a href="/users/me">
+        <img class="avatar" src="{{logged_in_user.properties.picture}}" alt="profile_picture">
+      </a>
     </div>
 
     <a href="/dashboard" class="dock-elem {{#if active_dashboard}}active{{/if}}">

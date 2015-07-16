@@ -1,21 +1,25 @@
 'use strict';
 
-var watchify     = require('watchify');
-var browserify   = require('browserify');
-var reactify     = require('reactify');
-var gulp         = require('gulp');
-var source       = require('vinyl-source-stream');
-var gutil        = require('gulp-util');
-var livereload   = require('gulp-livereload');
-var sass         = require('gulp-sass');
-var postcss      = require('gulp-postcss');
-var autoprefixer = require('autoprefixer-core');
+var watchify     = require('watchify')
+  , browserify   = require('browserify')
+  , reactify     = require('reactify')
+  , gulp         = require('gulp')
+  , source       = require('vinyl-source-stream')
+  , gutil        = require('gulp-util')
+  , livereload   = require('gulp-livereload')
+  , sass         = require('gulp-sass')
+  , postcss      = require('gulp-postcss')
+  , autoprefixer = require('autoprefixer-core')
+  , path         = require('path')
+  , nodemon      = require('gulp-nodemon')
 
-var nodemon = require('gulp-nodemon');
-var path = require('path');
-
-// TASK server
-// Starts server and listens for changes
+/**
+ * ===========
+ * TASK SERVER
+ * ===========
+ *
+ * Starts server and listens for changes
+ */
 gulp.task('server', function() {
   nodemon({
     script: 'server.js',
@@ -25,30 +29,58 @@ gulp.task('server', function() {
   });
 });
 
-// TASK watchify
-// uses watchify to update small parts of bundle if needed
+/**
+ * =============
+ * TASK WATCHIFY
+ * =============
+ *
+ * Creates a task to bundle and watch every main app feature
+ */
 gulp.task('watchify', function() {
-  var browserifyOpts = {
-    entries: './app/sheet/editor.js',
-    transform: ['reactify', 'browserify-shim'],
-    debug: true,
-    cache: {}, packageCache: {}, fullPaths: true // Watchify
-  };
-  var b = watchify(browserify(browserifyOpts));
-  b.transform(reactify);
-  function bundle() {
-    return b.bundle()
-      .on('error', gutil.log.bind(gutil, 'Browserify Error'))
-      .pipe(source('editor-bundled.js'))
-      .pipe(gulp.dest('./public/js'));
-  }
-  bundle();
-  b.on('update', bundle);
-  b.on('log', gutil.log);
+
+  // The starting files = feature in-points
+  var files = [
+    './app/sheet/editor.js',
+    './app/friendslist/friendslist.js',
+    './app/userpage/userpage.js'
+  ];
+
+  // Map a task for each file
+  var tasks = files.map(function(file) {
+    // Setup browsowatchify options
+    var browserifyOpts = {
+      entries: file,
+      transform: ['reactify', 'browserify-shim'],
+      debug: true,
+      cache: {}, packageCache: {}, fullPaths: true // Watchify
+    };
+
+    // The bundle function
+    function bundle() {
+      b.bundle()
+        .on('error', gutil.log.bind(gutil, 'Browserify Error'))
+        .pipe(source(path.basename(file, path.extname(file)) + '.bundle.js'))
+        .pipe(gulp.dest('./public/js'));
+    }
+
+    // Create the watchify task
+    var b = watchify(browserify(browserifyOpts))
+      .on('log', gutil.log)
+      .on('update', bundle);
+
+    // Run bundle when task starts
+    bundle();
+  });
 });
 
-// TASK live
-// uses livereload to reload the page upon css change
+
+/*
+ * =========
+ * TASK LIVE
+ * =========
+ *
+ * uses livereload to reload the page upon css change
+ */
 gulp.task('css:livereload', function() {
   gulp.watch('./public/css/*.css', function(file) {
     gulp.src(file.path)
@@ -56,8 +88,13 @@ gulp.task('css:livereload', function() {
   });
 });
 
-// TASK sass
-// Converts compiles files into css
+/*
+ * =========
+ * TASK SASS
+ * =========
+ *
+ * Converts compiles files into css
+ */
 gulp.task('sass', function() {
   gulp.src('app/scss/**/*.scss')
     .pipe(sass())
@@ -66,13 +103,35 @@ gulp.task('sass', function() {
     .pipe(gulp.dest('public/css/'));
 });
 
-// TASK sass:watch
-// watches over my scss files and calls task sass on change
+/*
+ * ===============
+ * TASK sass:watch
+ * ===============
+ *
+ * watches over my scss files and calls task sass on change
+ */
 gulp.task('sass:watch', function() {
   gulp.watch('app/scss/**/*.scss', ['sass']);
 });
 
+
+/*
+ * =========
+ * TASK seed
+ * =========
+ *
+ * Seeds the databse with some new users
+ */
+gulp.task('seed', function() {
+  require('./test/util/seed_db').bind(this)();
+});
+
+
+/*
+ * ======
+ * GROUPS
+ * ======
+ */
 gulp.task('code', ['watchify', 'server']);
 gulp.task('design', ['sass:watch', 'css:livereload']);
-
 gulp.task('default', ['design', 'code']);
