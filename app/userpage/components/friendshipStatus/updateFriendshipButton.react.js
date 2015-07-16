@@ -9,7 +9,7 @@
     render: function() {
       return (
         <div>
-          <p>You are now Buddies!</p>;
+          <p>You are now Buddies!</p>
           <button className="btn" onClick={this._onDeleteFriend}>I'm not your buddy, friend.</button>
         </div>
       )

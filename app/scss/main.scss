@@ -45,12 +45,11 @@ a {
         cursor: pointer;
     }
 
-    &:active {
-        background: #3286a7;
-    }
-
+    &:active,
     &:focus {
+        background: #3286a7;
         outline: none;
+        box-shadow: inset 0px 1px 0px #2ab7ec, 0px 3px 0px 0px #156785, 0px 5px 5px #999;
     }
 
     &.btn-orange {
@@ -60,6 +59,12 @@ a {
 
     &.btn-red {
         background: #A55;
+        &:active,
+        &:focus {
+            background: #A25252;
+            outline: none;
+            box-shadow: inset 0px 1px 0px #944, 0px 3px 0px 0px #944, 0px 5px 5px #999;
+        }
     }
 }
 

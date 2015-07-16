@@ -7,7 +7,11 @@
 
   var AddFriendButton = React.createClass({
     render: function() {
-      return <button className="btn" onClick={this._onClick}>Add Friend</button>;
+      return (
+        <div className="btn friendship-button" onClick={this._onClick}>
+          <span className="fa fa-plus"></span> Add Friend
+        </div>
+      )
     },
 
     _onClick: function() {
