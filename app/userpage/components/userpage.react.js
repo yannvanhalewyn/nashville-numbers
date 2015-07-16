@@ -14,17 +14,11 @@
     // COULD DO friendrequest on 'request' to have a temporary label
     // And catch the 'sync' later to set the label
     componentDidMount: function() {
-      console.log("KAKA");
-      Backbone.listenTo(this.props.store, 'friendship:sync', this.updateFriendship);
-      // this.props.store.listenTo('all', this.foo);
+      this.props.store.on('friendship:sync', this.updateFriendship);
     },
 
     componentDidUnmount: function() {
       this.props.store.off('sync', this.updateUser);
-    },
-
-    updateUser: function() {
-      this.setState(this.props.store.getState());
     },
 
     updateFriendship: function(sender, updatedValue) {
