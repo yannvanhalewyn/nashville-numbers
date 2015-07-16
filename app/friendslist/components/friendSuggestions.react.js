@@ -12,7 +12,7 @@
         <FriendSuggestion
           firstName={user.properties.firstName}
           lastName={user.properties.lastName}
-          picture={user.properties.picture}
+          thumb={user.properties.thumb}
           _id={user._id}
         />
       )
