@@ -8,6 +8,7 @@
   var FriendsController = require('../controllers/friends_controller');
 
   FriendsRouter.get('/', ensureAuth, FriendsController.index);
+  FriendsRouter.delete('/:friend_id', ensureAuth, FriendsController.destroy);
 
   module.exports = FriendsRouter;
 

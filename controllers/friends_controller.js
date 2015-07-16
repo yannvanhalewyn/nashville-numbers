@@ -10,6 +10,12 @@
 
     index: function(req, res) {
       res.render('friends');
+    },
+
+    destroy: function(req, res) {
+      req.user.deleteFriend(req.params.friend_id).then(function() {
+        res.json({type: 'destroyed'});
+      });
     }
   };
 
