@@ -13,10 +13,7 @@
     },
 
     show: function(req, res) {
-      return req.user.getFriendship(req.target_user._id).then(function(friendship) {
-        var state = _.assign({}, req.target_user, {friendship: friendship});
-        res.render('user', {state: JSON.stringify(state)});
-      });
+      res.render('user', { state: JSON.stringify(req.target_user) });
     }
   }
 

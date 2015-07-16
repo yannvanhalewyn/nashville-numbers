@@ -53,10 +53,8 @@ describe('USERS_CONTROLLER', function() {
           return Factory('user').then(function(userB) {
             this.userA = userA;
             this.userB = userB;
-            sinon.stub(userA, "getFriendship").returns(Q(dummyFriendship()));
             req.user = userA;
             req.target_user = userB;
-            req.url = "/" + userB._id;
             Controller.show(req, res);
             res.on('end', done)
           }.bind(this));
@@ -68,8 +66,7 @@ describe('USERS_CONTROLLER', function() {
       });
 
       it("sends the correct user data", function() {
-        var expected = _.assign({}, this.userB, {friendship: dummyFriendship()});
-        expected = JSON.stringify(expected);
+        expected = JSON.stringify(this.userB);
         expect(res.render.lastCall.args).to.contain.an.item.with.property('state', expected);
       });
     }); // End of context 'when requested user page (id) is found'
@@ -93,14 +90,4 @@ function dummyUsers() {
       }
     }
   ]
-}
-
-function dummyFriendship() {
-  return {
-    friendship: null,
-    sentRequest: {
-      _id: 99
-    },
-    receivedRequest: null
-  }
 }
