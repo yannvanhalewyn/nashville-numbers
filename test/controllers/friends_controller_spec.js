@@ -45,6 +45,24 @@ describe('FRIENDSROUTES', function() {
     });
   }); // End of describe 'GET#index'
 
+  describe('GET#show', function() {
+    beforeEach(function(done) {
+      sinon.stub(USER_A, 'getFriendship').returns(Q(dummyFriendship()));
+      req.user = USER_A;
+      req.params.friend_id = USER_B._id;
+      Controller.show(req, res);
+      res.on('end', done);
+    });
+
+    it("calls getFriendship on userA with userB's id", function() {
+      expect(USER_A.getFriendship).to.have.been.calledWith(USER_B._id);
+    });
+
+    it("sends along the friendship data via json", function() {
+      expect(res.json).to.have.been.calledWith(dummyFriendship());
+    });
+  }); // End of describe 'GET#show'
+
   describe('DELETE#destroy', function() {
     beforeEach(function(done) {
       sinon.stub(USER_A, 'deleteFriend').returns(Q());
@@ -63,3 +81,13 @@ describe('FRIENDSROUTES', function() {
     });
   }); // End of describe 'DELETE#destroy'
 }); // End of describe 'FRIENDSROUTES'
+
+function dummyFriendship() {
+  return {
+    friendship: null,
+    sentRequest: {
+      _id: 99
+    },
+    receivedRequest: null
+  }
+}
