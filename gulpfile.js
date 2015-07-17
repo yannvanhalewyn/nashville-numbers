@@ -42,7 +42,8 @@ gulp.task('watchify', function() {
   var files = [
     './app/sheet/editor.js',
     './app/friendslist/friendslist.js',
-    './app/userpage/userpage.js'
+    './app/userpage/userpage.js',
+    './app/hubs/hubs.js'
   ];
 
   // Map a task for each file

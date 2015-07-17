@@ -59,7 +59,7 @@
     app.use('/users/:user_id/friends/requests', FriendRequests);
 
     // Hubs
-    app.use('/hubs', Hubs);
+    app.use('/hubs', ensureAuth, Hubs);
   };
 
   module.exports = routes;

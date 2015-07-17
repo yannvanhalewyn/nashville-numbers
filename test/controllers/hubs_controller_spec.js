@@ -21,6 +21,24 @@ describe('HUBS_CONTROLLER', function() {
     });
   });
 
+  describe('GET/index', function() {
+    beforeEach(function(done) {
+      sinon.stub(USER, 'getHubs').returns(Q(["DUMMY", "ARRAY"]));
+      req.user = USER;
+      Controller.index(req, res);
+      res.on('end', done)
+    });
+
+    it("calls req.user.getHubs", function() {
+      expect(req.user.getHubs).to.have.been.called;
+    });
+
+    it("renders the hubs page with the response from user.getHubs()", function() {
+      var expected = {hubs: JSON.stringify(["DUMMY", "ARRAY"])};
+      expect(res.render).to.have.been.calledWith('hubs', expected);
+    });
+  }); // End of describe 'GET/index'
+
   describe('POST/create', function() {
     beforeEach(function(done) {
       sinon.stub(USER, 'createHub').returns(Q(dummyHub()));

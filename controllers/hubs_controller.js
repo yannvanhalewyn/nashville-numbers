@@ -2,7 +2,9 @@
 
   module.exports = {
     index: function(req, res) {
-      res.render('hubs', {active_hubs: true})
+      req.user.getHubs().then(function(hubs) {
+        res.render('hubs', {hubs: JSON.stringify(hubs)});
+      });
     },
 
     show: function(req, res) {
