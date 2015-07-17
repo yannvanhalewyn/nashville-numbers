@@ -30,13 +30,37 @@
         }
     }
 
-    p {
+    // Messages like 'friend request sent!'
+    .message {
         margin: 3px 0;
         font-size: 0.9em;
     }
 
     .friendship-button {
         margin: 10px 5px;
+    }
+
+    .friend-confirmed-label {
+        $green: #319936;
+        border: 2px solid $green;
+        display: block;
+        width: 100px;
+        margin: 10px auto;
+        border-radius: 8px;
+        color: $green;
+        cursor: pointer;
+
+        &:before {
+            font-family: FontAwesome;
+            content: "\0f00c";
+        }
+        &:after { content: " Friends"; }
+        &:hover {
+            border: 2px solid #A55;
+            color: #A55;
+            &:before { content: "\0f00d"; }
+            &:after { content: " Delete" }
+        }
     }
 }
 

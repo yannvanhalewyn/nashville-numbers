@@ -30,7 +30,7 @@
             <h1>{this.props.title}</h1>
             <p>{this.props.body}</p>
             <div className="btn btn-red" onClick={this._onCancel}>No!</div>
-            <div className="btn" onClick={this._onConfirm}>OK!</div>
+            <div className="btn" onClick={this._onConfirm}>Yes!</div>
           </div>
         </div>
       )

@@ -9,7 +9,7 @@
     render: function() {
       return (
         <div>
-          <p>Request sent!</p>
+          <p className="message">Request sent!</p>
           <div className="btn btn-red friendship-button" onClick={this._onCancel}>
             <span className="fa fa-times"></span> Cancel
           </div>
