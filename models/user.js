@@ -183,10 +183,26 @@
   }
 
   /**
-   * Creates a HubInvitation linked to the user as sender, target user as receiver and hub as mean.
+   * Gets all hubs related to user.
    *
-   * @param {string/number} hubID The ID of the hub to which we want to invite the user.
-   * @param {string/number} otherUserID The ID of the user we whish to invite to the hub.
+   * @return {array} The array with all the hubs. Each element in the array is
+   * an object containing the hub and the relationship.
+   */
+  User.prototype.getHubs = function() {
+    return db.query(
+      "MATCH (u:Person)-[relation]->(hub:Hub) " +
+      "WHERE id(u) = {uid} RETURN relation, hub", {uid: this._id}
+    )
+  }
+
+  /**
+   * Creates a HubInvitation linked to the user as sender, target user as
+   * receiver and hub as mean.
+   *
+   * @param {string/number} hubID The ID of the hub to which we want to invite
+   * the user.
+   * @param {string/number} otherUserID The ID of the user we whish to invite to
+   * the hub.
    * @return {object} the HubInvitation object or empty object if none created.
    */
   User.prototype.inviteToHub = function(hubID, otherUserID) {
@@ -278,7 +294,8 @@
    * Creates or updates a user entitity in the database (for login)
    *
    * @param {object} mergeParams The params for which we're trying to find a user.
-   * @param {object} params The variants: The params that will be updated but do not define the user we're looking for.
+   * @param {object} params The variants: The params that will be updated but do
+   * not define the user we're looking for.
    * @return {User} An instance of User containing the params of the newly created user.
    */
   User.findAndUpdateOrCreate = function(mergeParams, params) {

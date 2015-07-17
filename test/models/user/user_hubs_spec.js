@@ -1,13 +1,16 @@
-var include   = require('include')
-  , chai      = require('chai')
-  , sinonChai = require('sinon-chai')
-  , expect    = chai.expect
-  , sinon     = require('sinon')
-  , Q         = require('q')
-  , Hub       = include('/models/hub')
-  , Factory   = include('/test/util/factory')
-  , db        = include('/config/db');
+var include    = require('include')
+  , chai       = require('chai')
+  , sinonChai  = require('sinon-chai')
+  , chaiThings = require('chai-things')
+  , expect     = chai.expect
+  , sinon      = require('sinon')
+  , Q          = require('q')
+  , Hub        = include('/models/hub')
+  , Factory    = include('/test/util/factory')
+  , db         = include('/config/db')
+  , _          = require('lodash')
 chai.use(sinonChai);
+chai.use(chaiThings);
 
 include('/test/util/clear_db');
 
@@ -21,6 +24,46 @@ describe('USER-HUBS methods', function() {
     });
   });
 
+/*
+ * =========
+ * getHubs()
+ * =========
+ */
+  describe('user#getHubs()', function() {
+
+    var CREATED_HUB_A, CREATED_HUB_B;
+
+    beforeEach(function() {
+      return Factory('hub', {creator_id: USER._id}).then(function(hub1) {
+        return Factory('hub', {creator_id: USER._id}).then(function(hub2) {
+          return db.query(
+            "MATCH (u:Person) WHERE id(u)={uid} CREATE (u)-[:JOINED]->(h:Hub) " +
+            "RETURN h", {uid: USER._id}
+          ).then(function(results) {
+            CREATED_HUB_A = hub1;
+            CREATED_HUB_B = hub2;
+            JOINED_HUB = results[0].h;
+          })
+        });
+      });
+    });
+
+    it("returns all the hubs created by user", function() {
+      return USER.getHubs().then(function(hubs) {
+        expect(hubs.length).to.eql(3);
+        var ids = _.map(hubs, function(entry) { return entry.hub._id; });
+        expect(ids).to.include(CREATED_HUB_A._id);
+        expect(ids).to.include(CREATED_HUB_B._id);
+        expect(ids).to.include(JOINED_HUB._id);
+      });
+    });
+  }); // End of describe 'user#getHubs()'
+
+/*
+ * ===========
+ * createHub()
+ * ===========
+ */
   describe('user#createHub()', function() {
 
     var HUB;
