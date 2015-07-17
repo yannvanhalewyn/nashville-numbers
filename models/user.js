@@ -3,10 +3,11 @@
   "use strict";
 
   var include = require('include')
-    , db     = require('../config/db')
-    , _      = require('lodash')
-    , Cypher = include('/helpers/cypher')
-    , Sheet = include('/models/sheet') // For sheet instantiation
+    , db      = require('../config/db')
+    , _       = require('lodash')
+    , Cypher  = include('/helpers/cypher')
+    , Sheet   = include('/models/sheet') // For sheet instantiation
+    , Hub     = include('/models/hub')
 
 /*
  * ===========
@@ -18,9 +19,9 @@
   };
 
 /*
- * ========
- * INSTANCE
- * ========
+ * ===============
+ * INSTANCE:SHEETS
+ * ===============
  */
   /**
    * Creates a sheet with a AUTHORED_BY relationship to the user.
@@ -52,6 +53,11 @@
     })
   }
 
+/*
+ * ====================
+ * INSTANCE:FRIENDSHIPS
+ * ====================
+ */
   /**
    * Sends a friendrequest to the user with given id.
    * This doesn't create a FriendRequest if:
@@ -159,6 +165,21 @@
     ).then(function(result) {
       return result[0];
     });
+  }
+
+/*
+ * =============
+ * INSTANCE:HUBS
+ * =============
+ */
+  /**
+   * Creates a Hub owned by user
+   *
+   * @param {string} title The title of the new hub.
+   * @return {object} An instance of Hub model representing the created hub.
+   */
+  User.prototype.createHub = function(name) {
+    return Hub.create({creator_id: this._id, name: name});
   }
 
 
