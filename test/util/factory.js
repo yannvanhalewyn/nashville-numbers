@@ -56,7 +56,7 @@
 
       case 'hub':
         if (params && params.creator_id) {
-          return Sheet.create(_.assign(chance.hub(), params));
+          return Hub.create(_.assign(chance.hub(), params));
         } else {
           return Factory('user').then(function(params, user) {
             var params = _.assign(chance.hub(), {creator_id: user._id}, params);
