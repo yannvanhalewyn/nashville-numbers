@@ -9,6 +9,11 @@ var include = require('include')
 
 describe('HUB', function() {
 
+/*
+ * ======
+ * Create
+ * ======
+ */
   describe('Hub.create()', function() {
 
     var HUB, USER;
@@ -47,4 +52,43 @@ describe('HUB', function() {
       });
     });
   }); // End of describe 'Hub.create()'
+
+/*
+ * ==========
+ * findById()
+ * ==========
+ */
+  describe('Hub.FindById()', function() {
+
+    var CREATED_HUB, FOUND_HUB;
+
+    context("when a hub exists", function() {
+      beforeEach(function() {
+        return Factory('hub').then(function(entities) {
+          return Hub.findById(entities.hub._id).then(function(foundHub) {
+            CREATED_HUB = entities.hub;
+            FOUND_HUB = foundHub;
+          });
+        });
+      });
+
+      it("returns the correct hub", function() {
+        expect(FOUND_HUB._id).to.equal(CREATED_HUB._id);
+        expect(FOUND_HUB.properties).to.eql(CREATED_HUB.properties);
+      });
+
+      it("returns an instance of HUB", function() {
+        expect(FOUND_HUB).to.be.an.instanceof(Hub);
+      });
+    }); // End of context 'when a hub exists'
+
+    context("when a hub doesn't exist", function() {
+      it("throws a 'hub not found' error", function(done) {
+        return Hub.findById(999).then(done, function(err) {
+          expect(err).to.eql("Could not find hub with id 999");
+          done();
+        }).catch(done);
+      });
+    }); // End of context 'when a hub doesn't exist'
+  }); // End of describe 'Hub.FindById()'
 }); // End of describe 'HUB'

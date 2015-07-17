@@ -27,6 +27,18 @@
     });
   };
 
+  Hub.findById = function(hubID) {
+    return db.query(
+      Cypher.match('h', 'Hub') + Cypher.whereIdIs('h', 'hid') + "RETURN h",
+      {hid: hubID}
+    ).then(function(result) {
+      if (_.isEmpty(result)) {
+        throw "Could not find hub with id " + hubID;
+      }
+      return new Hub(result[0].h);
+    });
+  }
+
   module.exports = Hub;
 
 }())
