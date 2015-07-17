@@ -182,6 +182,31 @@
     return Hub.create({creator_id: this._id, name: name});
   }
 
+  /**
+   * Creates a HubInvitation linked to the user as sender, target user as receiver and hub as mean.
+   *
+   * @param {string/number} hubID The ID of the hub to which we want to invite the user.
+   * @param {string/number} otherUserID The ID of the user we whish to invite to the hub.
+   * @return {object} the HubInvitation object or empty object if none created.
+   */
+  User.prototype.inviteToHub = function(hubID, otherUserID) {
+    return db.query(
+      "MATCH (u:Person)-[:CREATED]->(h:Hub), (p:Person) " +
+      "OPTIONAL MATCH (u)-[:SENT]-(existinghi:HubInvitation)-[:TO]->(p:Person) " +
+      "WITH u, p, h, existinghi " +
+      "WHERE id(u) = {uid} AND id(p) = {pid} AND id(h) = {hid} AND NOT u = p " +
+      "AND existinghi IS NULL " +
+      "CREATE (u)-[:SENT]->(hi:HubInvitation)-[:TO]->(p), " +
+      "(hi)-[:TO_JOIN]->(h) " +
+      "RETURN hi", {uid: this._id, pid: otherUserID, hid: hubID}
+    ).then(function(result) {
+      if (_.isEmpty(result)) {
+        return {};
+      }
+      return result[0].hi;
+    })
+  }
+
 
 /*
  * ======
