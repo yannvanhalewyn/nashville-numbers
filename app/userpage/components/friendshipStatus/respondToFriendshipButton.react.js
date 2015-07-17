@@ -9,9 +9,9 @@
     render: function() {
       return (
         <div className="dropdown">
-          <p>Respond to friend request!</p>
-          <button className="btn btn-orange" onClick={this._onDecline}>Decline</button>
-          <button className="btn" onClick={this._onAccept}>Accept</button>
+          <p className="message">has sent you a friend request.</p>
+          <button className="btn btn-red friendship-button" onClick={this._onDecline}>Decline</button>
+          <button className="btn friendship-button" onClick={this._onAccept}>Accept</button>
         </div>
       )
     },

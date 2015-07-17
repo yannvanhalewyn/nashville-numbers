@@ -1,0 +1,85 @@
+.user-widget,
+.user-stats {
+    padding: 5%;
+    height: 100%;
+
+    img {
+        border-radius: 20%;
+        height: 100px;
+    }
+
+    div {
+        display: inline-block;
+        vertical-align: top;
+    }
+}
+
+.user-widget {
+    // padding: 5%;
+    border-right: 1px solid lightgrey;
+
+    img {
+        border: 2px solid #103542;
+    }
+
+    .info {
+        margin-left: 10%;
+        text-align: center;
+        h2 {
+            margin: 0 0 10px;
+        }
+    }
+
+    // Messages like 'friend request sent!'
+    .message {
+        margin: 3px 0;
+        font-size: 0.9em;
+    }
+
+    .friendship-button {
+        margin: 10px 5px;
+    }
+
+    .friend-confirmed-label {
+        $green: #319936;
+        border: 2px solid $green;
+        display: block;
+        width: 100px;
+        margin: 10px auto;
+        border-radius: 8px;
+        color: $green;
+        cursor: pointer;
+
+        &:before {
+            font-family: FontAwesome;
+            content: "\0f00c";
+        }
+        &:after { content: " Friends"; }
+        &:hover {
+            border: 2px solid #A55;
+            color: #A55;
+            &:before { content: "\0f00d"; }
+            &:after { content: " Delete" }
+        }
+    }
+}
+
+.user-stats {
+    .emblem {
+        width: 50%;
+    }
+    .statistics {
+        margin-left: 5%;
+        li {
+            list-style: none;
+            padding: 3px 10px;
+            margin-bottom: 7px;
+            color: #b5b5b5;
+            border-left: 3px solid rgba(255, 152, 0, 0.75);
+
+            strong {
+                color: black;
+            }
+        }
+    }
+}

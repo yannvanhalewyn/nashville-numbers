@@ -3,14 +3,25 @@
   "use strict";
 
   var React = require('react')
-  , FriendshipStatus = require('./friendshipStatus.react')
+    , UserWidget = require('./userWidget.react')
+    , UserStats = require('./userStats.react');
 
   var UserHeaderComponent = React.createClass({
     render: function() {
       return (
-        <div>
-          <h1>{this.props.firstName} {this.props.lastName}</h1>
-          <FriendshipStatus friendship={this.props.friendship} />
+        <div className="user-header grid">
+          <UserWidget
+            picture={this.props.picture}
+            firstName={this.props.firstName}
+            lastName={this.props.lastName}
+            friendship={this.props.friendship}
+          />
+          <UserStats
+            insignia={this.props.stats.insignia}
+            numSheets={this.props.stats.numSheets}
+            numFriends={this.props.stats.numFriends}
+            points={this.props.stats.points}
+          />
         </div>
       );
     }

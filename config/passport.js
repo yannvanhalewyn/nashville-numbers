@@ -35,7 +35,9 @@
           lastName: profile.name.familyName,
           displayName: profile.name.displayName,
           userName: profile.username,
-          picture: profile.photos ? profile.photos[0].value : '/img/faces/unknown-user.png',
+          thumb: profile.photos ? profile.photos[0].value : '/img/faces/unknown-user.png',
+          picture: "https://graph.facebook.com/" + profile.id +
+                   "/picture?width=200&height=200&access_token=" + accessToken,
           provider: 'facebook',
           providerData: providerData
         }).then(function(newUser) {done(null, newUser)}).catch(done);

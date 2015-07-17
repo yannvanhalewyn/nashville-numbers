@@ -6,7 +6,14 @@
 
   var SearchBar = React.createClass({
     render: function() {
-      return <input type="text" onInput={this.props.onInput} placeholder="Find your friends"></input>
+      return (
+      	<input 
+    			type="text" 
+    			className="user-search-field"
+    			onInput={this.props.onInput} 
+    			placeholder="Find friends" 
+    		/>
+      );
     }
 
   })
