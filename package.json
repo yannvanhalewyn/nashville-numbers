@@ -1,7 +1,7 @@
 {
-  "name": "react-chordboxes",
+  "name": "SheetSomething",
   "version": "1.0.0",
-  "description": "",
+  "description": "An online hub/universe for creating and sharing lead sheets with collegues and band-members.",
   "main": "server.js",
   "scripts": {
     "start": "nodemon server.js"
@@ -56,5 +56,8 @@
   "browserify-shim": {
     "react": "global:React",
     "lodash": "global:_"
+  },
+  "engines": {
+    "node": "0.12.6"
   }
 }

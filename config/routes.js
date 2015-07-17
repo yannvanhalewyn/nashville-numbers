@@ -11,7 +11,7 @@
     , Friends        = include('/routers/friends')
     , FriendRequests = include('/routers/friend_requests')
     , Users          = include('/routers/users')
-    , Hubs           = include('/controllers/hub_controller')
+    , Hubs           = include('/routers/hubs')
     , Explore        = include('/controllers/explore_controller')
 
   // Middlewares
@@ -46,18 +46,20 @@
  */
     app.route('/').get(ensureAuth, Dashboard.index);
     app.route('/dashboard').get(ensureAuth, Dashboard.index);
-    app.route('/hubs').get(ensureAuth, Hubs.index);
     app.route('/explore').get(ensureAuth, Explore.index);
 
 /*
- * ====================
- * USERS/FRIENDS/SHEETS
- * ====================
+ * =================
+ * DEDICATED ROUTERS
+ * =================
  */
     app.use('/users', ensureAuth, Users);
     app.use('/users/:user_id/sheets', Sheets);
     app.use('/users/:user_id/friends', Friends);
     app.use('/users/:user_id/friends/requests', FriendRequests);
+
+    // Hubs
+    app.use('/hubs', Hubs);
   };
 
   module.exports = routes;
