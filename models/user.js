@@ -37,7 +37,8 @@
   /**
    * Returns an array of sheets that have a AUTHORED (by) relationship to the user.
    *
-   * @return {Sheet} An instance of Sheet containing the params of the newly created persisted sheet.
+   * @return {Sheet} An instance of Sheet containing the params of the newly created
+   * persisted sheet.
    */
   User.prototype.sheets = function() {
     return db.query(
@@ -49,6 +50,115 @@
         return entry.s;
       });
     })
+  }
+
+  /**
+   * Sends a friendrequest to the user with given id.
+   * This doesn't create a FriendRequest if:
+   * - userA is already friends with userB
+   * - There already is a request from userA to userB
+   * - There already is a request from userB to userA
+   *
+   * @param {string/number} friendID The ID of the friend to whom we want to send the request.
+   * @return {object} The FriendRequest node that was created (empty if none)
+   */
+  User.prototype.sendFriendRequest = function(friendID) {
+    return db.query(
+      "MATCH (u:Person), (f:Person) " +
+      "WHERE NOT (u)-[:FRIEND]-(f) AND NOT (u)--(:FriendRequest)--(f) AND id(u) = {uid} AND id(f) = {fid}" +
+      "MERGE (u)-[:SENT]->(r:FriendRequest)-[:TO]->(f) RETURN r",
+      {uid: this._id, fid: parseInt(friendID)}
+    ).then(function(result) {
+      if (_.isEmpty(result)) {
+        return {};
+      }
+      return result[0].r;
+    })
+  }
+
+  /**
+   * Accepts a friendRequest with the given ID.
+   *
+   * @param {string/number} requestID The ID of the request node.
+   * @return {object} the created relationship. An empty object if none created.
+   */
+  User.prototype.acceptFriendRequest = function(requestID) {
+    return db.query(
+      "MATCH (f:Person)-[rs:SENT]->(r:FriendRequest)-[rt:TO]->(u:Person) " +
+      "WHERE id(u) = {uid} AND id(r) = {rid} " +
+      "DELETE rs,rt,r " +
+      "CREATE (u)-[created:FRIEND]->(f) RETURN created",
+      {uid: this._id, rid: parseInt(requestID)}
+    ).then(function(result) {
+      if (_.isEmpty(result)) {
+        return {};
+      }
+      return result[0].created;
+    });
+  }
+
+  /**
+   * Destroys a friendRequest with the given ID.
+   *
+   * @param {string/number} requestID The ID of the request node.
+   */
+  User.prototype.destroyFriendRequest = function(requestID) {
+    return db.query(
+      "MATCH (f:Person)-[rs]-(r:FriendRequest)-[rt]-(u:Person) " +
+      "WHERE id(u) = {uid} AND id(r) = {rid} " +
+      "DELETE rs,rt,r ", {uid: this._id, rid: parseInt(requestID)}
+    )
+  }
+
+  /**
+   * Deletes a FRIEND relationship to user with given friendID.
+   *
+   * @param {string/number} friendID The ID of the FRIEND to whom we wish to delete
+   * the relationship.
+   */
+  User.prototype.deleteFriend = function(friendID) {
+    return db.query(
+      "MATCH (u:Person)-[r:FRIEND]-(f:Person) " +
+      "WHERE id(u) = {uid} AND id(f) = {fid} " +
+      "DELETE r ",
+      {uid: this._id, fid: parseInt(friendID)}
+    );
+  }
+
+  /**
+   * Returns a list of all open incoming friend requests.
+   *
+   * @return {array} An array of FriendRequest objects containing request as the
+   * request node, sender as the user initiating the request.
+   */
+  User.prototype.getOpenFriendRequests = function() {
+    return db.query(
+      "MATCH (sender:Person)-[:SENT]->(request:FriendRequest)-[:TO]->(u:Person) " +
+      "WHERE id(u) = {uid} RETURN request,sender", {uid: this._id}
+    );
+  }
+
+  /**
+   * Gets the current friendship status between the user and another user.
+   *
+   * @param {string/number} friendID The ID of the other user we're querrying the friendship with.
+   * @return {object} The object describing the friend relationship. It has
+   * three properties: the friendship relationship, the sentRequest and the
+   * receivedRequest. Each or all of those are null when inexistant.
+   */
+  User.prototype.getFriendship = function(friendID) {
+    return db.query(
+      "MATCH (u:Person), (f:Person) " +
+      "OPTIONAL MATCH (u)-[friendship:FRIEND]-(f) " +
+      "OPTIONAL MATCH (u)-[:SENT]->(sentRequest:FriendRequest)-[:TO]->(f) " +
+      "OPTIONAL MATCH (f)-[:SENT]->(receivedRequest:FriendRequest)-[:TO]->(u) " +
+      "WITH u,f,friendship,sentRequest,receivedRequest " +
+      "WHERE id(u) = {uid} AND id(f) = {fid} " +
+      "RETURN friendship,sentRequest,receivedRequest",
+      {uid: this._id, fid: parseInt(friendID)}
+    ).then(function(result) {
+      return result[0];
+    });
   }
 
 
@@ -79,7 +189,28 @@
     .then(function(res) {
       return new User(res[0].p);
     });
-  }
+  };
+
+  /**
+   * Finds a user by it's fullname given a collection of words that each get matched
+   *
+   * @param {string} query A string with words to be matched
+   * @return {array} The array of users that have a matching full name
+   */
+  User.findByName = function(query) {
+    var whereClauses = query.split(" ").map(function(word) {
+      return 'fullname =~ "(?i).*' + word + '.*"';
+    }).join(" AND ")
+    return db.query(
+      "MATCH (p:Person) " +
+      "WITH p, p.firstName + ' ' + p.lastName AS fullname " +
+      "WHERE " + whereClauses + " RETURN p"
+    ).then(function(result) {
+      return result.map(function(entry) {
+        return entry.p
+      });
+    });
+  };
 
   /**
    * Finds a user by it's ID.
@@ -88,8 +219,11 @@
    * @return {User} An instance of User containing the params of the found user.
    */
   User.findById = function(id) {
-    return db.query("MATCH (p:Person) WHERE id(p) = {id} RETURN p", {id: id})
+    return db.query("MATCH (p:Person) WHERE id(p) = {id} RETURN p", {id: parseInt(id)})
     .then(function(result) {
+      if (_.isEmpty(result)) {
+        throw "Could not find user with id " + id;
+      }
       return new User(result[0].p);
     });
   }
