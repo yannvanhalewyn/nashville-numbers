@@ -208,7 +208,7 @@
   User.prototype.inviteToHub = function(hubID, otherUserID) {
     return db.query(
       "MATCH (u:Person)-[:CREATED]->(h:Hub), (p:Person) " +
-      "OPTIONAL MATCH (u)-[:SENT]-(existinghi:HubInvitation)-[:TO]->(p:Person) " +
+      "OPTIONAL MATCH (u)-[:SENT]-(existinghi:HubInvitation)-[:TO]->(p:Person), (existinghi)-[:TO_JOIN]->(h) " +
       "WITH u, p, h, existinghi " +
       "WHERE id(u) = {uid} AND id(p) = {pid} AND id(h) = {hid} AND NOT u = p " +
       "AND existinghi IS NULL " +
@@ -222,6 +222,15 @@
       return result[0].hi;
     })
   }
+
+  /*
+   * Accept hub request:
+   * MATCH (sender:Person)-[sent:SENT]->(hi:HubInvitation)-[to:TO]->(receiver:Person), (hi)-[toJoin:TO_JOIN]-(hub:Hub)
+   * WHERE id(hi) = 679
+   * CREATE (receiver)-[joined:JOINED]->(hub)
+   * DELETE sent, to, toJoin, hi
+   * RETURN receiver, hub
+   */
 
 
 /*

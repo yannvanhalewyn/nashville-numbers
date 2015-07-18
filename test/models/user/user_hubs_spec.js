@@ -95,7 +95,7 @@ describe('USER-HUBS methods', function() {
  */
   describe('user#inviteUserToHub()', function() {
 
-    var HUB, USER_B, HUB_INVITATION;
+    var HUB, USER_B
 
     beforeEach(function() {
       return Factory('hub', {creator_id: USER._id}).then(function(hub) {
@@ -107,6 +107,9 @@ describe('USER-HUBS methods', function() {
     });
 
     describe('valid invitations', function() {
+
+      var HUB_INVITATION;
+
       beforeEach(function() {
         return USER.inviteToHub(HUB._id, USER_B._id).then(function(invitation) {
           HUB_INVITATION = invitation;
@@ -121,8 +124,9 @@ describe('USER-HUBS methods', function() {
 
       it("creates the :SENT :TO and :TO_JOIN relationships", function() {
         return db.query(
-          "MATCH (u:Person)-[:SENT]->(hi:HubInvitation)-[:TO]->(p:Person), (hi)-[:TO_JOIN]-(h) " +
-            "WHERE id(u) = {uid} AND id(p) = {pid} AND id(h) = {hid} RETURN hi",
+          "MATCH (u:Person)-[:SENT]->(hi:HubInvitation)-[:TO]->(p:Person), " +
+          "(hi)-[:TO_JOIN]-(h) " +
+          "WHERE id(u) = {uid} AND id(p) = {pid} AND id(h) = {hid} RETURN hi",
           {uid: USER._id, pid: USER_B._id, hid: HUB._id}
         ).then(function(result) {
           expect(result.length).to.eql(1);
@@ -133,18 +137,35 @@ describe('USER-HUBS methods', function() {
         expect(HUB_INVITATION).not.to.be.undefined;
         expect(HUB_INVITATION._id).not.to.be.undefined;
       });
+
     }); // End of describe 'valid invitations'
 
 
     describe('invalid invitations', function() {
-
       var USER_C;
-
       beforeEach(function() {
         return Factory('user').then(function(userC) {
           USER_C = userC;
         });
       });
+
+      context("when userA already invited userB to join another hub", function() {
+        var HUB_B, INVITATION_A;
+        beforeEach(function() {
+          return USER.createHub('hub b').then(function(hub) {
+            return USER.inviteToHub(hub._id, USER_B._id).then(function(invitation) {
+              INVITATION_A = invitation;
+            });
+          });
+        });
+
+        it("creates a second invitation", function() {
+          return USER.inviteToHub(HUB._id, USER_B._id).then(function(invitation) {
+            expect(invitation).not.to.be.empty;
+            expect(invitation._id).not.to.eql(INVITATION_A._id);
+          });
+        });
+      }); // End of context 'when an invitation already exists to another user'
 
       context("when the creator tries to invite himself", function() {
         beforeEach(function() {
