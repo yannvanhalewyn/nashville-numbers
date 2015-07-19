@@ -432,7 +432,7 @@ describe('USER#friends', function() {
 
     context("when query = part of firstName and part of lastName as multiple words", function() {
       it("returns the correct friend (3)", function() {
-        return USER_A.findFriends("jame ay").then(function(found) {
+        return USER_A.findFriends("jame ay ").then(function(found) {
           expect(found.length).to.eql(1);
           expect(found[0]._id).to.eql(USER_C._id);
         });

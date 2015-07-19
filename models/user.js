@@ -289,7 +289,7 @@
    * @return {array} The array of users that have a matching full name
    */
   User.findByName = function(query) {
-    var whereClauses = _wordsToMultipleCypherRegexes(query, 'lastname');
+    var whereClauses = _wordsToMultipleCypherRegexes(query, 'fullname');
     return db.query(
       "MATCH (p:Person) " +
       "WITH p, p.firstName + ' ' + p.lastName AS fullname " +
@@ -348,11 +348,11 @@
    * @return {string} The match query.
    */
   function _wordsToMultipleCypherRegexes(string, matcher) {
-    return string.split(" ").map(function(word) {
-      if (word.length > 0) {
-        return matcher + ' =~ "(?i).*' + word + '.*"';
-      }
-    }).join(" AND ")
+    return string.split(" ").filter(function(word) {
+      if (word.length > 0) return true;
+    }).map(function(word) {
+      return matcher + ' =~ "(?i).*' + word + '.*"';
+    }).join(" AND ");
   }
 
 }())
