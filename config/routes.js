@@ -5,14 +5,17 @@
   var include     = require('include');
 
   // Controllers
-  var UserSession    = include('/controllers/user_session_controller')
-    , Dashboard      = include('/controllers/dashboard_controller')
-    , Sheets         = include('/routers/sheets')
-    , Friends        = include('/routers/friends')
-    , FriendRequests = include('/routers/friend_requests')
-    , Users          = include('/routers/users')
-    , Hubs           = include('/controllers/hub_controller')
-    , Explore        = include('/controllers/explore_controller')
+  var UserSession     = include('/controllers/user_session_controller')
+    , Dashboard       = include('/controllers/dashboard_controller')
+    , Sheets          = include('/routers/sheets')
+    , Friends         = include('/routers/friends')
+    , FriendRequests  = include('/routers/friend_requests')
+    , Users           = include('/routers/users')
+    , Hubs            = include('/routers/hubs')
+    , HubParticipants = include('/routers/hub_participants')
+    , HubInvitations  = include('/routers/hub_invitations')
+    , HubSheets       = include('/routers/hub_sheets')
+    , Explore         = include('/controllers/explore_controller')
 
   // Middlewares
   var ensureAuth = include('/middlewares/auth');
@@ -46,18 +49,23 @@
  */
     app.route('/').get(ensureAuth, Dashboard.index);
     app.route('/dashboard').get(ensureAuth, Dashboard.index);
-    app.route('/hubs').get(ensureAuth, Hubs.index);
     app.route('/explore').get(ensureAuth, Explore.index);
 
 /*
- * ====================
- * USERS/FRIENDS/SHEETS
- * ====================
+ * =================
+ * DEDICATED ROUTERS
+ * =================
  */
     app.use('/users', ensureAuth, Users);
     app.use('/users/:user_id/sheets', Sheets);
     app.use('/users/:user_id/friends', Friends);
     app.use('/users/:user_id/friends/requests', FriendRequests);
+
+    // Hubs
+    app.use('/hubs', Hubs);
+    app.use('/hubs/:hub_id/participants', HubParticipants);
+    app.use('/hubs/:hub_id/participants/invitations', HubInvitations);
+    app.use('/hubs/:hub_id/sheets', HubSheets);
   };
 
   module.exports = routes;
