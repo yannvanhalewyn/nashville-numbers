@@ -2,7 +2,9 @@
 
   module.exports = {
     index: function(req, res) {
-      res.send("P INDEX");
+      req.target_hub.getParticipants().then(function(participants) {
+        res.json(participants);
+      });
     },
 
     create: function(req, res) {
