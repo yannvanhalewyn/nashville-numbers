@@ -8,13 +8,13 @@
     },
 
     show: function(req, res) {
-      res.send("SHOW " + req.params.hub_id);
+      res.render('hub', {hub: JSON.stringify(req.target_hub)});
     },
 
     create: function(req, res) {
       req.user.createHub(req.body.name).then(function(hub) {
         res.redirect("/hubs/" + hub._id);
-      }).catch(res.send);
+      });
     },
 
     update: function(req, res) {

@@ -39,6 +39,26 @@ describe('HUBS_CONTROLLER', function() {
     });
   }); // End of describe 'GET/index'
 
+  describe('GET/show', function() {
+    var HUB;
+    beforeEach(function(done) {
+      return Factory('hub', {creator_id: USER._id}).then(function(hub) {
+        HUB = hub;
+        req.target_hub = hub;
+        Controller.show(req, res);
+        res.on('end', done);
+      });
+    });
+
+    it("renders the hub template", function() {
+      expect(res.render).to.have.been.calledWith('hub');
+    });
+
+    it("sends along the correct data", function() {
+      expect(res.render).to.have.been.calledWith('hub', {hub: JSON.stringify(HUB)});
+    });
+  }); // End of describe 'GET/show'
+
   describe('POST/create', function() {
     beforeEach(function(done) {
       sinon.stub(USER, 'createHub').returns(Q(dummyHub()));
