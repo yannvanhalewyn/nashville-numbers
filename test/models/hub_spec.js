@@ -5,7 +5,7 @@ var include = require('include')
   , Factory = include('/test/util/factory')
 
 // Clear DB afterEach()
-// include('/test/util/clear_db');
+include('/test/util/clear_db');
 
 describe('HUB', function() {
 
@@ -29,11 +29,8 @@ describe('HUB', function() {
     });
 
     it("creates a new hub in the db", function() {
-      return db.query(
-        "MATCH (h:Hub) RETURN h"
-      ).then(function(result) {
+      return db.query("MATCH (h:Hub) RETURN h").then(function(result) {
         expect(result.length).to.eql(1);
-        expect(result[0].h.properties.creator_id).to.eql(123);
       });
     });
 
@@ -65,7 +62,7 @@ describe('HUB', function() {
     context("when a hub exists", function() {
       beforeEach(function() {
         return Factory('hub').then(function(entities) {
-          return Hub.findById(entities.hub._id).then(function(foundHub) {
+          return Hub.findById(entities.hub._id.toString()).then(function(foundHub) {
             CREATED_HUB = entities.hub;
             FOUND_HUB = foundHub;
           });
