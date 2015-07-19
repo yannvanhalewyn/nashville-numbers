@@ -37,6 +37,7 @@
     "chai": "^3.0.0",
     "chai-things": "^0.2.0",
     "chance": "^0.7.6",
+    "cli-table": "^0.3.1",
     "gulp": "^3.9.0",
     "gulp-livereload": "^3.8.0",
     "gulp-nodemon": "^2.0.3",

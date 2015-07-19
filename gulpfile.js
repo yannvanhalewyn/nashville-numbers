@@ -127,6 +127,18 @@ gulp.task('seed', function() {
   require('./test/util/seed_db').bind(this)();
 });
 
+/*
+ * ===========
+ * TASK routes
+ * ===========
+ *
+ * Prints out beautiful tables of all the routes :)
+ */
+gulp.task('routes', function() {
+  var printRoutes = require('./bin/printRoutes');
+  printRoutes('/config/routes');
+});
+
 
 /*
  * ======
