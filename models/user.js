@@ -167,6 +167,26 @@
     });
   }
 
+  /**
+   * Finds a user's friends by fullname given a collection of words that each get matched
+   *
+   * @param {string} query A string with words to be matched
+   * @return {array} The array of users that have a matching full name
+   */
+  User.prototype.findFriends = function(query) {
+    var whereClauses = _wordsToMultipleCypherRegexes(query, 'fullname');
+    return db.query(
+      "MATCH (u:Person)-[:FRIEND]-(f:Person) " +
+      "WITH u, f, f.firstName + ' ' + f.lastName AS fullname " +
+      "WHERE id(u) = {uid} AND " + whereClauses + " RETURN f",
+      {uid: this._id, regex: "(?i).*" + query + ".*"}
+    ).then(function(result) {
+      return result.map(function(r) {
+        return r.f;
+      });
+    });
+  }
+
 /*
  * =============
  * INSTANCE:HUBS
@@ -269,9 +289,7 @@
    * @return {array} The array of users that have a matching full name
    */
   User.findByName = function(query) {
-    var whereClauses = query.split(" ").map(function(word) {
-      return 'fullname =~ "(?i).*' + word + '.*"';
-    }).join(" AND ")
+    var whereClauses = _wordsToMultipleCypherRegexes(query, 'lastname');
     return db.query(
       "MATCH (p:Person) " +
       "WITH p, p.firstName + ' ' + p.lastName AS fullname " +
@@ -317,5 +335,24 @@
   }
 
   module.exports = User;
+
+  /**
+   * Splits the given string of words and returns a match string matching the
+   * given matcher to a case-insensitive regex of every word.
+   *
+   * Example: _wordsToMultipheCypherRegexes("James May", 'fullname')
+   *   -> "fullname =~ '(?i).*James.*' AND fullname =~ '(?i).*May.*'"
+   *
+   * @param {string} string The query string - eg: "James May"
+   * @param {string} matcher the matcher. eg: 'fullname'
+   * @return {string} The match query.
+   */
+  function _wordsToMultipleCypherRegexes(string, matcher) {
+    return string.split(" ").map(function(word) {
+      if (word.length > 0) {
+        return matcher + ' =~ "(?i).*' + word + '.*"';
+      }
+    }).join(" AND ")
+  }
 
 }())
