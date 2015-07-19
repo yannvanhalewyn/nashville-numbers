@@ -1,8 +1,9 @@
-var include = require('include')
-  , expect  = require('chai').expect
-  , Hub     = include('/models/hub')
-  , db      = include('/config/db')
-  , Factory = include('/test/util/factory')
+var include    = require('include')
+  , chai       = require('chai')
+  , expect     = chai.expect
+  , Hub        = include('/models/hub')
+  , db         = include('/config/db')
+  , Factory    = include('/test/util/factory')
 
 // Clear DB afterEach()
 include('/test/util/clear_db');
@@ -15,9 +16,7 @@ describe('HUB', function() {
  * ======
  */
   describe('Hub.create()', function() {
-
     var HUB, USER;
-
     beforeEach(function() {
       return Factory('user').then(function(user) {
         return Hub.create({creator_id: user._id, title: "Some Title", foo: "bar"})
@@ -88,4 +87,39 @@ describe('HUB', function() {
       });
     }); // End of context 'when a hub doesn't exist'
   }); // End of describe 'Hub.FindById()'
+
+  describe('hub#getParticipants()', function() {
+    var HUB, CREATOR, USER_A;
+    beforeEach(function() {
+      return Factory('hub').then(function(entities) {
+        HUB = entities.hub;
+        CREATOR = entities.user;
+        return Factory('user').then(function(participant) {
+          USER_A = participant;
+          return db.query(
+            "MATCH (h:Hub), (p:Person) WHERE id(h) = {hid} AND id(p) = {pid} " +
+            "CREATE (p)-[:JOINED {permission: 7}]->(h)",
+            {hid: HUB._id, pid: USER_A._id}
+          );
+        });
+      });
+    });
+
+    it("returns the participants", function() {
+      return HUB.getParticipants().then(function(participants) {
+        expect(participants.length).to.eql(2);
+        var ids = participants.map(function(p) { return p.user._id })
+        expect(ids).to.contain(CREATOR._id)
+        expect(ids).to.contain(USER_A._id)
+      });
+    });
+
+    it("returns the relationships", function() {
+      return HUB.getParticipants().then(function(participants) {
+        var relationships = participants.map(function(p) { return p.relationship });
+        expect(relationships[0].type).to.eql("CREATED");
+        expect(relationships[1].properties.permission).to.eql(7);
+      });
+    });
+  }); // End of describe 'hub#getParticipants()'
 }); // End of describe 'HUB'

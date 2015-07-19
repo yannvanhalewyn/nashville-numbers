@@ -10,6 +10,22 @@
     _.merge(this, params);
   };
 
+
+  /**
+   * Returns all the participants that have a relationship to the hub.
+   *
+   * @return {array} The list of participants in the hub (including the
+   * creator). The array consists of multiple objects that each have properties
+   * user         -> representing the user that participates
+   * relationship -> representing the relationship between said user and the hub.
+   */
+  Hub.prototype.getParticipants = function() {
+    return db.query(
+      "MATCH (user:Person)-[relationship]->(hub:Hub) " +
+      "WHERE id(hub) = {hid} RETURN user, relationship", {hid: this._id}
+    );
+  }
+
   /**
    * Creates a new hub
    *
