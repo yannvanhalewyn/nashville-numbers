@@ -236,12 +236,28 @@
       "AND existinghi IS NULL " +
       "CREATE (u)-[:SENT]->(invitation:HubInvitation)-[:TO]->(invitee), " +
       "(invitation)-[:TO_JOIN]->(h) " +
-      "RETURN invitation, invitee", 
+      "RETURN invitation, invitee",
       {uid: this._id, iid: parseInt(otherUserID), hid: parseInt(hubID)}
     ).then(function(result) {
       return result[0];
     });
   }
+
+
+  /**
+   * Returns all open hubInvitations to the user.
+   *
+   * @return {array} An array of objects each having a property invitation, sender and hub.
+   */
+  User.prototype.getHubInvitations = function() {
+    return db.query(
+      "MATCH (sender:Person)-[:SENT]->(invitation:HubInvitation)-[:TO]->(user:Person), " +
+      "(invitation)-[:TO_JOIN]->(hub:Hub) " +
+      "WHERE id(user) = {uid} " +
+      "RETURN invitation, sender, hub", {uid: this._id}
+    )
+  }
+
 
   /*
    * Accept hub request:

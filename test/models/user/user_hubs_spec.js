@@ -218,4 +218,52 @@ describe('USER-HUBS methods', function() {
       }); // End of context 'when the user invites a user which is already in the hub'
     }); // End of describe 'invalid invitations'
   }); // End of describe 'user#inviteUserToHub()'
+
+  describe('getHubInvitations', function() {
+    var HUB, USER_B;
+    beforeEach(function() {
+      return Factory('hub', {creator_id: USER._id}).then(function(hub) {
+        return Factory('user').then(function(otherUser) {
+          HUB = hub;
+          USER_B = otherUser;
+        });
+      });
+    });
+
+    context("when user has invitations to hubs", function() {
+      var INVITATION, RESULT;
+      beforeEach(function() {
+        return USER.inviteToHub(HUB._id, USER_B._id).then(function(hubInvitation) {
+          return USER_B.getHubInvitations().then(function(result) {
+            INVITATION = hubInvitation.invitation;
+            RESULT = result;
+          });
+        });
+      });
+
+      it("returns an array", function() {
+        expect(RESULT.length).to.eql(1);
+      });
+
+      it("returns an object containing the invitation", function() {
+        expect(RESULT[0].invitation).to.eql(INVITATION);
+      });
+
+      it("returns an object containing the targetHub", function() {
+        expect(RESULT[0].sender._id).to.eql(USER._id);
+      });
+
+      it("returns an object containing the sender", function() {
+        expect(RESULT[0].hub._id).to.eql(HUB._id);
+      });
+    }); // End of context 'when user has invitations to hubs'
+
+    context("When user has no open invitations", function() {
+      it("returns an empty array", function() {
+        return USER.getHubInvitations().then(function(result) {
+          expect(result).to.eql([]);
+        });
+      });
+    }); // End of context 'When user has no open invitations'
+  }); // End of describe 'getHubInvitations'
 }); // End of describe 'USER-HUBS methods'
