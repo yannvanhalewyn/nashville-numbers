@@ -122,4 +122,47 @@ describe('HUB', function() {
       });
     });
   }); // End of describe 'hub#getParticipants()'
+
+  describe('getInvitations', function() {
+    var HUB, CREATOR;
+    beforeEach(function() {
+      return Factory('hub').then(function(entities) {
+        HUB = entities.hub;
+        CREATOR = entities.user;
+      });
+    });
+
+    context("when there is an invitation", function() {
+      var INVITATION, INVITEE;
+      beforeEach(function() {
+        return Factory('user').then(function(invitee) {
+          return CREATOR.inviteToHub(HUB._id, invitee._id).then(function(invitation) {
+            INVITATION = invitation;
+            INVITEE = invitee;
+          });
+        });
+      });
+
+      it("returns an array of invitations", function() {
+        return HUB.getInvitations().then(function(invitations) {
+          expect(invitations.length).to.eql(1);
+        });
+      });
+
+      it("returns the invitations as well as the invitees", function() {
+        return HUB.getInvitations().then(function(invitations) {
+          expect(invitations[0].invitation._id).to.eql(INVITATION._id);
+          expect(invitations[0].invitee._id).to.eql(INVITEE._id);
+        });
+      });
+    }); // End of context 'when there is an invitation'
+
+    context("when there is no invitation", function() {
+      it("returns an empty array", function() {
+        return HUB.getInvitations().then(function(invitations) {
+          expect(invitations.length).to.eql(0);
+        });
+      });
+    }); // End of context 'when there is no invitation'
+  }); // End of describe 'getInvitations'
 }); // End of describe 'HUB'

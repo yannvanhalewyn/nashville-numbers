@@ -27,6 +27,19 @@
   }
 
   /**
+   * Gets all open invitations for the hub.
+   *
+   * @return {array} The array of objects representing invitations.
+   */
+  Hub.prototype.getInvitations = function() {
+    return db.query(
+      "MATCH (invitee:Person)<-[:TO]-(invitation:HubInvitation)-[:TO_JOIN]->(h:Hub) " +
+      "WHERE id(h) = {hid} RETURN invitation, invitee",
+      {hid: this._id}
+    );
+  }
+
+  /**
    * Creates a new hub
    *
    * @param {object} params The params to create the hub. It needs a 'creator_id' property to create the CREATED relationship to the hub.

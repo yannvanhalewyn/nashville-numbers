@@ -62,10 +62,10 @@
     app.use('/users/:user_id/friends/requests', FriendRequests);
 
     // Hubs
-    app.use('/hubs', Hubs);
-    app.use('/hubs/:hub_id/participants', HubParticipants);
-    app.use('/hubs/:hub_id/participants/invitations', HubInvitations);
-    app.use('/hubs/:hub_id/sheets', HubSheets);
+    app.use('/hubs', ensureAuth, Hubs);
+    app.use('/hubs/:hub_id/participants', ensureAuth, HubParticipants);
+    app.use('/hubs/:hub_id/invitations', ensureAuth, HubInvitations);
+    app.use('/hubs/:hub_id/sheets', ensureAuth, HubSheets);
   };
 
   module.exports = routes;

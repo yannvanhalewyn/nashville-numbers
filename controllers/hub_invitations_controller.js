@@ -2,7 +2,9 @@
 
   module.exports = {
     index: function(req, res) {
-      res.send("INDEX");
+      req.target_hub.getInvitations().then(function(invitations) {
+        res.json(invitations);
+      });
     },
 
     show: function(req, res) {
@@ -10,7 +12,9 @@
     },
 
     create: function(req, res) {
-      res.send("CREATE " + req.body);
+      req.user.inviteToHub(req.params.hub_id, req.body.other_user_id).then(function(invitation) {
+        res.json(invitation);
+      });
     },
 
     update: function(req, res) {

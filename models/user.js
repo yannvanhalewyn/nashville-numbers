@@ -167,6 +167,26 @@
     });
   }
 
+  /**
+   * Finds a user's friends by fullname given a collection of words that each get matched
+   *
+   * @param {string} query A string with words to be matched
+   * @return {array} The array of users that have a matching full name
+   */
+  User.prototype.findFriends = function(query) {
+    var whereClauses = _wordsToMultipleCypherRegexes(query, 'fullname');
+    return db.query(
+      "MATCH (u:Person)-[:FRIEND]-(f:Person) " +
+      "WITH u, f, f.firstName + ' ' + f.lastName AS fullname " +
+      "WHERE id(u) = {uid} AND " + whereClauses + " RETURN f",
+      {uid: this._id, regex: "(?i).*" + query + ".*"}
+    ).then(function(result) {
+      return result.map(function(r) {
+        return r.f;
+      });
+    });
+  }
+
 /*
  * =============
  * INSTANCE:HUBS
@@ -203,24 +223,24 @@
    * the user.
    * @param {string/number} otherUserID The ID of the user we whish to invite to
    * the hub.
-   * @return {object} the HubInvitation object or empty object if none created.
+   * @return {object} the object containing the HubInvitation object as
+   * 'invitation' proeprty and the invited person object as 'invitee' property.
+   * Will send an empty object when no invitation has been created.
    */
   User.prototype.inviteToHub = function(hubID, otherUserID) {
     return db.query(
-      "MATCH (u:Person)-[:CREATED]->(h:Hub), (p:Person) " +
-      "OPTIONAL MATCH (u)-[:SENT]-(existinghi:HubInvitation)-[:TO]->(p:Person), (existinghi)-[:TO_JOIN]->(h) " +
-      "WITH u, p, h, existinghi " +
-      "WHERE id(u) = {uid} AND id(p) = {pid} AND id(h) = {hid} AND NOT u = p " +
+      "MATCH (u:Person)-[:CREATED]->(h:Hub), (invitee:Person) " +
+      "OPTIONAL MATCH (u)-[:SENT]-(existinghi:HubInvitation)-[:TO]->(invitee:Person), (existinghi)-[:TO_JOIN]->(h) " +
+      "WITH u, invitee, h, existinghi " +
+      "WHERE id(u) = {uid} AND id(invitee) = {iid} AND id(h) = {hid} AND NOT u = invitee " +
       "AND existinghi IS NULL " +
-      "CREATE (u)-[:SENT]->(hi:HubInvitation)-[:TO]->(p), " +
-      "(hi)-[:TO_JOIN]->(h) " +
-      "RETURN hi", {uid: this._id, pid: otherUserID, hid: hubID}
+      "CREATE (u)-[:SENT]->(invitation:HubInvitation)-[:TO]->(invitee), " +
+      "(invitation)-[:TO_JOIN]->(h) " +
+      "RETURN invitation, invitee", 
+      {uid: this._id, iid: parseInt(otherUserID), hid: parseInt(hubID)}
     ).then(function(result) {
-      if (_.isEmpty(result)) {
-        return {};
-      }
-      return result[0].hi;
-    })
+      return result[0];
+    });
   }
 
   /*
@@ -269,9 +289,7 @@
    * @return {array} The array of users that have a matching full name
    */
   User.findByName = function(query) {
-    var whereClauses = query.split(" ").map(function(word) {
-      return 'fullname =~ "(?i).*' + word + '.*"';
-    }).join(" AND ")
+    var whereClauses = _wordsToMultipleCypherRegexes(query, 'fullname');
     return db.query(
       "MATCH (p:Person) " +
       "WITH p, p.firstName + ' ' + p.lastName AS fullname " +
@@ -317,5 +335,24 @@
   }
 
   module.exports = User;
+
+  /**
+   * Splits the given string of words and returns a match string matching the
+   * given matcher to a case-insensitive regex of every word.
+   *
+   * Example: _wordsToMultipheCypherRegexes("James May", 'fullname')
+   *   -> "fullname =~ '(?i).*James.*' AND fullname =~ '(?i).*May.*'"
+   *
+   * @param {string} string The query string - eg: "James May"
+   * @param {string} matcher the matcher. eg: 'fullname'
+   * @return {string} The match query.
+   */
+  function _wordsToMultipleCypherRegexes(string, matcher) {
+    return string.split(" ").filter(function(word) {
+      if (word.length > 0) return true;
+    }).map(function(word) {
+      return matcher + ' =~ "(?i).*' + word + '.*"';
+    }).join(" AND ");
+  }
 
 }())

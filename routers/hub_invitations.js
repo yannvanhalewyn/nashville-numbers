@@ -2,10 +2,11 @@
 
   "use strict";
 
-  var HubInvitationsRouter = require('express').Router()
+  var HubInvitationsRouter = require('express').Router({mergeParams: true})
     , Controller = require('../controllers/hub_invitations_controller')
+    , getTargetHub = require('../middlewares/getTargetHub')
 
-  HubInvitationsRouter.get('/', Controller.index);
+  HubInvitationsRouter.get('/', getTargetHub, Controller.index);
   HubInvitationsRouter.get('/:invitation_id', Controller.show);
   HubInvitationsRouter.post('/', Controller.create);
   HubInvitationsRouter.put('/:invitation_id', Controller.update);
