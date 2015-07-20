@@ -5,7 +5,7 @@
   var FriendRequestsRouter = require('express').Router({mergeParams: true});
   var ensureAuth = require('../middlewares/auth');
 
-  var FriendRequestsController = require('../controllers/friend_requests_controller');
+  var FriendRequestsController = require('../controllers/friends/friend_requests_controller');
 
   FriendRequestsRouter.get('/', ensureAuth, FriendRequestsController.index)
   FriendRequestsRouter.post('/', ensureAuth, FriendRequestsController.create)

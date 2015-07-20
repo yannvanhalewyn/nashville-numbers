@@ -3,7 +3,7 @@
   "use strict";
 
   var HubInvitationsRouter = require('express').Router({mergeParams: true})
-    , Controller = require('../controllers/hub_invitations_controller')
+    , Controller = require('../controllers/hubs/hub_invitations_controller')
     , getTargetHub = require('../middlewares/getTargetHub')
 
   HubInvitationsRouter.get('/', getTargetHub, Controller.index);

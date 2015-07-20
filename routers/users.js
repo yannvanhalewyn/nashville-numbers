@@ -2,7 +2,7 @@
 
   "use strict";
 
-  var UsersController = require('../controllers/users_controller')
+  var UsersController = require('../controllers/users/users_controller')
     , ensureAuth      = require('../middlewares/auth')
     , getTargetUser   = require('../middlewares/getTargetUser')
     , getMeAsUser   = require('../middlewares/getMeAsUser')

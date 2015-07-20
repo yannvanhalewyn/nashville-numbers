@@ -2,7 +2,8 @@
 
   "use strict";
 
-  var User = require('../models/user')
+  var include = require('include')
+    , User = include('/models/user')
     , _    = require('lodash')
 
   var UsersController = {

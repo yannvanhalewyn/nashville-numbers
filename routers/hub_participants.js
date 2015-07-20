@@ -4,7 +4,7 @@
 
   var include               = require('include')
     , HubParticipantsRouter = require('express').Router({mergeParams: true})
-    , Controller            = include('/controllers/hub_participants_controller')
+    , Controller            = include('/controllers/hubs/hub_participants_controller')
     , getTargetHub = include('/middlewares/getTargetHub')
 
   HubParticipantsRouter.get('/', getTargetHub, Controller.index);

@@ -4,9 +4,6 @@
 
   var Backbone = require('backbone');
 
-  // Check if necessary
-  var HubUserRelation = Backbone.Model.extend({});
-
   var HubModel = Backbone.Model.extend({
     idAttribute: "_id",
   });

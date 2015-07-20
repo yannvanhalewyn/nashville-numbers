@@ -4,7 +4,7 @@
 
   var include = require('include')
     , HubsRouter     = require('express').Router()
-    , HubsController = require('../controllers/hubs_controller')
+    , HubsController = require('../controllers/hubs/hubs_controller')
     , getTargetHub = include('/middlewares/getTargetHub')
 
   HubsRouter.get('/', HubsController.index);

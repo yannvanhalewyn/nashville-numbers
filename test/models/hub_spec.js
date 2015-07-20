@@ -137,7 +137,7 @@ describe('HUB', function() {
       beforeEach(function() {
         return Factory('user').then(function(invitee) {
           return CREATOR.inviteToHub(HUB._id, invitee._id).then(function(invitation) {
-            INVITATION = invitation;
+            INVITATION = invitation.invitation;
             INVITEE = invitee;
           });
         });

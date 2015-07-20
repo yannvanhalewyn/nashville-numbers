@@ -6,7 +6,7 @@ var include    = require('include')
   , reqres     = require('reqres')
   , Factory    = include('/test/util/factory')
   , Q          = require('q')
-  , Controller = include('/controllers/hub_participants_controller');
+  , Controller = include('/controllers/hubs/hub_participants_controller');
 chai.use(sinonChai);
 
 describe('HubParticipantsController', function() {

@@ -4,7 +4,7 @@
 
   var include         = require('include')
     , HubSheetsRouter = require('express').Router({mergeParams: true})
-    , Controller      = include('/controllers/hub_sheets_controller');
+    , Controller      = include('/controllers/hubs/hub_sheets_controller');
 
   HubSheetsRouter.get('/', Controller.index);
   HubSheetsRouter.get('/:sheet_id', Controller.show);

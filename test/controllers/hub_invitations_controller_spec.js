@@ -4,7 +4,7 @@ var include    = require('include')
   , sinonChai = require('sinon-chai')
   , sinon      = require('sinon')
   , reqres     = require('reqres')
-  , Controller = include('/controllers/hub_invitations_controller')
+  , Controller = include('/controllers/hubs/hub_invitations_controller')
   , Factory    = include('/test/util/factory')
   , Q          = require('q')
 chai.use(sinonChai);
