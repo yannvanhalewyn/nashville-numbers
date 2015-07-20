@@ -5,7 +5,8 @@
     , Dispatcher = require('../dispatchers/hubpageDispatcher')
 
   var UserpageConstants = keyMirror({
-    UPDATE_FRIENDS_LIST: null
+    UPDATE_FRIENDS_LIST: null,
+    INVITE_FRIEND: null
   });
 
   var UserpageActions = {
@@ -13,6 +14,13 @@
       Dispatcher.dispatch({
         actionType: UserpageConstants.UPDATE_FRIENDS_LIST,
         query: query
+      });
+    },
+
+    inviteFriend: function(friendID) {
+      Dispatcher.dispatch({
+        actionType: UserpageConstants.INVITE_FRIEND,
+        friendID: friendID
       });
     }
   }

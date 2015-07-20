@@ -2,16 +2,19 @@
 
   "use strict";
 
-  var React = require('react');
+  var React = require('react')
+    , FriendSuggestion = require('./friendSuggestion.jsx')
 
   var FriendsSuggestionsDropdown = React.createClass({
     renderFriendSuggestion: function(friend) {
       return (
-        <div>
-          <img src={friend.properties.thumb} alt="friend profile picture" />
-          <h2>{friend.properties.firstName} {friend.properties.lastName}</h2>
-          <button className="btn">Invite</button>
-        </div>
+        <FriendSuggestion
+          key={friend._id}
+          firstName={friend.properties.firstName}
+          lastName={friend.properties.lastName}
+          thumb={friend.properties.thumb}
+          _id={friend._id}
+        />
       )
     },
 
