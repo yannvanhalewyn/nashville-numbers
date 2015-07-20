@@ -25,6 +25,30 @@ describe('HubInvitationsController', function() {
     });
   });
 
+  describe('GET/index', function() {
+    var OTHER_USER, INVITATION;
+    beforeEach(function(done) {
+      return Factory('user').then(function(otherUser) {
+        return USER.inviteToHub(HUB._id, otherUser._id).then(function(invitation) {
+          OTHER_USER = otherUser;
+          INVITATION = INVITATION;
+          req.target_hub = HUB;
+          sinon.stub(HUB, 'getInvitations').returns(Q(dummyInvitations()));
+          Controller.index(req, res);
+          res.on('end', done)
+        });
+      });
+    });
+
+    it("calls the targethub getInvitations", function() {
+      expect(HUB.getInvitations).to.have.been.called;
+    });
+
+    it("sends the resulting invitations via json", function() {
+      expect(res.json).to.have.been.calledWith(dummyInvitations());
+    });
+  }); // End of describe 'GET/index'
+
   describe('POST/create', function() {
     var OTHER_USER;
     beforeEach(function(done) {
@@ -48,9 +72,14 @@ describe('HubInvitationsController', function() {
 }); // End of describe 'HubInvitationsController'
 
 function dummyInvitation() {
-  return {
-    _id: 123,
-    properties: {}
-  }
+  return { _id: 123, properties: {} };
+}
+
+function dummyInvitations() {
+  return [
+    { _id: 456, properties: {} },
+    { _id: 457, properties: {} },
+    { _id: 458, properties: {} }
+  ];
 }
 
