@@ -223,24 +223,24 @@
    * the user.
    * @param {string/number} otherUserID The ID of the user we whish to invite to
    * the hub.
-   * @return {object} the HubInvitation object or empty object if none created.
+   * @return {object} the object containing the HubInvitation object as
+   * 'invitation' proeprty and the invited person object as 'invitee' property.
+   * Will send an empty object when no invitation has been created.
    */
   User.prototype.inviteToHub = function(hubID, otherUserID) {
     return db.query(
-      "MATCH (u:Person)-[:CREATED]->(h:Hub), (p:Person) " +
-      "OPTIONAL MATCH (u)-[:SENT]-(existinghi:HubInvitation)-[:TO]->(p:Person), (existinghi)-[:TO_JOIN]->(h) " +
-      "WITH u, p, h, existinghi " +
-      "WHERE id(u) = {uid} AND id(p) = {pid} AND id(h) = {hid} AND NOT u = p " +
+      "MATCH (u:Person)-[:CREATED]->(h:Hub), (invitee:Person) " +
+      "OPTIONAL MATCH (u)-[:SENT]-(existinghi:HubInvitation)-[:TO]->(invitee:Person), (existinghi)-[:TO_JOIN]->(h) " +
+      "WITH u, invitee, h, existinghi " +
+      "WHERE id(u) = {uid} AND id(invitee) = {iid} AND id(h) = {hid} AND NOT u = invitee " +
       "AND existinghi IS NULL " +
-      "CREATE (u)-[:SENT]->(hi:HubInvitation)-[:TO]->(p), " +
-      "(hi)-[:TO_JOIN]->(h) " +
-      "RETURN hi", {uid: this._id, pid: parseInt(otherUserID), hid: parseInt(hubID)}
+      "CREATE (u)-[:SENT]->(invitation:HubInvitation)-[:TO]->(invitee), " +
+      "(invitation)-[:TO_JOIN]->(h) " +
+      "RETURN invitation, invitee", 
+      {uid: this._id, iid: parseInt(otherUserID), hid: parseInt(hubID)}
     ).then(function(result) {
-      if (_.isEmpty(result)) {
-        return {};
-      }
-      return result[0].hi;
-    })
+      return result[0];
+    });
   }
 
   /*

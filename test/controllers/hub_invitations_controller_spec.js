@@ -72,14 +72,25 @@ describe('HubInvitationsController', function() {
 }); // End of describe 'HubInvitationsController'
 
 function dummyInvitation() {
-  return { _id: 123, properties: {} };
+  return { 
+    invitation: { _id: 123, properties: {} }
+  }
 }
 
 function dummyInvitations() {
   return [
-    { _id: 456, properties: {} },
-    { _id: 457, properties: {} },
-    { _id: 458, properties: {} }
+    {
+      invitation: { _id: 456, properties: {} },
+      invitee: {_id: 897, properties: {}}
+    },
+    {
+      invitation: { _id: 457, properties: {} },
+      invitee: {_id: 898, properties: {}}
+    },
+    {
+      invitation: { _id: 458, properties: {} },
+      invitee: {_id: 899, properties: {}}
+    }
   ];
 }
 

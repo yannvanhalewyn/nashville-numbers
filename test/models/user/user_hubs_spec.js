@@ -133,11 +133,11 @@ describe('USER-HUBS methods', function() {
         });
       });
 
-      it("returns the invitation object", function() {
-        expect(HUB_INVITATION).not.to.be.undefined;
-        expect(HUB_INVITATION._id).not.to.be.undefined;
+      it("returns the an object containing the invitation and the invitee", function() {
+        expect(HUB_INVITATION.invitation).not.to.be.undefined;
+        expect(HUB_INVITATION.invitee).not.to.be.undefined;
+        expect(HUB_INVITATION.invitee._id).to.eql(USER_B._id)
       });
-
     }); // End of describe 'valid invitations'
 
 
@@ -162,7 +162,7 @@ describe('USER-HUBS methods', function() {
         it("creates a second invitation", function() {
           return USER.inviteToHub(HUB._id, USER_B._id).then(function(invitation) {
             expect(invitation).not.to.be.empty;
-            expect(invitation._id).not.to.eql(INVITATION_A._id);
+            expect(invitation.invitation._id).not.to.eql(INVITATION_A._id);
           });
         });
       }); // End of context 'when an invitation already exists to another user'

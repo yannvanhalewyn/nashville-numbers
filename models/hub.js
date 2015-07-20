@@ -33,14 +33,10 @@
    */
   Hub.prototype.getInvitations = function() {
     return db.query(
-      "MATCH (:Person)-[:SENT]->(invitation:HubInvitation)-[:TO_JOIN]->(h:Hub) " +
-      "WHERE id(h) = {hid} RETURN invitation",
+      "MATCH (invitee:Person)<-[:TO]-(invitation:HubInvitation)-[:TO_JOIN]->(h:Hub) " +
+      "WHERE id(h) = {hid} RETURN invitation, invitee",
       {hid: this._id}
-    ).then(function(result) {
-      return result.map(function(i) {
-        return i.invitation;
-      });
-    });
+    );
   }
 
   /**
