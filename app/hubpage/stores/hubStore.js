@@ -54,11 +54,33 @@
       }
     },
 
+    // TODO: clean up filtering, I dislike the fact that I'm handling and
+    // sending live mutable data into the react tree. Find a way to get all
+    // model attributes in a collection as Immutable data, maybe use
+    // ImmutableJS?
     getState: function() {
+      // Invitations are all atributes on all models in the invitations collection
+      var invitations = this.invitations.models.map(function(invitation) {
+        return invitation.attributes;
+      });
+
+      // Filter friends suggestions list to friends no yet invited
+      var friends = this.friends.models.filter(function(friend) {
+        for (var i in invitations) {
+          if (invitations[i].invitee._id == friend.attributes._id) {
+            return false;
+          }
+        }
+        return true;
+      // Return all those friends's attributes
+      }).map(function(friend) {
+        return friend.attributes;
+      });
+
+      // Return the state
       return {
-        invitations: this.invitations.models.map(function(i) {
-          return i.attributes;
-        })
+        invitations: invitations,
+        friends: friends
       }
     }
   });
