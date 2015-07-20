@@ -30,6 +30,7 @@
       // Set the invitations collection as nested resource
       this.invitations = new InvitationCollection({hubID: this.id});
       this.invitations.on('sync', this.trigger.bind(this, 'invitations:sync'));
+      this.invitations.fetch(); // TODO only fetch when management modal pops
 
       // Set the friendsCollection as nestedResource
       this.friends = new FriendsCollection();
@@ -50,6 +51,14 @@
         default:
           console.error("Invalid actiontype: " + payload.actionType);
           break;
+      }
+    },
+
+    getState: function() {
+      return {
+        invitations: this.invitations.models.map(function(i) {
+          return i.attributes;
+        })
       }
     }
   });
