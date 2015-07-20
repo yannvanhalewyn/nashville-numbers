@@ -234,7 +234,7 @@
       "AND existinghi IS NULL " +
       "CREATE (u)-[:SENT]->(hi:HubInvitation)-[:TO]->(p), " +
       "(hi)-[:TO_JOIN]->(h) " +
-      "RETURN hi", {uid: this._id, pid: otherUserID, hid: hubID}
+      "RETURN hi", {uid: this._id, pid: parseInt(otherUserID), hid: parseInt(hubID)}
     ).then(function(result) {
       if (_.isEmpty(result)) {
         return {};

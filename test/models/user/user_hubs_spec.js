@@ -111,7 +111,7 @@ describe('USER-HUBS methods', function() {
       var HUB_INVITATION;
 
       beforeEach(function() {
-        return USER.inviteToHub(HUB._id, USER_B._id).then(function(invitation) {
+        return USER.inviteToHub(HUB._id.toString(), USER_B._id.toString()).then(function(invitation) {
           HUB_INVITATION = invitation;
         });
       });
