@@ -12,6 +12,7 @@
   UsersRouter.get('/', UsersController.index);
   UsersRouter.get('/me', getMeAsUser, UsersController.show);
   UsersRouter.get('/:user_id', getTargetUser, UsersController.show);
+  UsersRouter.get('/me/hubinvitations', getMeAsUser, UsersController.hubInvitations);
 
   module.exports = UsersRouter;
 

@@ -14,6 +14,12 @@
 
     show: function(req, res) {
       res.render('user', { state: JSON.stringify(req.target_user) });
+    },
+
+    hubInvitations: function(req, res) {
+      req.user.getHubInvitations().then(function(invitations) {
+        res.json(invitations);
+      });
     }
   }
 

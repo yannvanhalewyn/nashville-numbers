@@ -71,6 +71,27 @@ describe('USERS_CONTROLLER', function() {
       });
     }); // End of context 'when requested user page (id) is found'
   }); // End of describe 'GET#show'
+
+  describe('GET/hubInvitations', function() {
+    var USER;
+    beforeEach(function(done) {
+      return Factory('user').then(function(user) {
+        sinon.stub(user, "getHubInvitations").returns(Q(dummyInvitations()));
+        req.user = user;
+        Controller.hubInvitations(req, res);
+        USER = user;
+        res.on('end', done)
+      });
+    });
+
+    it("calls getHubInvitations on the target_user", function() {
+      expect(USER.getHubInvitations).to.have.been.called;
+    });
+
+    it("sends the results along as json", function() {
+      expect(res.json).to.have.been.calledWith(dummyInvitations());
+    });
+  }); // End of describe 'GET/hubInvitations'
 }); // End of describe 'USER_CONTROLLER'
 
 function dummyUsers() {
@@ -90,4 +111,24 @@ function dummyUsers() {
       }
     }
   ]
+}
+
+function dummyInvitations() {
+  return [
+    {
+      sender: {_id: 1},
+      hub: {_id: 2},
+      invitation: { _id: 3 }
+    },
+    {
+      sender: {_id: 4},
+      hub: {_id: 5},
+      invitation: { _id: 6 }
+    },
+    {
+      sender: {_id: 7},
+      hub: {_id: 8},
+      invitation: { _id: 9 }
+    }
+  ];
 }
