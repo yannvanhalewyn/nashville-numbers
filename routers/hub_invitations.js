@@ -7,9 +7,7 @@
     , middlewares = Controller.middlewares
 
   HubInvitationsRouter.get('/', middlewares.index, Controller.index);
-  HubInvitationsRouter.get('/:invitation_id', middlewares.show, Controller.show);
   HubInvitationsRouter.post('/', middlewares.create, Controller.create);
-  HubInvitationsRouter.put('/:invitation_id', middlewares.update, Controller.update);
   HubInvitationsRouter.delete('/:invitation_id', middlewares.destroy, Controller.destroy);
 
   module.exports = HubInvitationsRouter;

@@ -69,10 +69,43 @@ describe('HubInvitationsController', function() {
       expect(res.json).to.have.been.calledWith(dummyInvitation());
     });
   }); // End of describe 'POST/create'
+
+  describe('DELETE/destroy', function() {
+    context("with a valid hubInvitation", function() {
+      beforeEach(function(done) {
+        sinon.stub(USER, 'destroyHubInvitation').returns(Q());
+        req.params = {invitation_id: 123};
+        Controller.destroy(req, res);
+        res.on('end', done);
+      });
+
+      it("calls destroyHubInvitation on user with the invitation_id", function() {
+        expect(USER.destroyHubInvitation).to.have.been.calledWith(123);
+      });
+
+      it("returns a destroyed flag as json", function() {
+        expect(res.json).to.have.been.calledWith({destroyed: true});
+      });
+    }); // End of context 'with a valid hubInvitation'
+
+    context("On error", function() {
+      beforeEach(function(done) {
+        sinon.stub(USER, 'destroyHubInvitation').returns(rejectionPromise());
+        req.params = {invitation_id: 123};
+        Controller.destroy(req, res);
+        res.on('end', done);
+      });
+
+      it("sends a 401 and the error message", function() {
+        expect(res.status).to.have.been.calledWith(401);
+        expect(res.send).to.have.been.calledWith("SOME ERROR");
+      });
+    }); // End of context 'On error'
+  }); // End of describe 'decription'
 }); // End of describe 'HubInvitationsController'
 
 function dummyInvitation() {
-  return { 
+  return {
     invitation: { _id: 123, properties: {} }
   }
 }
@@ -94,3 +127,8 @@ function dummyInvitations() {
   ];
 }
 
+function rejectionPromise() {
+  var defered = Q.defer();
+  defered.reject("SOME ERROR");
+  return defered.promise;
+}

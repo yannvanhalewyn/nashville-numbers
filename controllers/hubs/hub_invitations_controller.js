@@ -1,16 +1,15 @@
 (function() {
 
   var include      = require('include')
+    , ensureAuth   = include('/middlewares/auth')
     , getTargetHub = include('/middlewares/getTargetHub')
 
   module.exports = {
 
     middlewares: {
-      index:   [getTargetHub],
-      show:    [],
-      create:  [],
-      update:  [],
-      destroy: []
+      index:   [ensureAuth, getTargetHub],
+      create:  [ensureAuth],
+      destroy: [ensureAuth]
     },
 
     index: function(req, res) {
@@ -19,22 +18,19 @@
       });
     },
 
-    show: function(req, res) {
-      res.send("Show " + req.params.invitation_id)
-    },
-
     create: function(req, res) {
       req.user.inviteToHub(req.params.hub_id, req.body.other_user_id).then(function(invitation) {
         res.json(invitation);
       });
     },
 
-    update: function(req, res) {
-      res.send("UPDATE " + req.params.invitation_id);
-    },
-
     destroy: function(req, res) {
-      res.send("DESTROY " + req.params.invitation_id);
+      req.user.destroyHubInvitation(req.params.invitation_id).then(function() {
+        res.json({destroyed: true});
+      }, function(err) {
+        res.status(401);
+        res.send(err);
+      });
     }
   };
 
