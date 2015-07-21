@@ -80,11 +80,51 @@ describe('UserHubInvitationsController', function() {
           res.on('end', done)
         });
 
-        it("sends the error as string", function() {
+        it("sends a 401 the error as string", function() {
+          expect(res.status).to.have.been.calledWith(401);
           expect(res.send).to.have.been.calledWith("SOME ERROR");
         });
       }); // End of context 'on errors'
     }); // End of context 'when params state the invitation is accepted'
+
+    context("when params state the invitation is denied (accept:false)", function() {
+      beforeEach(function() {
+        req.body = {accept: false};
+      });
+
+      context("when invitation is valid", function() {
+        beforeEach(function(done) {
+          sinon.stub(USER, 'destroyHubInvitation').returns(Q());
+          Controller.destroy(req, res);
+          res.on('end', done)
+        });
+
+        it("calls destroyHubInvitation on the signed-in user with invitation_id param", function() {
+          expect(USER.destroyHubInvitation).to.have.been.calledWith(123);
+        });
+
+        it("returns json with successflag", function() {
+          expect(res.json).to.have.been.calledWith({destroyed: true});
+        });
+      }); // End of context 'on successful invitation acceptation'
+
+      context("on errors", function() {
+        beforeEach(function(done) {
+          USER.destroyHubInvitation = function() {
+            var defered = Q.defer();
+            defered.reject("SOME ERROR");
+            return defered.promise;
+          };
+          Controller.destroy(req, res);
+          res.on('end', done)
+        });
+
+        it("sends a 401 and the error as string", function() {
+          expect(res.status).to.have.been.calledWith(401);
+          expect(res.send).to.have.been.calledWith("SOME ERROR");
+        });
+      }); // End of context 'on errors'
+    }); // End of context 'when params state the invitation is denied (accepted:false)'
   }); // End of describe 'DELETE/destroy'
 }); // End of describe 'USER_CONTROLLER'
 
