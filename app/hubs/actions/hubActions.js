@@ -15,6 +15,13 @@
         actionType: Constants.ACCEPT_HUB_INVITATION,
         cid: cid
       });
+    },
+
+    declineHubInvitation: function(cid) {
+      Dispatcher.dispatch({
+        actionType: Constants.DECLINE_HUB_INVITATION,
+        cid: cid
+      });
     }
   }
 

@@ -40,6 +40,12 @@
     dispatchCallback: function(payload) {
       switch (payload.actionType) {
         case Constants.ACCEPT_HUB_INVITATION:
+          console.log("ACCEPT");
+          var invitation = this.invitations.get(payload.cid);
+          invitation.destroy({contentType: "application/json", data: JSON.stringify({accept: true})});
+          break;
+
+        case Constants.DECLINE_HUB_INVITATION:
           var invitation = this.invitations.get(payload.cid);
           invitation.destroy();
           break;
@@ -50,7 +56,6 @@
     },
 
     getState: function() {
-      console.log("GETSTATE", this);
       return {
         hubs: this.models.map(function(m) {
           return {
