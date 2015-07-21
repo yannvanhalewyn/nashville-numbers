@@ -2,8 +2,18 @@
 
   "use strict";
 
+  var ensureAuth = require('../../middlewares/auth');
+
   // TODO be semantic about not founds, not authorised etc.. Middleware?
   var FriendRequestsController = {
+
+    middlewares: {
+      index: [ensureAuth],
+      create: [ensureAuth],
+      update: [ensureAuth],
+      destroy: [ensureAuth]
+    },
+
     index: function(req, res) {
       req.user.getOpenFriendRequests().then(function(requests) {
         res.json(requests);

@@ -2,16 +2,13 @@
 
   "use strict";
 
-  var UsersController = require('../controllers/users_controller')
-    , ensureAuth      = require('../middlewares/auth')
-    , getTargetUser   = require('../middlewares/getTargetUser')
-    , getMeAsUser   = require('../middlewares/getMeAsUser')
+  var UsersRouter     = require('express').Router()
+    , UsersController = require('../controllers/users/users_controller')
+    , middlewares     = UsersController.middlewares
 
-  var UsersRouter = require('express').Router();
-
-  UsersRouter.get('/', UsersController.index);
-  UsersRouter.get('/me', getMeAsUser, UsersController.show);
-  UsersRouter.get('/:user_id', getTargetUser, UsersController.show);
+  UsersRouter.get('/', middlewares.index, UsersController.index);
+  UsersRouter.get('/me', middlewares.showMe, UsersController.show);
+  UsersRouter.get('/:user_id', middlewares.showUser, UsersController.show);
 
   module.exports = UsersRouter;
 

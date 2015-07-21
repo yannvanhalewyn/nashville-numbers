@@ -3,10 +3,11 @@
   "use strict";
 
   var include = require('include')
-    , db     = require('../config/db')
-    , _      = require('lodash')
-    , Cypher = include('/helpers/cypher')
-    , Sheet = include('/models/sheet') // For sheet instantiation
+    , db      = require('../config/db')
+    , _       = require('lodash')
+    , Cypher  = include('/helpers/cypher')
+    , Sheet   = include('/models/sheet') // For sheet instantiation
+    , Hub     = include('/models/hub')
 
 /*
  * ===========
@@ -18,9 +19,9 @@
   };
 
 /*
- * ========
- * INSTANCE
- * ========
+ * ===============
+ * INSTANCE:SHEETS
+ * ===============
  */
   /**
    * Creates a sheet with a AUTHORED_BY relationship to the user.
@@ -52,6 +53,11 @@
     })
   }
 
+/*
+ * ====================
+ * INSTANCE:FRIENDSHIPS
+ * ====================
+ */
   /**
    * Sends a friendrequest to the user with given id.
    * This doesn't create a FriendRequest if:
@@ -161,6 +167,145 @@
     });
   }
 
+  /**
+   * Finds a user's friends by fullname given a collection of words that each get matched
+   *
+   * @param {string} query A string with words to be matched
+   * @return {array} The array of users that have a matching full name
+   */
+  User.prototype.findFriends = function(query) {
+    var whereClauses = _wordsToMultipleCypherRegexes(query, 'fullname');
+    return db.query(
+      "MATCH (u:Person)-[:FRIEND]-(f:Person) " +
+      "WITH u, f, f.firstName + ' ' + f.lastName AS fullname " +
+      "WHERE id(u) = {uid} AND " + whereClauses + " RETURN f",
+      {uid: this._id, regex: "(?i).*" + query + ".*"}
+    ).then(function(result) {
+      return result.map(function(r) {
+        return r.f;
+      });
+    });
+  }
+
+/*
+ * =============
+ * INSTANCE:HUBS
+ * =============
+ */
+  /**
+   * Creates a Hub owned by user
+   *
+   * @param {string} title The title of the new hub.
+   * @return {object} An instance of Hub model representing the created hub.
+   */
+  User.prototype.createHub = function(name) {
+    return Hub.create({creator_id: this._id, name: name});
+  }
+
+  /**
+   * Gets all hubs related to user.
+   *
+   * @return {array} The array with all the hubs. Each element in the array is
+   * an object containing the hub and the relationship.
+   */
+  User.prototype.getHubs = function() {
+    return db.query(
+      "MATCH (u:Person)-[relation]->(hub:Hub) " +
+      "WHERE id(u) = {uid} RETURN relation, hub", {uid: this._id}
+    )
+  }
+
+  /**
+   * Creates a HubInvitation linked to the user as sender, target user as
+   * receiver and hub as mean.
+   *
+   * @param {string/number} hubID The ID of the hub to which we want to invite
+   * the user.
+   * @param {string/number} otherUserID The ID of the user we whish to invite to
+   * the hub.
+   * @return {object} the object containing the HubInvitation object as
+   * 'invitation' proeprty and the invited person object as 'invitee' property.
+   * Will send an empty object when no invitation has been created.
+   */
+  User.prototype.inviteToHub = function(hubID, otherUserID) {
+    return db.query(
+      "MATCH (u:Person)-[:CREATED]->(h:Hub), (invitee:Person) " +
+      "OPTIONAL MATCH (u)-[:SENT]-(existinghi:HubInvitation)-[:TO]->(invitee:Person), (existinghi)-[:TO_JOIN]->(h) " +
+      "WITH u, invitee, h, existinghi " +
+      "WHERE id(u) = {uid} AND id(invitee) = {iid} AND id(h) = {hid} AND NOT u = invitee " +
+      "AND existinghi IS NULL " +
+      "CREATE (u)-[:SENT]->(invitation:HubInvitation)-[:TO]->(invitee), " +
+      "(invitation)-[:TO_JOIN]->(h) " +
+      "RETURN invitation, invitee",
+      {uid: this._id, iid: parseInt(otherUserID), hid: parseInt(hubID)}
+    ).then(function(result) {
+      return result[0];
+    });
+  }
+
+
+  /**
+   * Returns all open hubInvitations to the user.
+   *
+   * @return {array} An array of objects each having a property invitation, sender and hub.
+   */
+  User.prototype.getHubInvitations = function() {
+    return db.query(
+      "MATCH (sender:Person)-[:SENT]->(invitation:HubInvitation)-[:TO]->(user:Person), " +
+      "(invitation)-[:TO_JOIN]->(hub:Hub) " +
+      "WHERE id(user) = {uid} " +
+      "RETURN invitation, sender, hub", {uid: this._id}
+    )
+  }
+
+  /**
+   * Accepts a hub invitation IF the invitee is the user.
+   *
+   * @param {string/number} invitationID The ID of the invitation we're accepting.
+   * @return {Object} The created JOINED relationship.
+   * @throws {NotAllowed} When user is not the invitee or when invitation
+   * doesn't exist.
+   */
+  User.prototype.acceptHubInvitation = function(invitationID) {
+    return db.query(
+      "MATCH (sender:Person)-[sent:SENT]->(invitation:HubInvitation)-[to:TO]->(receiver:Person), " +
+      "(hi)-[toJoin:TO_JOIN]->(hub:Hub) " +
+      "WHERE id(invitation) = {invitationID} AND id(receiver) = {uid} " +
+      "CREATE (receiver)-[joined:JOINED]->(hub) " +
+      "DELETE invitation, sent, to, toJoin " +
+      "RETURN joined",
+      {invitationID: parseInt(invitationID), uid: this._id}
+    ).then(function(result) {
+      if (_.isEmpty(result)) {
+        // TODO this same error gets thrown when the invitation isn't found.
+        throw "Cannot accept someone else's hub invitation.";
+      }
+      return result[0].joined;
+    });
+  };
+
+  /**
+   * Destroys the hubinvitation.
+   *
+   * @param {string/number} invitationID The ID of the invitation.
+   * @throws {NotAllowed} When the user is not the invotor or invitee or when no
+   * invitation exists with given ID.
+   */
+  User.prototype.destroyHubInvitation = function(invitationID) {
+    return db.query(
+      "MATCH (sender:Person)-[:SENT]->(invitation:HubInvitation)-[:TO]->(receiver:Person)" +
+      "OPTIONAL MATCH (invitation)-[r]-() " +
+      "WITH sender, invitation, r " +
+      "WHERE id(invitation) = {iid} AND ( id(sender) = {uid} OR id(receiver) = {uid} ) " +
+      "DELETE invitation, r RETURN sender",
+      {iid: parseInt(invitationID), uid: this._id}
+    ).then(function(result) {
+      if (_.isEmpty(result)) {
+        throw "Cannot delete someone else's hub invitation.";
+      }
+    });
+  };
+
 
 /*
  * ======
@@ -198,9 +343,7 @@
    * @return {array} The array of users that have a matching full name
    */
   User.findByName = function(query) {
-    var whereClauses = query.split(" ").map(function(word) {
-      return 'fullname =~ "(?i).*' + word + '.*"';
-    }).join(" AND ")
+    var whereClauses = _wordsToMultipleCypherRegexes(query, 'fullname');
     return db.query(
       "MATCH (p:Person) " +
       "WITH p, p.firstName + ' ' + p.lastName AS fullname " +
@@ -232,7 +375,8 @@
    * Creates or updates a user entitity in the database (for login)
    *
    * @param {object} mergeParams The params for which we're trying to find a user.
-   * @param {object} params The variants: The params that will be updated but do not define the user we're looking for.
+   * @param {object} params The variants: The params that will be updated but do
+   * not define the user we're looking for.
    * @return {User} An instance of User containing the params of the newly created user.
    */
   User.findAndUpdateOrCreate = function(mergeParams, params) {
@@ -245,5 +389,24 @@
   }
 
   module.exports = User;
+
+  /**
+   * Splits the given string of words and returns a match string matching the
+   * given matcher to a case-insensitive regex of every word.
+   *
+   * Example: _wordsToMultipheCypherRegexes("James May", 'fullname')
+   *   -> "fullname =~ '(?i).*James.*' AND fullname =~ '(?i).*May.*'"
+   *
+   * @param {string} string The query string - eg: "James May"
+   * @param {string} matcher the matcher. eg: 'fullname'
+   * @return {string} The match query.
+   */
+  function _wordsToMultipleCypherRegexes(string, matcher) {
+    return string.split(" ").filter(function(word) {
+      if (word.length > 0) return true;
+    }).map(function(word) {
+      return matcher + ' =~ "(?i).*' + word + '.*"';
+    }).join(" AND ");
+  }
 
 }())

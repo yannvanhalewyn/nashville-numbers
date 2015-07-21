@@ -7,7 +7,7 @@ var include    = require('include')
   , Q          = require('q')
   , login      = include('/test/util/login')
   , Factory    = include('/test/util/factory')
-  , Controller = include('/controllers/friend_requests_controller')
+  , Controller = include('/controllers/friends/friend_requests_controller')
   , login      = include('/test/util/login')
 chai.use(sinonChai);
 

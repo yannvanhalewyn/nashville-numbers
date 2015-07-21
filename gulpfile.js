@@ -42,7 +42,9 @@ gulp.task('watchify', function() {
   var files = [
     './app/sheet/editor.js',
     './app/friendslist/friendslist.js',
-    './app/userpage/userpage.js'
+    './app/userpage/userpage.js',
+    './app/hubs/hubs.js',
+    './app/hubpage/hubpage.js'
   ];
 
   // Map a task for each file
@@ -124,6 +126,18 @@ gulp.task('sass:watch', function() {
  */
 gulp.task('seed', function() {
   require('./test/util/seed_db').bind(this)();
+});
+
+/*
+ * ===========
+ * TASK routes
+ * ===========
+ *
+ * Prints out beautiful tables of all the routes :)
+ */
+gulp.task('routes', function() {
+  var printRoutes = require('./bin/printRoutes');
+  printRoutes('/config/routes');
 });
 
 
