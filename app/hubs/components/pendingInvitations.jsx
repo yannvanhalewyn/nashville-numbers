@@ -8,9 +8,9 @@
   var PendingInvitations = React.createClass({
     renderInvitationCard: function(invitation) {
       return  <InvitationCard
-                invitation={invitation.invitation}
                 sender={invitation.sender}
                 hub={invitation.hub}
+                cid={invitation.cid}
               />
     },
 

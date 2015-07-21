@@ -4,6 +4,8 @@
 
   var Backbone = require('backbone')
     , HubInvitationCollection = require('../models/hubinvitations')
+    , Dispatcher = require('../../dispatcher/generic_dispatcher')
+    , Constants = require('../actions/hubActions').constants
 
   var HubModel = Backbone.Model.extend({
     idAttribute: "_id",
@@ -17,6 +19,7 @@
       // Parse the hubs json state
       var jsonState = document.getElementById('initial_state').text;
       var hubs = JSON.parse(jsonState);
+
       // Create a new model for every hub
       hubs.forEach(function(e) {
         var hub = new HubModel(e.hub);
@@ -28,6 +31,21 @@
       this.invitations = new HubInvitationCollection();
       this.invitations.on('sync', this.trigger.bind(this, 'invitations:sync'));
       this.invitations.fetch();
+
+      // Register the dispatcher
+      this.dispatchToken = Dispatcher.register(this.dispatchCallback.bind(this));
+    },
+
+    dispatchCallback: function(payload) {
+      switch (payload.actionType) {
+        case Constants.ACCEPT_HUB_INVITATION:
+          var invitation = this.invitations.get(payload.cid);
+          this.invitations.get(payload.cid).save();
+          break;
+
+        default:
+          console.error("No such action - " + payload.actionType);
+      }
     },
 
     getState: function() {
@@ -40,7 +58,9 @@
           }
         }),
         invitations: this.invitations.models.map(function(invitation) {
-          return invitation.attributes;
+          var object = invitation.attributes;
+          object.cid = invitation.cid;
+          return object;
         })
       };
     }

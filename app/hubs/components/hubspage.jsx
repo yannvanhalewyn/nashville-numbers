@@ -25,8 +25,8 @@
       )
     },
 
-    _update: function(foo, invitations) {
-      this.setState({invitations: invitations});
+    _update: function() {
+      this.setState(this.props.store.getState());
     }
   });
 
