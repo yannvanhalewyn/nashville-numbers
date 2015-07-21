@@ -11,7 +11,7 @@
   var HubPageComponent = React.createClass({
     componentDidMount: function() {
       this.props.store.on('participants:sync', this._onParticipantsSync);
-      this.props.store.on('friends:sync invitations:sync', this._update);
+      this.props.store.on('friends:sync invitations:sync invitations:destroy', this._update);
     },
 
     getInitialState: function() {
@@ -37,7 +37,7 @@
       this.setState({participants: participants});
     },
 
-    _update: function(foo, bar) {
+    _update: function() {
       this.setState(this.props.store.getState());
     }
   });
