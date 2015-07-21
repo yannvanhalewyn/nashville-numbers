@@ -325,7 +325,7 @@ describe('USER-HUBS methods', function() {
           });
         });
 
-        it("throws a notAllowed error", function() {
+        it("throws a notAllowed error (1)", function() {
           expect(ERROR).to.eql("Cannot accept someone else's hub invitation.");
         });
 
@@ -346,7 +346,7 @@ describe('USER-HUBS methods', function() {
           });
         });
 
-        it("throws a notAllowed error", function() {
+        it("throws a notAllowed error (2)", function() {
           expect(ERROR).to.eql("Cannot accept someone else's hub invitation.");
         });
       }); // End of context 'when another user accepts the invitation'
@@ -361,4 +361,88 @@ describe('USER-HUBS methods', function() {
       });
     }); // End of context 'when the invitation doesn't exists'
   }); // End of describe 'acceptHubInvitation'
+
+  describe('destroyHubInvitation', function() {
+    context("when the invitation exists", function() {
+      var USER_B, HUB, INVITATION;
+      beforeEach(function() {
+        return Factory('hub').then(function(entities) {
+          USER_B = entities.user;
+          HUB = entities.hub;
+          return USER_B.inviteToHub(HUB._id, USER._id).then(function(invitation) {
+            INVITATION = invitation.invitation;
+          });
+        });
+      });
+
+      context("when invitor destroys the invitation", function() {
+        it("destroys the HubInvitation node (1)", function() {
+          return USER_B.destroyHubInvitation(INVITATION._id).then(function() {
+            return db.query("MATCH (hi:HubInvitation) RETURN hi").then(function(result) {
+              expect(result).to.be.empty;
+            });
+          });
+        });
+      }); // End of context 'when invitor destroys the invitation'
+
+      context("when the invitee destroys the invitation", function() {
+        it("destroys the HubInvitation node (2)", function() {
+          return USER.destroyHubInvitation(INVITATION._id).then(function() {
+            return db.query("MATCH (hi:HubInvitation) RETURN hi").then(function(result) {
+              expect(result).to.be.empty;
+            });
+          });
+        });
+      }); // End of context 'when the invitee destroys the invitation'
+
+      context("when another user tries to destroy the invitation", function() {
+        var ERROR;
+        beforeEach(function() {
+          return Factory('user').then(function(user) {
+            return user.destroyHubInvitation(INVITATION._id).catch(function(error) {
+              ERROR = error;
+            });
+          });
+        });
+
+        it("throws a notAllowed error (3)", function() {
+          expect(ERROR).to.eql("Cannot delete someone else's hub invitation.");
+        });
+      }); // End of context 'when another user tries to destroy the invitation'
+
+      // This is a test inspired by implementation, which is bad not in this case
+      // I'm actuallty testing the .. AND .. OR .. clause in the db query to
+      // be .. AND ( .. OR .. ) and not (.. AND ..) OR ..
+      describe("a receiving user can't delete another existing invitation", function() {
+        var OTHER_INVITATION, ERROR;
+        beforeEach(function() {
+          return Factory('user', {firstName: "USERC"}).then(function(userC) {
+            return USER_B.inviteToHub(HUB._id, userC._id).then(function(invitation) {
+              OTHER_INVITATION = invitation.invitation;
+              return USER.destroyHubInvitation(OTHER_INVITATION._id).catch(function(error) {
+                ERROR = error;
+              });
+            });
+          });
+        });
+
+        it("throws a notAllowed error (5)", function() {
+          expect(ERROR).to.eql("Cannot delete someone else's hub invitation.")
+        });
+      }); // End of describe '"a receiving user can'
+    }); // End of context 'when the invitation exists'
+
+    context("when the invitation doesn't exist", function() {
+      var ERROR;
+      beforeEach(function() {
+        return USER.destroyHubInvitation(123456).catch(function(error) {
+          ERROR = error;
+        });
+      });
+
+      it("throws an error (3)", function() {
+        expect(ERROR).not.to.be.undefined;
+      });
+    }); // End of context 'when the invitation doesn't exist'
+  }); // End of describe 'destroyHubInvitation'
 }); // End of describe 'USER-HUBS methods'

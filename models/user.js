@@ -277,11 +277,34 @@
       {invitationID: parseInt(invitationID), uid: this._id}
     ).then(function(result) {
       if (_.isEmpty(result)) {
+        // TODO this same error gets thrown when the invitation isn't found.
         throw "Cannot accept someone else's hub invitation.";
       }
       return result[0].joined;
     });
-  }
+  };
+
+  /**
+   * Destroys the hubinvitation.
+   *
+   * @param {string/number} invitationID The ID of the invitation.
+   * @throws {NotAllowed} When the user is not the invotor or invitee or when no
+   * invitation exists with given ID.
+   */
+  User.prototype.destroyHubInvitation = function(invitationID) {
+    return db.query(
+      "MATCH (sender:Person)-[:SENT]->(invitation:HubInvitation)-[:TO]->(receiver:Person)" +
+      "OPTIONAL MATCH (invitation)-[r]-() " +
+      "WITH sender, invitation, r " +
+      "WHERE id(invitation) = {iid} AND ( id(sender) = {uid} OR id(receiver) = {uid} ) " +
+      "DELETE invitation, r RETURN sender",
+      {iid: invitationID, uid: this._id}
+    ).then(function(result) {
+      if (_.isEmpty(result)) {
+        throw "Cannot delete someone else's hub invitation.";
+      }
+    });
+  };
 
 
 /*
