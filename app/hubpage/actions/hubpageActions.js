@@ -6,7 +6,8 @@
 
   var UserpageConstants = keyMirror({
     UPDATE_FRIENDS_LIST: null,
-    INVITE_FRIEND: null
+    INVITE_FRIEND: null,
+    CANCEL_INVITATION: null
   });
 
   var UserpageActions = {
@@ -21,6 +22,13 @@
       Dispatcher.dispatch({
         actionType: UserpageConstants.INVITE_FRIEND,
         friendID: friendID
+      });
+    },
+
+    cancelInvitation: function(cid) {
+      Dispatcher.dispatch({
+        actionType: UserpageConstants.CANCEL_INVITATION,
+        cid: cid
       });
     }
   }

@@ -2,16 +2,18 @@
 
   "use strict";
 
-  var React = require('react');
+  var React = require('react')
+    , InvitationCard = require('./invitationCard.jsx')
 
   var PendingInvitations = React.createClass({
     renderInvitationCard: function(invitation) {
       return (
-        <div className="invitation-card">
-          <h2>{invitation.invitee.properties.firstName}</h2>
-          <img src={invitation.invitee.properties.thumb} alt="user profile picture" />
-          <button className="btn btn-red">Cancel</button>
-        </div>
+        <InvitationCard
+          key={invitation.cid}
+          firstName={invitation.invitee.properties.firstName}
+          thumb={invitation.invitee.properties.thumb}
+          cid={invitation.cid}
+        />
       )
     },
 

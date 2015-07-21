@@ -48,6 +48,11 @@
           this.invitations.create({other_user_id: payload.friendID});
           break;
 
+        case Constants.CANCEL_INVITATION:
+          var invitation = this.invitations.get(payload.cid)
+          invitation.destroy();
+          break;
+
         default:
           console.error("Invalid actiontype: " + payload.actionType);
           break;
@@ -61,7 +66,9 @@
     getState: function() {
       // Invitations are all atributes on all models in the invitations collection
       var invitations = this.invitations.models.map(function(invitation) {
-        return invitation.attributes;
+        var obj = invitation.attributes;
+        obj.cid = invitation.cid;
+        return obj;
       });
 
       // Filter friends suggestions list to friends no yet invited
