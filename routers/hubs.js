@@ -2,16 +2,16 @@
 
   "use strict";
 
-  var include = require('include')
+  var include        = require('include')
     , HubsRouter     = require('express').Router()
     , HubsController = require('../controllers/hubs/hubs_controller')
-    , getTargetHub = include('/middlewares/getTargetHub')
+    , middlewares    = HubsController.middlewares
 
-  HubsRouter.get('/', HubsController.index);
-  HubsRouter.get('/:hub_id', getTargetHub, HubsController.show);
-  HubsRouter.post('/', HubsController.create);
-  HubsRouter.put('/:hub_id', getTargetHub, HubsController.update);
-  HubsRouter.delete('/:hub_id', getTargetHub, HubsController.destroy);
+  HubsRouter.get('/', middlewares.index, HubsController.index);
+  HubsRouter.get('/:hub_id', middlewares.show, HubsController.show);
+  HubsRouter.post('/', middlewares.create, HubsController.create);
+  HubsRouter.put('/:hub_id', middlewares.update, HubsController.update);
+  HubsRouter.delete('/:hub_id', middlewares.destroy, HubsController.destroy);
 
   module.exports = HubsRouter;
 

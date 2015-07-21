@@ -1,6 +1,14 @@
 (function() {
 
   module.exports = {
+
+    middlewares: {
+      index:   [],
+      show:    [],
+      create:  [],
+      destroy: []
+    },
+
     index: function(req, res) {
       res.send("HS INDEX");
     },

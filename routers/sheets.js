@@ -2,16 +2,17 @@
 
   "use strict";
 
-  var SheetsController = require('../controllers/sheets_controller')
+  var Controller = require('../controllers/sheets_controller')
+    , middlewares = Controller.middlewares
     , ensureAuth = require('../middlewares/auth');
 
   var SheetsRouter = require('express').Router({mergeParams: true});
 
-  SheetsRouter.get('/', ensureAuth, SheetsController.index);
-  SheetsRouter.get('/:sheet_id/edit', ensureAuth, SheetsController.edit);
-  SheetsRouter.post('/', ensureAuth, SheetsController.create);
-  SheetsRouter.put('/:sheet_id', ensureAuth, SheetsController.update);
-  SheetsRouter.delete('/:sheet_id', SheetsController.destroy);
+  SheetsRouter.get('/', middlewares.index, Controller.index);
+  SheetsRouter.get('/:sheet_id/edit', middlewares.edit, Controller.edit);
+  SheetsRouter.post('/', middlewares.create, Controller.create);
+  SheetsRouter.put('/:sheet_id', middlewares.update, Controller.update);
+  SheetsRouter.delete('/:sheet_id', middlewares.destroy, Controller.destroy);
 
   module.exports = SheetsRouter;
 

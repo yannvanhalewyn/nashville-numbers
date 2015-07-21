@@ -1,6 +1,19 @@
 (function() {
 
+  var include      = require('include')
+    , ensureAuth   = include('/middlewares/auth')
+    , getTargetHub = include('/middlewares/getTargetHub')
+
   module.exports = {
+
+    middlewares: {
+      index:   [ensureAuth],
+      show:    [getTargetHub],
+      create:  [ensureAuth],
+      update:  [],
+      destroy: []
+    },
+
     index: function(req, res) {
       req.user.getHubs().then(function(hubs) {
         res.render('hubs', {hubs: JSON.stringify(hubs)});

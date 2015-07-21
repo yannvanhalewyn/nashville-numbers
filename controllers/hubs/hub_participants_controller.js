@@ -1,6 +1,18 @@
 (function() {
 
+  var include = require('include')
+    , getTargetHub = include('/middlewares/getTargetHub')
+
   module.exports = {
+
+    middlewares: {
+      index:   [getTargetHub],
+      show:    [],
+      create:  [],
+      update:  [],
+      destroy: []
+    },
+
     index: function(req, res) {
       req.target_hub.getParticipants().then(function(participants) {
         res.json(participants);

@@ -1,8 +1,17 @@
 (function() {
 
-  var Sheet = require('../models/sheet');
+  var Sheet      = require('../models/sheet')
+    , ensureAuth = require('../middlewares/auth')
 
   module.exports = {
+
+    middlewares: {
+      index:   [ensureAuth],
+      edit:    [ensureAuth],
+      create:  [ensureAuth],
+      update:  [ensureAuth],
+      destroy: [ensureAuth]
+    },
 
     // GET#index
     index: function(req, res) {

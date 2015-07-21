@@ -6,7 +6,15 @@
 
   "use strict";
 
+  var ensureAuth = require('../../middlewares/auth');
+
   var FriendController = {
+
+    middlewares: {
+      index:   [ensureAuth],
+      show:    [ensureAuth],
+      destroy: [ensureAuth]
+    },
 
     index: function(req, res) {
       if (req.query && req.query.search) {
