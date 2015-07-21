@@ -37,6 +37,49 @@ describe('UserHubInvitationsController', function() {
       expect(res.json).to.have.been.calledWith(dummyInvitations());
     });
   }); // End of describe 'GET/index'
+
+  describe('PUT/update', function() {
+    var USER;
+    beforeEach(function() {
+      return Factory('user').then(function(user) {
+        USER = user;
+        req.user = user;
+        req.params = {invitation_id: 123};
+      });
+    });
+
+    context("on successful invitation acceptation", function() {
+      beforeEach(function(done) {
+        sinon.stub(USER, 'acceptHubInvitation').returns(Q(dummyJoinedRelationship()));
+        Controller.update(req, res);
+        res.on('end', done)
+      });
+
+      it("calls acceptHubInvitation on the signed-in user with send in invitation_id", function() {
+        expect(USER.acceptHubInvitation).to.have.been.calledWith(123);
+      });
+
+      it("returns the joined relationship as json", function() {
+        expect(res.json).to.have.been.calledWith(dummyJoinedRelationship());
+      });
+    }); // End of context 'on successful invitation acceptation'
+
+    context("on errors", function() {
+      beforeEach(function(done) {
+        USER.acceptHubInvitation = function() {
+          var defered = Q.defer();
+          defered.reject("SOME ERROR");
+          return defered.promise;
+        };
+        Controller.update(req, res);
+        res.on('end', done)
+      });
+
+      it("sends the error as string", function() {
+        expect(res.send).to.have.been.calledWith("SOME ERROR");
+      });
+    }); // End of context 'on errors'
+  }); // End of describe 'PUT/update'
 }); // End of describe 'USER_CONTROLLER'
 
 function dummyInvitations() {
@@ -57,4 +100,13 @@ function dummyInvitations() {
       invitation: { _id: 9 }
     }
   ];
+}
+
+function dummyJoinedRelationship() {
+  return {
+    _id: 123,
+    type: "JOINED",
+    from_id: 111,
+    to_id: 112
+  }
 }

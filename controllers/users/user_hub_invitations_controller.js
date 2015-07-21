@@ -18,7 +18,11 @@
     },
 
     update: function(req, res) {
-      res.send("UPDATE " + req.params.invitation_id);
+      req.user.acceptHubInvitation(req.params.invitation_id).then(function(relationship) {
+        res.json(relationship);
+      }, function(err) {
+        res.send(err);
+      });
     },
 
     destroy: function(req, res) {
