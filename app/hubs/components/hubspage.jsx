@@ -8,7 +8,7 @@
 
   var HubsPage = React.createClass({
     componentWillMount: function() {
-      this.props.store.on('invitations:sync', this._update);
+      this.props.store.on('invitations:sync invitations:destroy', this._update);
     },
 
     getInitialState: function() {

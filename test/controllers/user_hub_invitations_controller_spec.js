@@ -38,7 +38,7 @@ describe('UserHubInvitationsController', function() {
     });
   }); // End of describe 'GET/index'
 
-  describe('PUT/update', function() {
+  describe('DELETE/destroy', function() {
     var USER;
     beforeEach(function() {
       return Factory('user').then(function(user) {
@@ -48,38 +48,44 @@ describe('UserHubInvitationsController', function() {
       });
     });
 
-    context("on successful invitation acceptation", function() {
-      beforeEach(function(done) {
-        sinon.stub(USER, 'acceptHubInvitation').returns(Q(dummyJoinedRelationship()));
-        Controller.update(req, res);
-        res.on('end', done)
+    context("when params state the invitation is accepted", function() {
+      beforeEach(function() {
+        req.body = {accept: true};
       });
 
-      it("calls acceptHubInvitation on the signed-in user with send in invitation_id", function() {
-        expect(USER.acceptHubInvitation).to.have.been.calledWith(123);
-      });
+      context("on successful invitation acceptation", function() {
+        beforeEach(function(done) {
+          sinon.stub(USER, 'acceptHubInvitation').returns(Q(dummyJoinedRelationship()));
+          Controller.destroy(req, res);
+          res.on('end', done)
+        });
 
-      it("returns the joined relationship as json", function() {
-        expect(res.json).to.have.been.calledWith(dummyJoinedRelationship());
-      });
-    }); // End of context 'on successful invitation acceptation'
+        it("calls acceptHubInvitation on the signed-in user with send in invitation_id", function() {
+          expect(USER.acceptHubInvitation).to.have.been.calledWith(123);
+        });
 
-    context("on errors", function() {
-      beforeEach(function(done) {
-        USER.acceptHubInvitation = function() {
-          var defered = Q.defer();
-          defered.reject("SOME ERROR");
-          return defered.promise;
-        };
-        Controller.update(req, res);
-        res.on('end', done)
-      });
+        it("returns the joined relationship as json", function() {
+          expect(res.json).to.have.been.calledWith(dummyJoinedRelationship());
+        });
+      }); // End of context 'on successful invitation acceptation'
 
-      it("sends the error as string", function() {
-        expect(res.send).to.have.been.calledWith("SOME ERROR");
-      });
-    }); // End of context 'on errors'
-  }); // End of describe 'PUT/update'
+      context("on errors", function() {
+        beforeEach(function(done) {
+          USER.acceptHubInvitation = function() {
+            var defered = Q.defer();
+            defered.reject("SOME ERROR");
+            return defered.promise;
+          };
+          Controller.destroy(req, res);
+          res.on('end', done)
+        });
+
+        it("sends the error as string", function() {
+          expect(res.send).to.have.been.calledWith("SOME ERROR");
+        });
+      }); // End of context 'on errors'
+    }); // End of context 'when params state the invitation is accepted'
+  }); // End of describe 'DELETE/destroy'
 }); // End of describe 'USER_CONTROLLER'
 
 function dummyInvitations() {

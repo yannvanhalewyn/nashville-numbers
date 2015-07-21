@@ -7,7 +7,6 @@
 
     middlewares: {
       index:   [ensureAuth],
-      update:  [ensureAuth],
       destroy: [ensureAuth]
     },
 
@@ -17,16 +16,12 @@
       });
     },
 
-    update: function(req, res) {
+    destroy: function(req, res) {
       req.user.acceptHubInvitation(req.params.invitation_id).then(function(relationship) {
         res.json(relationship);
       }, function(err) {
         res.send(err);
       });
-    },
-
-    destroy: function(req, res) {
-      res.send("DESTROY " + req.params.invitation_id);
     }
   };
 

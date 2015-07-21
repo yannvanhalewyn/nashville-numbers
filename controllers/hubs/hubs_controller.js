@@ -8,7 +8,7 @@
 
     middlewares: {
       index:   [ensureAuth],
-      show:    [getTargetHub],
+      show:    [ensureAuth, getTargetHub],
       create:  [ensureAuth],
       update:  [],
       destroy: []

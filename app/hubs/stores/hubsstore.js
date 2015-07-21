@@ -30,6 +30,7 @@
       // Set a hubinvitations nested resource
       this.invitations = new HubInvitationCollection();
       this.invitations.on('sync', this.trigger.bind(this, 'invitations:sync'));
+      this.invitations.on('destroy', this.trigger.bind(this, 'invitations:destroy'));
       this.invitations.fetch();
 
       // Register the dispatcher
@@ -40,7 +41,7 @@
       switch (payload.actionType) {
         case Constants.ACCEPT_HUB_INVITATION:
           var invitation = this.invitations.get(payload.cid);
-          this.invitations.get(payload.cid).save();
+          invitation.destroy();
           break;
 
         default:
@@ -49,6 +50,7 @@
     },
 
     getState: function() {
+      console.log("GETSTATE", this);
       return {
         hubs: this.models.map(function(m) {
           return {
