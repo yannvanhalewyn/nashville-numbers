@@ -298,7 +298,7 @@
       "WITH sender, invitation, r " +
       "WHERE id(invitation) = {iid} AND ( id(sender) = {uid} OR id(receiver) = {uid} ) " +
       "DELETE invitation, r RETURN sender",
-      {iid: invitationID, uid: this._id}
+      {iid: parseInt(invitationID), uid: this._id}
     ).then(function(result) {
       if (_.isEmpty(result)) {
         throw "Cannot delete someone else's hub invitation.";

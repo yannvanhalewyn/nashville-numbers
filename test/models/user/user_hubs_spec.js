@@ -377,7 +377,7 @@ describe('USER-HUBS methods', function() {
 
       context("when invitor destroys the invitation", function() {
         it("destroys the HubInvitation node (1)", function() {
-          return USER_B.destroyHubInvitation(INVITATION._id).then(function() {
+          return USER_B.destroyHubInvitation(INVITATION._id.toString()).then(function() {
             return db.query("MATCH (hi:HubInvitation) RETURN hi").then(function(result) {
               expect(result).to.be.empty;
             });
@@ -387,7 +387,7 @@ describe('USER-HUBS methods', function() {
 
       context("when the invitee destroys the invitation", function() {
         it("destroys the HubInvitation node (2)", function() {
-          return USER.destroyHubInvitation(INVITATION._id).then(function() {
+          return USER.destroyHubInvitation(INVITATION._id.toString()).then(function() {
             return db.query("MATCH (hi:HubInvitation) RETURN hi").then(function(result) {
               expect(result).to.be.empty;
             });
