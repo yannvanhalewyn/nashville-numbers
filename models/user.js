@@ -258,15 +258,30 @@
     )
   }
 
-
-  /*
-   * Accept hub request:
-   * MATCH (sender:Person)-[sent:SENT]->(hi:HubInvitation)-[to:TO]->(receiver:Person), (hi)-[toJoin:TO_JOIN]-(hub:Hub)
-   * WHERE id(hi) = 679
-   * CREATE (receiver)-[joined:JOINED]->(hub)
-   * DELETE sent, to, toJoin, hi
-   * RETURN receiver, hub
+  /**
+   * Accepts a hub invitation IF the invitee is the user.
+   *
+   * @param {string/number} invitationID The ID of the invitation we're accepting.
+   * @return {Object} The created JOINED relationship.
+   * @throws {NotAllowed} When user is not the invitee or when invitation
+   * doesn't exist.
    */
+  User.prototype.acceptHubInvitation = function(invitationID) {
+    return db.query(
+      "MATCH (sender:Person)-[sent:SENT]->(invitation:HubInvitation)-[to:TO]->(receiver:Person), " +
+      "(hi)-[toJoin:TO_JOIN]->(hub:Hub) " +
+      "WHERE id(invitation) = {invitationID} AND id(receiver) = {uid} " +
+      "CREATE (receiver)-[joined:JOINED]->(hub) " +
+      "DELETE invitation, sent, to, toJoin " +
+      "RETURN joined",
+      {invitationID: parseInt(invitationID), uid: this._id}
+    ).then(function(result) {
+      if (_.isEmpty(result)) {
+        throw "Cannot accept someone else's hub invitation.";
+      }
+      return result[0].joined;
+    });
+  }
 
 
 /*

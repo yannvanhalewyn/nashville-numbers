@@ -266,4 +266,99 @@ describe('USER-HUBS methods', function() {
       });
     }); // End of context 'When user has no open invitations'
   }); // End of describe 'getHubInvitations'
+
+  describe('acceptHubInvitation', function() {
+    context("when the invitation exists", function() {
+      var USER_B, HUB, INVITATION;
+      beforeEach(function() {
+        return Factory('hub').then(function(entities) {
+          USER_B = entities.user;
+          HUB = entities.hub;
+          return USER_B.inviteToHub(HUB._id, USER._id).then(function(invitation) {
+            INVITATION = invitation.invitation;
+          });
+        });
+      });
+
+      context("when the user is the invitee", function() {
+        var RETURNED;
+        beforeEach(function() {
+          return USER.acceptHubInvitation(INVITATION._id.toString()).then(function(relationship) {
+            RETURNED = relationship;
+          });
+        });
+
+        it("destroys the invitation object", function() {
+          return db.query("MATCH (invitation:HubInvitation) RETURN invitation")
+          .then(function(result) {
+            expect(result.length).to.eql(0);
+          });
+        });
+
+        it("creates a JOINED relationship to the hub", function() {
+          return db.query(
+            "MATCH (u:Person)-[r:JOINED]->(h:Hub) WHERE id(h) = {hid} RETURN r",
+            {hid: HUB._id}
+          ).then(function(result) {
+            expect(result.length).to.eql(1);
+          });
+        });
+
+        it("returns the JOINED relationship", function() {
+          return db.query(
+            "MATCH (u:Person)-[r:JOINED]->(h:Hub) WHERE id(h) = {hid} RETURN r",
+            {hid: HUB._id}
+          ).then(function(result) {
+            expect(RETURNED._id).not.to.be.undefined;
+            expect(RETURNED._id).to.eql(result[0].r._id);
+          });
+        });
+      }); // End of context 'when the user is the invitee'
+
+      context("when the invitor accepts the invitation", function() {
+        var RETURNED, ERROR;
+        beforeEach(function() {
+          return USER_B.acceptHubInvitation(INVITATION._id).then(function(result) {
+            RETURNED = result;
+          }, function(error) {
+            ERROR = error;
+          });
+        });
+
+        it("throws a notAllowed error", function() {
+          expect(ERROR).to.eql("Cannot accept someone else's hub invitation.");
+        });
+
+        it("doesn't destroy the hub invitation", function() {
+          return db.query("MATCH (hi:HubInvitation) RETURN hi").then(function(result) {
+            expect(result).not.to.be.empty;
+          });
+        });
+      }); // End of context 'when the invitor accepts the invitation'
+
+      context("when another user accepts the invitation", function() {
+        var ERROR;
+        beforeEach(function() {
+          return Factory('user').then(function(user) {
+            return user.acceptHubInvitation(INVITATION._id).catch(function(error) {
+              ERROR = error;
+            });
+          });
+        });
+
+        it("throws a notAllowed error", function() {
+          expect(ERROR).to.eql("Cannot accept someone else's hub invitation.");
+        });
+      }); // End of context 'when another user accepts the invitation'
+    }); // End of context 'when the invitation exists'
+
+    context("when the invitation doesn't exists", function() {
+      it("throws an error", function(done) {
+        return USER.acceptHubInvitation(999).then(done, function(error) {
+          expect(error).not.to.be.undefined;
+          done();
+        });
+      });
+    }); // End of context 'when the invitation doesn't exists'
+  }); // End of describe 'acceptHubInvitation'
 }); // End of describe 'USER-HUBS methods'
