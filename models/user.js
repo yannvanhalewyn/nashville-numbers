@@ -223,21 +223,27 @@
    * the user.
    * @param {string/number} otherUserID The ID of the user we whish to invite to
    * the hub.
+   * @param {string/number} permissions The permission level the receiving user
+   * will have upon acceptation of the invitation.
    * @return {object} the object containing the HubInvitation object as
    * 'invitation' proeprty and the invited person object as 'invitee' property.
    * Will send an empty object when no invitation has been created.
    */
-  User.prototype.inviteToHub = function(hubID, otherUserID) {
+  User.prototype.inviteToHub = function(hubID, otherUserID, permissions) {
     return db.query(
       "MATCH (u:Person)-[:CREATED]->(h:Hub), (invitee:Person) " +
       "OPTIONAL MATCH (u)-[:SENT]-(existinghi:HubInvitation)-[:TO]->(invitee:Person), (existinghi)-[:TO_JOIN]->(h) " +
       "WITH u, invitee, h, existinghi " +
       "WHERE id(u) = {uid} AND id(invitee) = {iid} AND id(h) = {hid} AND NOT u = invitee " +
       "AND existinghi IS NULL " +
-      "CREATE (u)-[:SENT]->(invitation:HubInvitation)-[:TO]->(invitee), " +
+      "CREATE (u)-[:SENT]->(invitation:HubInvitation {permissions: {permissions}})-[:TO]->(invitee), " +
       "(invitation)-[:TO_JOIN]->(h) " +
       "RETURN invitation, invitee",
-      {uid: this._id, iid: parseInt(otherUserID), hid: parseInt(hubID)}
+      {
+        uid: this._id, iid: parseInt(otherUserID),
+        hid: parseInt(hubID),
+        permissions: parseInt(permissions) || 0
+      }
     ).then(function(result) {
       return result[0];
     });
