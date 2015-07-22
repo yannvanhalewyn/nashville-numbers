@@ -276,8 +276,11 @@
     return db.query(
       "MATCH (sender:Person)-[sent:SENT]->(invitation:HubInvitation)-[to:TO]->(receiver:Person), " +
       "(hi)-[toJoin:TO_JOIN]->(hub:Hub) " +
+      // Annoying line just to keep permissions in memory before deleting the invitation node...
+      "WITH invitation, receiver, hub, sent, to, toJoin, invitation.permissions AS permissions " +
       "WHERE id(invitation) = {invitationID} AND id(receiver) = {uid} " +
       "CREATE (receiver)-[joined:JOINED]->(hub) " +
+      "SET joined.permissions = permissions " +
       "DELETE invitation, sent, to, toJoin " +
       "RETURN joined",
       {invitationID: parseInt(invitationID), uid: this._id}

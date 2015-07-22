@@ -94,9 +94,7 @@ describe('USER-HUBS methods', function() {
  * ===============
  */
   describe('user#inviteUserToHub()', function() {
-
     var HUB, USER_B
-
     beforeEach(function() {
       return Factory('hub', {creator_id: USER._id}).then(function(hub) {
         return Factory('user').then(function(otherUser) {
@@ -107,7 +105,6 @@ describe('USER-HUBS methods', function() {
     });
 
     describe('valid invitations', function() {
-
       context("when permission level is specified", function() {
         var HUB_INVITATION;
         var PERMISSIONS = 15;
@@ -291,11 +288,12 @@ describe('USER-HUBS methods', function() {
   describe('acceptHubInvitation', function() {
     context("when the invitation exists", function() {
       var USER_B, HUB, INVITATION;
+      var PERMISSIONS = 15;
       beforeEach(function() {
         return Factory('hub').then(function(entities) {
           USER_B = entities.user;
           HUB = entities.hub;
-          return USER_B.inviteToHub(HUB._id, USER._id).then(function(invitation) {
+          return USER_B.inviteToHub(HUB._id, USER._id, PERMISSIONS).then(function(invitation) {
             INVITATION = invitation.invitation;
           });
         });
@@ -322,6 +320,15 @@ describe('USER-HUBS methods', function() {
             {hid: HUB._id}
           ).then(function(result) {
             expect(result.length).to.eql(1);
+          });
+        });
+
+        it("stores the permissions specified on the invitation as property on JOINED", function() {
+          return db.query(
+            "MATCH (u:Person)-[r:JOINED]->(h:Hub) WHERE id(h) = {hid} RETURN r",
+            {hid: HUB._id}
+          ).then(function(result) {
+            expect(result[0].r.properties.permissions).to.eql(PERMISSIONS);
           });
         });
 
