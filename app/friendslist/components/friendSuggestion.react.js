@@ -7,7 +7,6 @@
 
   var FriendSuggestionComponent = React.createClass({
     render: function() {
-      console.log(this.props)
       return (
         <a className="friend-suggestion" href={"/users/" + this.props._id}>
           <div className="suggestion-container">

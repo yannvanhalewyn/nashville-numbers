@@ -54,6 +54,11 @@
           invitation.destroy();
           break;
 
+        case Constants.UPDATE_INVITED_USER_PERMISSIONS:
+          var invitation = this.invitations.get(payload.cid);
+          invitation.save({permissions: payload.value});
+          break;
+
         default:
           console.error("Invalid actiontype: " + payload.actionType);
           break;

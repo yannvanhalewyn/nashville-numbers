@@ -12,7 +12,7 @@
         <div className="invitation-card">
           <h2>{this.props.firstName}</h2>
           <img src={this.props.thumb} alt="user profile picture" />
-          <PermissionsSelector onChange={this._onSelect} />
+          <PermissionsSelector onChange={this._onSelect} currentPermissions={this.props.permissions}/>
           <button className="btn btn-red" onClick={this._onCancelInvitation}>Cancel</button>
         </div>
       )
@@ -23,7 +23,7 @@
     },
 
     _onSelect: function(permissionValue) {
-      console.log(permissionValue);
+      Actions.updateInvitedUserPermissions(this.props.cid, permissionValue);
     }
   });
 

@@ -40,7 +40,6 @@
     dispatchCallback: function(payload) {
       switch (payload.actionType) {
         case Constants.ACCEPT_HUB_INVITATION:
-          console.log("ACCEPT");
           var invitation = this.invitations.get(payload.cid);
           invitation.destroy({contentType: "application/json", data: JSON.stringify({accept: true})});
           break;

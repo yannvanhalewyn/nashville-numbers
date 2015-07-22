@@ -12,6 +12,7 @@
           key={invitation.cid}
           firstName={invitation.invitee.properties.firstName}
           thumb={invitation.invitee.properties.thumb}
+          permissions={invitation.properties.permissions}
           cid={invitation.cid}
         />
       )

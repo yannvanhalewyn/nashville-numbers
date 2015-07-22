@@ -8,7 +8,11 @@
     idAttribute: "_id",
     parse: function(res) {
       var obj = res.invitation;
-      obj.invitee = res.invitee;
+      // When originally fetching the invitation, the invitee gets sent along.
+      // When updating (permissions), only the updated invitation gets sent.
+      if (res.invitee) {
+        obj.invitee = res.invitee;
+      }
       return obj;
     }
   });
