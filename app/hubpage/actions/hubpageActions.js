@@ -7,7 +7,8 @@
   var UserpageConstants = keyMirror({
     UPDATE_FRIENDS_LIST: null,
     INVITE_FRIEND: null,
-    CANCEL_INVITATION: null
+    CANCEL_INVITATION: null,
+    UPDATE_INVITED_USER_PERMISSIONS: null
   });
 
   var UserpageActions = {
@@ -29,6 +30,14 @@
       Dispatcher.dispatch({
         actionType: UserpageConstants.CANCEL_INVITATION,
         cid: cid
+      });
+    },
+
+    updateInvitedUserPermissions: function(cid, newPermission) {
+      Dispatcher.dispatch({
+        actionType: UserpageConstants.UPDATE_INVITED_USER_PERMISSIONS,
+        cid: cid,
+        value: newPermission
       });
     }
   }

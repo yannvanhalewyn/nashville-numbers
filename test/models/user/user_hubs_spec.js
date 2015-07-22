@@ -94,9 +94,7 @@ describe('USER-HUBS methods', function() {
  * ===============
  */
   describe('user#inviteUserToHub()', function() {
-
     var HUB, USER_B
-
     beforeEach(function() {
       return Factory('hub', {creator_id: USER._id}).then(function(hub) {
         return Factory('user').then(function(otherUser) {
@@ -107,37 +105,57 @@ describe('USER-HUBS methods', function() {
     });
 
     describe('valid invitations', function() {
-
-      var HUB_INVITATION;
-
-      beforeEach(function() {
-        return USER.inviteToHub(HUB._id.toString(), USER_B._id.toString()).then(function(invitation) {
-          HUB_INVITATION = invitation;
+      context("when permission level is specified", function() {
+        var HUB_INVITATION;
+        var PERMISSIONS = 15;
+        beforeEach(function() {
+          return USER.inviteToHub(HUB._id.toString(), USER_B._id.toString(), PERMISSIONS.toString())
+          .then(function(invitation) {
+            HUB_INVITATION = invitation;
+          });
         });
-      });
 
-      it("creates a HubInvitation node in the DB", function() {
-        return db.query("MATCH (hi:HubInvitation) RETURN hi").then(function(result) {
-          expect(result.length).to.eql(1);
+        it("creates a HubInvitation node in the DB", function() {
+          return db.query("MATCH (hi:HubInvitation) RETURN hi").then(function(result) {
+            expect(result.length).to.eql(1);
+          });
         });
-      });
 
-      it("creates the :SENT :TO and :TO_JOIN relationships", function() {
-        return db.query(
-          "MATCH (u:Person)-[:SENT]->(hi:HubInvitation)-[:TO]->(p:Person), " +
-          "(hi)-[:TO_JOIN]-(h) " +
-          "WHERE id(u) = {uid} AND id(p) = {pid} AND id(h) = {hid} RETURN hi",
-          {uid: USER._id, pid: USER_B._id, hid: HUB._id}
-        ).then(function(result) {
-          expect(result.length).to.eql(1);
+        it("creates the :SENT :TO and :TO_JOIN relationships", function() {
+          return db.query(
+            "MATCH (u:Person)-[:SENT]->(hi:HubInvitation)-[:TO]->(p:Person), " +
+            "(hi)-[:TO_JOIN]-(h) " +
+            "WHERE id(u) = {uid} AND id(p) = {pid} AND id(h) = {hid} RETURN hi",
+            {uid: USER._id, pid: USER_B._id, hid: HUB._id}
+          ).then(function(result) {
+            expect(result.length).to.eql(1);
+          });
         });
-      });
 
-      it("returns the an object containing the invitation and the invitee", function() {
-        expect(HUB_INVITATION.invitation).not.to.be.undefined;
-        expect(HUB_INVITATION.invitee).not.to.be.undefined;
-        expect(HUB_INVITATION.invitee._id).to.eql(USER_B._id)
-      });
+        it("stores the permission level", function() {
+          expect(HUB_INVITATION.invitation.properties.permissions).to.eql(PERMISSIONS);
+        });
+
+        it("returns the an object containing the invitation and the invitee", function() {
+          expect(HUB_INVITATION.invitation).not.to.be.undefined;
+          expect(HUB_INVITATION.invitee).not.to.be.undefined;
+          expect(HUB_INVITATION.invitee._id).to.eql(USER_B._id)
+        });
+      }); // End of context 'when permission level is specified'
+
+      context("when permission level isn't specified", function() {
+        var INVITATION;
+        beforeEach(function() {
+          return USER.inviteToHub(HUB._id.toString(), USER_B._id.toString())
+          .then(function(invitation) {
+            INVITATION = invitation;
+          });
+        });
+
+        it("stores the permissions as 0", function() {
+          expect(INVITATION.invitation.properties.permissions).to.eql(0);
+        });
+      }); // End of context 'when permission level isn't specified'
     }); // End of describe 'valid invitations'
 
 
@@ -270,11 +288,12 @@ describe('USER-HUBS methods', function() {
   describe('acceptHubInvitation', function() {
     context("when the invitation exists", function() {
       var USER_B, HUB, INVITATION;
+      var PERMISSIONS = 15;
       beforeEach(function() {
         return Factory('hub').then(function(entities) {
           USER_B = entities.user;
           HUB = entities.hub;
-          return USER_B.inviteToHub(HUB._id, USER._id).then(function(invitation) {
+          return USER_B.inviteToHub(HUB._id, USER._id, PERMISSIONS).then(function(invitation) {
             INVITATION = invitation.invitation;
           });
         });
@@ -301,6 +320,15 @@ describe('USER-HUBS methods', function() {
             {hid: HUB._id}
           ).then(function(result) {
             expect(result.length).to.eql(1);
+          });
+        });
+
+        it("stores the permissions specified on the invitation as property on JOINED", function() {
+          return db.query(
+            "MATCH (u:Person)-[r:JOINED]->(h:Hub) WHERE id(h) = {hid} RETURN r",
+            {hid: HUB._id}
+          ).then(function(result) {
+            expect(result[0].r.properties.permissions).to.eql(PERMISSIONS);
           });
         });
 

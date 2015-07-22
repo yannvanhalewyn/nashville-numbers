@@ -1,14 +1,16 @@
 (function() {
 
-  var include      = require('include')
-    , ensureAuth   = include('/middlewares/auth')
-    , getTargetHub = include('/middlewares/getTargetHub')
+  var include             = require('include')
+    , ensureAuth          = include('/middlewares/auth')
+    , getTargetHub        = include('/middlewares/getTargetHub')
+    , getTargetInvitation = include('/middlewares/getTargetInvitation')
 
   module.exports = {
 
     middlewares: {
       index:   [ensureAuth, getTargetHub],
       create:  [ensureAuth],
+      update:  [ensureAuth, getTargetInvitation.sentByLoggedInUser],
       destroy: [ensureAuth]
     },
 
@@ -19,8 +21,24 @@
     },
 
     create: function(req, res) {
-      req.user.inviteToHub(req.params.hub_id, req.body.other_user_id).then(function(invitation) {
+      req.user.inviteToHub(req.params.hub_id, req.body.other_user_id, req.body.permissions)
+      .then(function(invitation) {
         res.json(invitation);
+      });
+    },
+
+    update: function(req, res) {
+      // Attempt to update the invitation's permissions
+      req.target_invitation.setPermissionValue(req.body.permissions)
+
+      // On success send the updated invitation as json
+      .then(function(updated_invitation) {
+        res.json(updated_invitation);
+
+      // On error send a 400 (bad request) and the error message)
+      }).catch(function(error) {
+        res.status(400);
+        res.send(error);
       });
     },
 
