@@ -21,7 +21,8 @@
     },
 
     create: function(req, res) {
-      req.user.inviteToHub(req.params.hub_id, req.body.other_user_id).then(function(invitation) {
+      req.user.inviteToHub(req.params.hub_id, req.body.other_user_id, req.body.permissions)
+      .then(function(invitation) {
         res.json(invitation);
       });
     },

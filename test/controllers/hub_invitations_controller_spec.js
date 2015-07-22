@@ -53,18 +53,19 @@ describe('HubInvitationsController', function() {
 
   describe('POST/create', function() {
     var OTHER_USER;
+    var PERMISSIONS = 123;
     beforeEach(function(done) {
       return Factory('user').then(function(otherUser) {
         sinon.stub(USER, 'inviteToHub').returns(Q(dummyInvitation()));
         OTHER_USER = otherUser;
-        req.body = {other_user_id: otherUser._id}
+        req.body = {other_user_id: otherUser._id, permissions: PERMISSIONS};
         Controller.create(req, res);
         res.on('end', done)
       });
     });
 
     it("calls user#inviteToHub", function() {
-      expect(USER.inviteToHub).to.have.been.calledWith(HUB._id, OTHER_USER._id);
+      expect(USER.inviteToHub).to.have.been.calledWith(HUB._id, OTHER_USER._id, PERMISSIONS);
     });
 
     it("sends the created invitation as json", function() {

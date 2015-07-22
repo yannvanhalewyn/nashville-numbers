@@ -9,6 +9,9 @@
     , InvitationCollection = require('../models/invitationCollection')
     , FriendsCollection = require('../models/friendsCollection')
 
+  // Temporary until finished up the hub-settings.
+  var DEFAULT_PERMISSIONS = require('../../../models/permission').Ranks.citizen;
+
   var HubStore = Backbone.Model.extend({
     urlRoot: '/hubs',
 
@@ -46,7 +49,9 @@
           }
           break;
         case Constants.INVITE_FRIEND:
-          this.invitations.create({other_user_id: payload.friendID});
+          this.invitations.create({
+            other_user_id: payload.friendID, permissions: DEFAULT_PERMISSIONS
+          });
           break;
 
         case Constants.CANCEL_INVITATION:
