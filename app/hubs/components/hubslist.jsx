@@ -3,7 +3,7 @@
   "use strict";
 
   var React = require('react')
-    , HubListing = require('./hubListing.jsx')
+    , HubListing = require('./hublisting.jsx')
 
   var HubsList = React.createClass({
     renderHubListing: function(hub) {
@@ -18,9 +18,9 @@
 
     render: function() {
       return (
-        <div className="hubs-list">
+        <ul className="list hubs-list">
           {this.props.hubs.map(this.renderHubListing)}
-        </div>
+        </ul>
       )
     }
   });
