@@ -7,7 +7,12 @@
 
   var FriendsSearchField = React.createClass({
     render: function() {
-      return <input onChange={this._onChange} type="text" placeholder="Find friends.."/>
+      return (
+        <div className="search-field">
+          <span className="fa fa-search"></span>
+          <input onChange={this._onChange} type="text" placeholder="Find friends.." />
+        </div>
+      )
     },
 
     _onChange: function(e) {

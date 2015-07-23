@@ -29,9 +29,8 @@
     margin-top: 7px;
 
     &#SC-fav-icon:hover {
-      $STAR_YELLOW: #FcAf08;
-      color: $STAR_YELLOW;
-      text-shadow: 0px 0px 5px $STAR_YELLOW;
+      color: $YELLOW;
+      text-shadow: 0px 0px 5px $YELLOW;
     }
   }
 
@@ -39,12 +38,11 @@
     display: inline-block;
     position: relative;
     .sheet-operations-popup {
-      $POPUP_BG: #103542;
       color: white;
       border: 10%;
       margin-top: 10px;
       padding: 10px 5px 0;
-      background: $POPUP_BG;
+      background: $BLUE;
       box-shadow: 0px 0px 20px #444;
       position: absolute;
       width: 145px;
@@ -52,7 +50,7 @@
 
       .pointer-up {
         left: 68px;
-        border-bottom-color: $POPUP_BG;
+        border-bottom-color: $BLUE;
       }
     }
   }
@@ -65,18 +63,17 @@
   }
 
   #play-mode-toggle {
-    $TOGGLE_COLOR: #66aa33;
     margin-top: 2px;
     cursor: pointer;
     float: right;
     font-size: 0.8em;
-    border: 2px solid $TOGGLE_COLOR;
+    border: 2px solid $LIGHT-GREEN-2;
     padding: 7px;
     border-radius: 10%;
 
     &:hover {
       color: white;
-      background: $TOGGLE_COLOR;
+      background: $LIGHT-GREEN-2;
     }
   }
 }
@@ -162,13 +159,11 @@
   }
 
   &.chord-empty {
-    // background: #9977ae;
-    // border: 1px solid #666;
     box-shadow: 0px 0px 7px #999;
   }
 
   &.chord-editing {
-    background: #66779b;
+    background: $CHORD-EDITING;
     font-family: inherit;
     cursor: auto;
     transition: background 300ms;

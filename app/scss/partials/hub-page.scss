@@ -1,0 +1,168 @@
+#hubpage-container {
+    padding-left: 20px;
+}
+
+.hub-header {
+    .hub-info {
+        h1 { margin-bottom: 10px; }
+    }
+}
+
+.participants-section {
+    h2 {
+        display: inline;
+        margin-right: 20px;
+    }
+
+    .manage-participants-button {
+        padding: 8px;
+    }
+
+    .participants-viewer {
+        display: block;
+        padding-top: 10px;
+
+        .participant-preview {
+            width: 10%;
+            min-width: 150px;
+            height: 60px;
+            display: inline-block;
+            border-radius: 5%;
+            img {
+                margin: 4px;
+                box-shadow: $THUMB-BOX-SHADOW;
+            }
+            .participant-info {
+                display: inline-block;
+                vertical-align: top;
+                padding: 10px 0 0 5px;
+                .participant-name {
+                    margin: 0;
+                    color: #111111;
+                }
+                .participant-status {
+                    margin: 0;
+                    color: #999;
+                }
+            }
+
+            &:hover {
+                background: #ddd;
+            }
+        }
+    }
+}
+
+// =============================
+// Participants management modal
+// =============================
+.participants-management {
+    display: inline-block; // For the 'manage' label to be next to 'participants' title.
+    @include modalWithTrigger("#participant-modal-trigger");
+}
+
+.live-friends-searcher {
+    input {
+        // Else the top-right corner of the modal would have none!
+        border-radius: 5px;
+    }
+    .friend-suggestions {
+        // It doesn't relate to the outer modal but to the page.
+        // Since the modal is at 10% padding on each side, this works
+        width: 80%;
+
+        // User thumbnail
+        img {
+            border-radius: 5px;
+            box-shadow: $THUMB-BOX-SHADOW;
+            vertical-align: middle;
+        }
+
+        // Name
+        .name {
+            display: inline-block;
+            margin: 10px;
+            width: 25%;
+        }
+
+        button {
+            padding: 5px 10px;
+            &:hover {
+                box-shadow: none;
+            }
+        }
+    }
+}
+
+// The modal body
+.overview {
+    height: 100%;
+    text-align: center;
+    padding-top: 7px;
+
+    img {
+        box-shadow: $THUMB-BOX-SHADOW;
+    }
+
+    .name {
+        color: $GREY-8;
+    }
+
+    .pending-invitations {
+        padding-right: 0; // Override .col- padding
+        height: 90%;
+        border-right: 1px solid $GREY-3;
+    }
+
+    .participants {
+        height: 90%;
+    }
+
+    .creator-card {
+        background: $DARK-RED;
+        color: $MAIN-BG;
+        .name {
+            color: $MAIN-BG;
+            padding: 10px;
+        }
+        &:hover {
+            background: #8C4646;
+        }
+    }
+
+    .btn {
+        padding: 7px 10px;
+        margin: 10% 0;
+    }
+
+    .permissions-selector {
+        border-radius: 3px;
+        padding: 7px 0;
+        margin-top: 10%;
+        background: $SELECT-BLUE;
+        &:after {
+            content: "\0f078";
+            color: white;
+            font-size: .8em;
+            font-family: FontAwesome;
+        }
+    }
+
+    select {
+        border: none;
+        cursor: pointer;
+        background: transparent;
+        color: white;
+        font-size: .9em;
+        appearance: none;
+
+        .rank-option {
+            color: red;
+            font-size: 1.5em;
+        }
+
+        &:focus {
+            outline: none;
+        }
+    }
+}

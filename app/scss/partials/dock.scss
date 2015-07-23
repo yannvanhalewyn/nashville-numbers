@@ -3,7 +3,7 @@
 
 .dock {
     color: white;
-    background: #103542;
+    background: $BLUE;
     min-height: 600px;
     position: fixed;
     top: 0;
@@ -34,7 +34,7 @@
 }
 
 .dock-elem {
-    color: #84afbd;
+    color: $DOCK-TEXT;
     font-size: 14px;
     margin-bottom: 20px;
     cursor: pointer;
@@ -71,23 +71,23 @@
             right: 0px;
             border-top: 10px solid transparent;
             border-bottom: 10px solid transparent;
-            border-right: 10px solid #f6f6f6;
+            border-right: 10px solid $MAIN-BG;
         }
     }
 }
 
 .fa-NN-love {
-    color: #e91e63;
+    color: $RED;
 }
 
 .fa-NN-explore {
-    color: rgba(255,152,0,.75);
+    color: $ORANGE;
 }
 
 .fa-NN-sheets {
-    color: #738902;
+    color: $GREEN;
 }
 
 .fa-NN-hubs {
-    color: #cbbc89;
+    color: $LEMON;
 }

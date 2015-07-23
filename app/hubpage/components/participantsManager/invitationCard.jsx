@@ -9,12 +9,18 @@
   var InvitationCard = React.createClass({
     render: function() {
       return (
-        <div className="invitation-card">
-          <h2>{this.props.firstName}</h2>
-          <img src={this.props.thumb} alt="user profile picture" />
-          <PermissionsSelector onChange={this._onSelect} currentPermissions={this.props.permissions}/>
-          <button className="btn btn-red" onClick={this._onCancelInvitation}>Cancel</button>
-        </div>
+        <li className="invitation-card grid">
+          <span className="col-4-12 name">{this.props.firstName} {this.props.lastName}</span>
+          <div className="col-2-12">
+            <img src={this.props.thumb} alt="user profile picture" />
+          </div>
+          <div className="permissions col-3-12">
+            <PermissionsSelector onChange={this._onSelect} currentPermissions={this.props.permissions}/>
+          </div>
+          <div className="col-3-12">
+            <button className="btn btn-red" onClick={this._onCancelInvitation}><span className="fa fa-times" /> Cancel</button>
+          </div>
+        </li>
       )
     },
 

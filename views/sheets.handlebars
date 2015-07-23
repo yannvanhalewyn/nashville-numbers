@@ -2,17 +2,17 @@
 <form action="/users/me/sheets" method="POST">
   <label for="title">Title</label>
   <input id="title" type="text" name="title">
-  <label for="artist">Artist</lavel>
+  <label for="artist">Artist</label>
     <input id="artist" type="text" name="artist">
     <input class="btn" type="submit" value="New Sheet">
 </form>
 
 <div class="sheets-listing clearFloats">
   {{#each sheets}}
-  <div class="sheet-list-entry">
+  <div class="sheet-list-entry grid">
     <a href="/users/me/sheets/{{this._id}}/edit">
-      <div class="block-thumb"><span class="fa fa-file-o"></span></div>
-      <div class="block-info">
+      <div class="block-thumb col-2-12"><span class="fa fa-file-o"></span></div>
+      <div class="block-info col-9-12">
         <div class="title">{{this.properties.title}}</div>
         <div class="artist">{{this.properties.artist}}</div>
         <div class="info">
@@ -20,7 +20,7 @@
             {{this.createdAtInWords}}</em>
         </div>
       </div>
-      <div class="block-actions">
+      <div class="block-actions col-1-12">
         <span class="fa fa-cloud-download"></span>
         <span class="fa fa-trash-o"></span>
       </div>

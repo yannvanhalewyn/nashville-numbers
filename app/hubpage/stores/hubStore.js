@@ -98,7 +98,8 @@
       // Return the state
       return {
         invitations: invitations,
-        friends: friends
+        friends: friends,
+        hub: this.attributes
       }
     }
   });

@@ -6,7 +6,6 @@
     , Header = require('./Header.jsx')
     , SheetsSection = require('./SheetsSection.jsx')
     , ParticipantsSection = require('./ParticipantsSection.jsx')
-    , ParticipantsManagementModal = require('./participantsManager/participantsManagementModal.jsx')
 
   var HubPageComponent = React.createClass({
     componentDidMount: function() {
@@ -15,20 +14,21 @@
     },
 
     getInitialState: function() {
-      return { participants: [], friends: [], invitations: [] }
+      return { participants: [], friends: [], invitations: [], hub: {properties: { name: "Hub" }} };
     },
 
     render: function() {
+      var numParticipants = this.state.participants.length;
       return (
         <div>
-          <Header />
-          <SheetsSection />
-          <ParticipantsSection participants={this.state.participants}/>
-          <ParticipantsManagementModal
+          <Header hub={this.state.hub} numParticipants={this.state.participants.length} />
+          <ParticipantsSection
             participants={this.state.participants}
+            numParticipants={numParticipants}
             friends={this.state.friends}
             invitations={this.state.invitations}
           />
+          <SheetsSection />
         </div>
       )
     },

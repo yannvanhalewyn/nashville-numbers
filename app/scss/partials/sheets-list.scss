@@ -1,30 +1,24 @@
 /* SHEETLIST
  ----------------- */
 
- .sheets-listing {
+.sheets-listing {
     padding: 75px 10px;
 
     .sheet-list-entry {
-        border-bottom: 1px solid #d5d5d5;
+        border-bottom: 1px solid $GREY-2;
         cursor: pointer;
         a {
-            text-decoration: none;
             color: inherit;
         }
         &:hover {
-            background: #d5d5d5;
+            background: $GREY-2;
         }
         .block-thumb {
-            width: 10%;
             text-align: center;
             font-size: 50px;
-            // height: 100%;
             margin-top: 20px;
-            display: inline-block;
-            vertical-align:top;
         }
         .block-info {
-            display: inline-block;
             .title {
                 margin: 20px 0 0;
                 font-size: 1.2em;
@@ -35,17 +29,14 @@
             }
             .info {
                 margin-bottom: 40px;
-                color: #CCC;
+                color: $GREY-3;
             }
         }
 
         .block-actions {
-            display: inline-block;
-            color: grey;
-            float: right;
+            color: $GREY-7;
             font-size: 1.3em;
             cursor: pointer;
-            margin-right: 50px;
             span {
                 margin: 20px 5px;
             }
