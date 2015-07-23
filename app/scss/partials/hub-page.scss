@@ -9,7 +9,7 @@
 }
 
 .participants-section {
-    h2 { 
+    h2 {
         display: inline;
         margin-right: 20px;
     }
@@ -48,31 +48,36 @@
 
             &:hover {
                 background: #ddd;
-            }   
-        }   
+            }
+        }
     }
 }
 
 // =============================
 // Participants management modal
 // =============================
+.participants-management {
+    display: inline-block; // For the 'manage' label to be next to 'participants' title.
+    @include modalWithTrigger("#participant-modal-trigger");
+}
+
 .live-friends-searcher {
     input {
         // Else the top-right corner of the modal would have none!
         border-radius: 5px;
     }
     .friend-suggestions {
-        // It doesn't relate to the outer modal but to the page. 
+        // It doesn't relate to the outer modal but to the page.
         // Since the modal is at 10% padding on each side, this works
         width: 80%;
 
         // User thumbnail
-        img { 
-            border-radius: 5px; 
+        img {
+            border-radius: 5px;
             box-shadow: $THUMB-BOX-SHADOW;
             vertical-align: middle;
         }
-        
+
         // Name
         .name {
             display: inline-block;
@@ -118,12 +123,12 @@
     }
 
     .creator-card {
-        .name { 
-            color: $MAIN-BG;
-            padding: 10px; 
-        }
-        background: #8C4646;
+        background: $DARK-RED;
         color: $MAIN-BG;
+        .name {
+            color: $MAIN-BG;
+            padding: 10px;
+        }
         &:hover {
             background: #8C4646;
         }

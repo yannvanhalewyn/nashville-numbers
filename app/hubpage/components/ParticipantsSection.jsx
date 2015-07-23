@@ -23,15 +23,18 @@
       return (
         <div className="participants-section">
           <h2>Participants ({this.props.numParticipants})</h2>
-          <button className="btn manage-participants-button"><span className="fa fa-pencil"> Manage</span></button>
+          <div className="participants-management">
+            <label htmlFor="participant-modal-trigger" className="btn manage-participants-button"><span className="fa fa-pencil" /> Manage</label>
+            <input id="participant-modal-trigger" type="checkbox" />
+            <ParticipantsManagementModal
+              participants={this.props.participants}
+              friends={this.props.friends}
+              invitations={this.props.invitations}
+            />
+          </div>
           <div className="participants-viewer">
             {this.props.participants.map(this.renderParticipant)}
           </div>
-          <ParticipantsManagementModal
-            participants={this.props.participants}
-            friends={this.props.friends}
-            invitations={this.props.invitations}
-          />
         </div>
       )
     }

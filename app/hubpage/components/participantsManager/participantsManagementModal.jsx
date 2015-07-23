@@ -12,6 +12,7 @@
       return (
         <div className="modal-overlay">
           <div className="modal-wrap participants-management-modal">
+            <label htmlFor="participant-modal-trigger"><span className="fa fa-times modal-close-trigger"></span></label>
             <LiveFriendsSearcher friends={this.props.friends}/>
             <div className="overview grid">
               <PendingInvitations invitations={this.props.invitations} />

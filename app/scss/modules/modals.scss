@@ -1,5 +1,5 @@
 .modal-overlay {
-    background: rgba(0, 0, 0, .5);
+    background: rgba(0, 0, 0, .75);
     position: fixed;
     top: 0;
     left: 0;
@@ -7,9 +7,37 @@
     right: 0;
     padding: 5% 10%;
 
+    // Default it to hidden
+    opacity: 0;
+    z-index: -100;
+    transform: scale(.5);
+    transition: all .6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    
     .modal-wrap {
         background: white;
         border-radius: 7px;
         height: 100%;
+        position: relative;
+
+        .modal-close-trigger {
+            cursor: pointer;
+            background: black;
+            color: white;
+            padding: 7px;
+            border-radius: 50%;
+            font-size: 1em;
+            position: absolute;
+            right: -.75em;
+            top: -.75em;
+        }
+    }
+}
+
+@mixin modalWithTrigger($trigger) {
+    #{$trigger} { display: none; }
+    #{$trigger}:checked ~ .modal-overlay {
+        opacity: 1;
+        z-index: 600;
+        transform: scale(1);
     }
 }
