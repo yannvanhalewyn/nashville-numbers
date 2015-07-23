@@ -4,16 +4,28 @@
 
   var React = require('react')
     , FriendsSearchField = require('./friendsSearchField.jsx')
-    , FriendsSuggestionsDropdown = require('./friendsSuggestionsDrowdown.jsx')
+    , FriendsSuggestionsDropdown = require('./friendsSuggestionsDropdown.jsx')
 
   var LiveFriendsSearcher = React.createClass({
+    getInitialState: function() {
+      return {hideDropdown: false};
+    },
+
     render: function() {
       return (
-        <div className="live-friends-searcher">
+        <div onMouseLeave={this._onMouseLeave} onMouseEnter={this._onMouseEnter} className="live-friends-searcher">
           <FriendsSearchField />
-          <FriendsSuggestionsDropdown friends={this.props.friends} />
+          {this.state.hideDropdown ? null : <FriendsSuggestionsDropdown friends={this.props.friends} />}
         </div>
       )
+    },
+
+    _onMouseLeave: function() {
+      this.setState({hideDropdown: true});
+    },
+
+    _onMouseEnter: function() {
+      this.setState({hideDropdown: false});
     }
   });
 

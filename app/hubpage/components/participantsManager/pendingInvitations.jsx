@@ -20,7 +20,7 @@
 
     render: function() {
       return (
-        <div>
+        <div className="col-2-4 pending-invitations">
           <h1>Pending Invitations</h1>
           {this.props.invitations.map(this.renderInvitationCard)}
         </div>

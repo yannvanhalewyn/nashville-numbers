@@ -8,11 +8,11 @@
   var FriendSuggestion = React.createClass({
     render: function() {
       return (
-        <div className="friend-suggestion">
+        <li className="suggestion">
           <img src={this.props.thumb} alt="friend profile picture" />
-          <h2>{this.props.firstName} {this.props.lastName}</h2>
-          <button onClick={this._onInvite} className="btn">Invite</button>
-        </div>
+          <span className="name">{this.props.firstName} {this.props.lastName}</span>
+          <button onClick={this._onInvite} className="btn"><span className="fa fa-plus" /> Invite</button>
+        </li>
       )
     },
 

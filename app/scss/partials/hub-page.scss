@@ -1,0 +1,103 @@
+#hubpage-container {
+    padding-left: 20px;
+}
+
+.hub-header {
+    .hub-info {
+        h1 { margin-bottom: 10px; }
+    }
+}
+
+.participants-section {
+    h2 { 
+        display: inline;
+        margin-right: 20px;
+    }
+
+    .manage-participants-button {
+        padding: 8px;
+    }
+
+    .participants-viewer {
+        display: block;
+        padding-top: 10px;
+
+        .participant-preview {
+            width: 10%;
+            min-width: 150px;
+            height: 60px;
+            display: inline-block;
+            border-radius: 5%;
+            img {
+                margin: 4px;
+                box-shadow: $THUMB-BOX-SHADOW;
+            }
+            .participant-info {
+                display: inline-block;
+                vertical-align: top;
+                padding: 10px 0 0 5px;
+                .participant-name {
+                    margin: 0;
+                    color: #111111;
+                }
+                .participant-status {
+                    margin: 0;
+                    color: #999;
+                }
+            }
+
+            &:hover {
+                background: #ddd;
+            }   
+        }   
+    }
+}
+
+// Participants management modal
+.live-friends-searcher {
+    input {
+        // Else the top-right corner of the modal would have none!
+        border-radius: 5px;
+    }
+    .friend-suggestions {
+        // It doesn't relate to the outer modal but to the page. 
+        // Since the modal is at 10% padding on each side, this works
+        width: 80%;
+
+        // User thumbnail
+        img { 
+            border-radius: 5px; 
+            box-shadow: $THUMB-BOX-SHADOW;
+            vertical-align: middle;
+        }
+        
+        // Name
+        .name {
+            display: inline-block;
+            margin: 10px;
+            width: 25%;
+        }
+
+        button {
+            padding: 5px 10px;
+            &:hover {
+                box-shadow: none;
+            }
+        }
+    }
+}
+
+.overview {
+    height: 100%;
+}
+
+.pending-invitations {
+    height: 90%;
+    border-right: 1px solid $GREY-3;
+}
+
+.participants {
+    height: 100%;
+}
+
+

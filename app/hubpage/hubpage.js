@@ -3,7 +3,7 @@
   "use strict";
 
   var React    = require('react')
-    , HubPage = require('./components/hubpage.jsx')
+    , HubPage = require('./components/Hubpage.jsx')
     , HubStore = require('./stores/hubStore')
 
   React.render(

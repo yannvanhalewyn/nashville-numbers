@@ -20,8 +20,10 @@
 
     render: function() {
       return (
-        <div>
-          {this.props.friends.map(this.renderFriendSuggestion)}
+        <div className="search-dropdown friend-suggestions">
+          <ul>
+            {this.props.friends.map(this.renderFriendSuggestion)}
+          </ul>
         </div>
       )
     }
