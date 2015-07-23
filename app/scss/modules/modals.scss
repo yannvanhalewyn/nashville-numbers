@@ -29,6 +29,11 @@
             position: absolute;
             right: -.75em;
             top: -.75em;
+
+            // Animation on hover
+            &:hover {
+                transform: scale(1.2);
+            }
         }
     }
 }

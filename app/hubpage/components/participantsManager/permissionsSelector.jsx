@@ -10,7 +10,7 @@
       // Store an array of options based and set the correct selected flag
       return Object.keys(Ranks).map(function(rank) {
         var selected = Ranks[rank] == this.props.currentPermissions ? "selected" : "";
-        return <option value={Ranks[rank]} selected={selected}>{rank}</option>
+        return <option className="rank-option" value={Ranks[rank]} selected={selected}>{rank}</option>
       }.bind(this));
     },
 

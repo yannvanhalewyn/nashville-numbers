@@ -118,10 +118,6 @@
         height: 90%;
     }
 
-    button {
-        padding: 10px 10px 10px 5px;
-    }
-
     .creator-card {
         background: $DARK-RED;
         color: $MAIN-BG;
@@ -134,14 +130,22 @@
         }
     }
 
+    .btn {
+        padding: 7px 10px;
+        margin: 10% 0;
+    }
+
     .permissions-selector {
-        height: 100%;
-        width: 90%;
         border-radius: 3px;
-        border: 1px solid $GREY-3;
-        padding: 10px;
-        cursor: pointer;
-        background: $GREY-6;
+        padding: 7px 0;
+        margin-top: 10%;
+        background: $SELECT-BLUE;
+        &:after {
+            content: "\0f078";
+            color: white;
+            font-size: .8em;
+            font-family: FontAwesome;
+        }
     }
 
     select {
@@ -149,14 +153,16 @@
         cursor: pointer;
         background: transparent;
         color: white;
-        font-size: 1em;
-        -webkit-appearance: none;
+        font-size: .9em;
+        appearance: none;
+
+        .rank-option {
+            color: red;
+            font-size: 1.5em;
+        }
+
         &:focus {
             outline: none;
         }
     }
 }
-
-
-
-
