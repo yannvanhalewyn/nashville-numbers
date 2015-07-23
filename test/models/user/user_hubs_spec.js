@@ -221,7 +221,24 @@ describe('USER-HUBS methods', function() {
         });
       }); // End of context 'when the user invites the creator of the hub'
 
-      context("when the user invites a user which is already in the hub", function() {
+      context("when user invites a user which is already in the hub", function() {
+        beforeEach(function() {
+          return db.query(
+            "MATCH (p:Person), (h:Hub) WHERE id(p) = {uid} AND id(h) = {hid} " +
+            "CREATE (p)-[:JOINED]->(h) ", {uid: USER_B._id, hid: HUB._id}
+          ).then(function() {
+            return USER.inviteToHub(HUB._id, USER_B._id);
+          });
+        });
+
+        it("doesn't create another invitation", function() {
+          return db.query("MATCH (hi:HubInvitation) RETURN hi").then(function(result) {
+            expect(result).to.be.empty;
+          });
+        });
+      }); // End of context 'when user invites a user which is already in the hub'
+
+      context("when the user invites a user which is already invited to that hub", function() {
         beforeEach(function() {
           return USER.inviteToHub(HUB._id, USER_B._id).then(function() {
             return USER.inviteToHub(HUB._id, USER_B._id);

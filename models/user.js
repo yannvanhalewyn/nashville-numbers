@@ -217,7 +217,12 @@
 
   /**
    * Creates a HubInvitation linked to the user as sender, target user as
-   * receiver and hub as mean.
+   * receiver and hub as means. Will not create a HubInvitation in the following
+   * cirumstances:
+   * - The target user is already invited to the target hub
+   * - The target user is already a participant in the target hub
+   * - The sender is not the creator of the hub (will change when permission
+   *   actions are setup)
    *
    * @param {string/number} hubID The ID of the hub to which we want to invite
    * the user.
@@ -232,10 +237,12 @@
   User.prototype.inviteToHub = function(hubID, otherUserID, permissions) {
     return db.query(
       "MATCH (u:Person)-[:CREATED]->(h:Hub), (invitee:Person) " +
-      "OPTIONAL MATCH (u)-[:SENT]-(existinghi:HubInvitation)-[:TO]->(invitee:Person), (existinghi)-[:TO_JOIN]->(h) " +
-      "WITH u, invitee, h, existinghi " +
-      "WHERE id(u) = {uid} AND id(invitee) = {iid} AND id(h) = {hid} AND NOT u = invitee " +
-      "AND existinghi IS NULL " +
+      "OPTIONAL MATCH (u)-[:SENT]-(existinghi:HubInvitation)-[:TO]->(invitee:Person), " +
+        "(existinghi)-[:TO_JOIN]->(h) " +
+      "OPTIONAL MATCH (invitee)-[joined:JOINED]->(h) " +
+      "WITH u, invitee, h, existinghi, joined " +
+      "WHERE id(u) = {uid} AND id(invitee) = {iid} AND id(h) = {hid} " +
+        "AND NOT u = invitee AND joined IS NULL AND existinghi IS NULL " +
       "CREATE (u)-[:SENT]->(invitation:HubInvitation {permissions: {permissions}})-[:TO]->(invitee), " +
       "(invitation)-[:TO_JOIN]->(h) " +
       "RETURN invitation, invitee",
