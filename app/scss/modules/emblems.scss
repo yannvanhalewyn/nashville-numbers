@@ -14,7 +14,7 @@
 	&:before {
 		font-family: militaria;
         margin: -10px 0 10px;
-        color: #278981;
+        color: $EMBLEM-LOGO;
         font-size: 70px;
         display: block;
 	}
@@ -22,7 +22,7 @@
 	&:after {
 		font-family: army;
 		font-size: 1.4em;
-        color: #b5b5b5;
+        color: $GREY-4;
         margin-top: 10px;
 	}
 }

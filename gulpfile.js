@@ -98,7 +98,7 @@ gulp.task('css:livereload', function() {
  * Converts compiles files into css
  */
 gulp.task('sass', function() {
-  gulp.src('app/scss/**/*.scss')
+  gulp.src('app/scss/index.scss')
     .pipe(sass())
     .on('error', console.error)
     .pipe(postcss([ autoprefixer({ browsers: ['last 2 version'] }) ]))

@@ -1,5 +1,3 @@
-$MAIN_BG: #f6f6f6;
-
 body {
     margin: 0px;
     background: $MAIN_BG;
@@ -8,7 +6,7 @@ body {
 
 h1 {
     font-weight: 300;
-    color: rgb(70, 70, 70);
+    color: $HEADER;
 }
 
 a {
@@ -33,26 +31,26 @@ a {
     display: inline-block;
     padding: 8px 30px;
     border-radius: 2px;
-    background: #247794;
-    color: rgba(255,255,255,.84);
+    background: $BUTTON_BLUE;
+    color: $MAIN-BG;
     border: none;
     font-size: 12px;
     transition: box-shadow .2s;
 
     &:hover {
         box-shadow: -4px 4px 10px #c4c4c4;
-        background: #2780a0;
+        background: $BUTTON_BLUE_HOVER;
         cursor: pointer;
     }
 
     &:active {
-        background: #3286a7;
+        background: $BUTTON_BLUE_ACTIVE;
         box-shadow: inset 0px 1px 0px #2ab7ec, 0px 3px 0px 0px #156785, 0px 5px 5px #999;
     }
     &:focus { outline: none; }
 
     &.btn-orange {
-        background: rgba(255,152,0,.75);
+        background: $BUTTON_ORANGE;
         color: white;
     }
 
