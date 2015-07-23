@@ -53,7 +53,9 @@
     }
 }
 
+// =============================
 // Participants management modal
+// =============================
 .live-friends-searcher {
     input {
         // Else the top-right corner of the modal would have none!
@@ -87,17 +89,69 @@
     }
 }
 
+// The modal body
 .overview {
     height: 100%;
+    text-align: center;
+    padding-top: 7px;
+
+    img {
+        box-shadow: $THUMB-BOX-SHADOW;
+    }
+
+    .name {
+        color: $GREY-8;
+    }
+
+    .pending-invitations {
+        padding-right: 0; // Override .col- padding
+        height: 90%;
+        border-right: 1px solid $GREY-3;
+    }
+
+    .participants {
+        height: 90%;
+    }
+
+    button {
+        padding: 10px 10px 10px 5px;
+    }
+
+    .creator-card {
+        .name { 
+            color: $MAIN-BG;
+            padding: 10px; 
+        }
+        background: #8C4646;
+        color: $MAIN-BG;
+        &:hover {
+            background: #8C4646;
+        }
+    }
+
+    .permissions-selector {
+        height: 100%;
+        width: 90%;
+        border-radius: 3px;
+        border: 1px solid $GREY-3;
+        padding: 10px;
+        cursor: pointer;
+        background: $GREY-6;
+    }
+
+    select {
+        border: none;
+        cursor: pointer;
+        background: transparent;
+        color: white;
+        font-size: 1em;
+        -webkit-appearance: none;
+        &:focus {
+            outline: none;
+        }
+    }
 }
 
-.pending-invitations {
-    height: 90%;
-    border-right: 1px solid $GREY-3;
-}
 
-.participants {
-    height: 100%;
-}
 
 

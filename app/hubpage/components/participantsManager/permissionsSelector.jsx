@@ -6,22 +6,22 @@
     , Ranks = require('../../../../models/permission').Ranks
 
   var PermissionsSelector = React.createClass({
-    render: function() {
-
+    renderOptions: function() {
       // Store an array of options based and set the correct selected flag
-      var options = [];
-      for (var name in Ranks) {
-        var selected = Ranks[name] == this.props.currentPermissions ? "selected" : "";
-        options.push(
-          <option value={Ranks[name]} selected={selected}>{name}</option>
-        );
-      }
+      return Object.keys(Ranks).map(function(rank) {
+        var selected = Ranks[rank] == this.props.currentPermissions ? "selected" : "";
+        return <option value={Ranks[rank]} selected={selected}>{rank}</option>
+      }.bind(this));
+    },
 
+    render: function() {
       // Render the select node with the options
       return (
-        <select onChange={this._onChange}>
-          {options}
-        </select>
+        <div className="permissions-selector">
+          <select onChange={this._onChange}>
+            {this.renderOptions()}
+          </select>
+        </div>
       )
     },
 

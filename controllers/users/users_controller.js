@@ -4,6 +4,7 @@
 
   var include       = require('include')
     , User          = include('/models/user')
+    , ensureAuth    = include('/middlewares/auth')
     , getTargetUser = include('/middlewares/getTargetUser')
     , getMeAsUser   = include('/middlewares/getMeAsUser')
     , _             = require('lodash')
@@ -12,8 +13,8 @@
 
     middlewares: {
       index:    [],
-      showMe:   [getMeAsUser],
-      showUser: [getTargetUser]
+      showMe:   [ensureAuth, getMeAsUser],
+      showUser: [ensureAuth, getTargetUser]
     },
 
     index: function(req, res) {

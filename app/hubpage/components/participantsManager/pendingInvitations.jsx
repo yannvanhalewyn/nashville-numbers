@@ -11,6 +11,7 @@
         <InvitationCard
           key={invitation.cid}
           firstName={invitation.invitee.properties.firstName}
+          lastName={invitation.invitee.properties.lastName}
           thumb={invitation.invitee.properties.thumb}
           permissions={invitation.properties.permissions}
           cid={invitation.cid}
@@ -21,8 +22,10 @@
     render: function() {
       return (
         <div className="col-2-4 pending-invitations">
-          <h1>Pending Invitations</h1>
-          {this.props.invitations.map(this.renderInvitationCard)}
+          <h2>INVITATIONS</h2>
+          <ul className="list">
+            {this.props.invitations.map(this.renderInvitationCard)}
+          </ul>
         </div>
       )
     }
