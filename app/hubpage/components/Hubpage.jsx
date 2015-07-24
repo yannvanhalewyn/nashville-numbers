@@ -9,8 +9,8 @@
 
   var HubPageComponent = React.createClass({
     componentDidMount: function() {
-      this.props.store.on('participants:sync', this._onParticipantsSync);
-      this.props.store.on('friends:sync invitations:sync invitations:destroy', this._update);
+      this.props.store.on('participants:sync participants:destroy ' +
+                          'invitations:sync invitations:destroy friends:sync', this._update);
     },
 
     getInitialState: function() {
@@ -31,10 +31,6 @@
           <SheetsSection />
         </div>
       )
-    },
-
-    _onParticipantsSync: function(sender, participants) {
-      this.setState({participants: participants});
     },
 
     _update: function() {

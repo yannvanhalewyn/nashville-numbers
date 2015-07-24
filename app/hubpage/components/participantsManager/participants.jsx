@@ -9,10 +9,11 @@
     renderParticipantCard: function(participant) {
       return (
         <ParticipantCard
-          firstName={participant.user.properties.firstName}
-          lastName={participant.user.properties.lastName}
+          firstName={participant.properties.firstName}
+          lastName={participant.properties.lastName}
           relationship={participant.relationship}
-          thumb={participant.user.properties.thumb}
+          thumb={participant.properties.thumb}
+          cid={participant.cid}
         />
       )
     },

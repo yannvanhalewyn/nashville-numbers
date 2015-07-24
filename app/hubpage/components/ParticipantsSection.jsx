@@ -9,10 +9,10 @@
     renderParticipant: function(participant) {
       var status = participant.relationship.type == "CREATED" ? "Creator" : "Participant"
       return (
-        <a href={"/users/" + participant.user._id} className="participant-preview">
-          <img src={participant.user.properties.thumb} alt="participant profile thumbnail" />
+        <a href={"/users/" + participant._id} className="participant-preview">
+          <img src={participant.properties.thumb} alt="participant profile thumbnail" />
           <div className="participant-info">
-            <h4 className="participant-name">{participant.user.properties.firstName}</h4>
+            <h4 className="participant-name">{participant.properties.firstName}</h4>
             <p className="participant-status">{status}</p>
           </div>
         </a>

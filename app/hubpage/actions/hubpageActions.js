@@ -4,45 +4,53 @@
   var keyMirror = require('keymirror')
     , Dispatcher = require('../dispatchers/hubpageDispatcher')
 
-  var UserpageConstants = keyMirror({
+  var HubpageConstants = keyMirror({
     UPDATE_FRIENDS_LIST: null,
     INVITE_FRIEND: null,
     CANCEL_INVITATION: null,
-    UPDATE_INVITED_USER_PERMISSIONS: null
+    UPDATE_INVITED_USER_PERMISSIONS: null,
+    REMOVE_PARTICIPANT: null
   });
 
-  var UserpageActions = {
+  var HubpageActions = {
     updateFriendsList: function(query) {
       Dispatcher.dispatch({
-        actionType: UserpageConstants.UPDATE_FRIENDS_LIST,
+        actionType: HubpageConstants.UPDATE_FRIENDS_LIST,
         query: query
       });
     },
 
     inviteFriend: function(friendID) {
       Dispatcher.dispatch({
-        actionType: UserpageConstants.INVITE_FRIEND,
+        actionType: HubpageConstants.INVITE_FRIEND,
         friendID: friendID
       });
     },
 
     cancelInvitation: function(cid) {
       Dispatcher.dispatch({
-        actionType: UserpageConstants.CANCEL_INVITATION,
+        actionType: HubpageConstants.CANCEL_INVITATION,
         cid: cid
       });
     },
 
-    updateInvitedUserPermissions: function(cid, newPermission) {
+    updateInvitedHubPermissions: function(cid, newPermission) {
       Dispatcher.dispatch({
-        actionType: UserpageConstants.UPDATE_INVITED_USER_PERMISSIONS,
+        actionType: HubpageConstants.UPDATE_INVITED_USER_PERMISSIONS,
         cid: cid,
         value: newPermission
+      });
+    },
+
+    removeParticipant: function(cid) {
+      Dispatcher.dispatch({
+        actionType: HubpageConstants.REMOVE_PARTICIPANT,
+        cid: cid
       });
     }
   }
 
-  module.exports = UserpageActions;
-  module.exports.constants = UserpageConstants;
+  module.exports = HubpageActions;
+  module.exports.constants = HubpageConstants;
 
 }())

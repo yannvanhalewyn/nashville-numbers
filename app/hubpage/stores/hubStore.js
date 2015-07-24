@@ -28,10 +28,11 @@
       // Set the participants collection as nested resource
       this.participants = new ParticipantCollection({hubID: this.id});
       this.participants.on('sync', this.trigger.bind(this, 'participants:sync'));
+      this.participants.on('destroy', this.trigger.bind(this, 'participants:destroy'));
       this.participants.fetch();
 
       // Set the invitations collection as nested resource
-      this.invitations = new InvitationCollection({hubID: this.id});
+      this.invitations = new InvitationCollection([], {hubID: this.id});
       this.invitations.on('sync', this.trigger.bind(this, 'invitations:sync'));
       this.invitations.on('destroy', this.trigger.bind(this, 'invitations:destroy'));
       this.invitations.fetch(); // TODO only fetch when management modal pops
@@ -64,6 +65,11 @@
           invitation.save({permissions: payload.value});
           break;
 
+        case Constants.REMOVE_PARTICIPANT:
+          var participant = this.participants.get(payload.cid);
+          participant.destroy();
+          break;
+
         default:
           console.error("Invalid actiontype: " + payload.actionType);
           break;
@@ -77,7 +83,7 @@
     getState: function() {
       // Invitations are all atributes on all models in the invitations collection
       var invitations = this.invitations.models.map(function(invitation) {
-        var obj = invitation.attributes;
+        var obj = invitation.toJSON();
         obj.cid = invitation.cid;
         return obj;
       });
@@ -95,10 +101,17 @@
         return friend.attributes;
       });
 
+      var participants = this.participants.models.map(function(p) {
+        var obj = p.attributes;
+        obj.cid = p.cid;
+        return obj;
+      });
+
       // Return the state
       return {
         invitations: invitations,
         friends: friends,
+        participants: participants,
         hub: this.attributes
       }
     }

@@ -49,7 +49,7 @@
     },
 
     _onBannishParticipant: function() {
-      Actions.bannishParticipant(this.props.cid);
+      Actions.removeParticipant(this.props.cid);
     },
 
     _onSelect: function(permissionValue) {
