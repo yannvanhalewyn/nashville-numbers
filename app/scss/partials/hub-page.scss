@@ -67,9 +67,7 @@
         border-radius: 5px;
     }
     .friend-suggestions {
-        // It doesn't relate to the outer modal but to the page.
-        // Since the modal is at 10% padding on each side, this works
-        width: 80%;
+        width: 100%;
 
         // User thumbnail
         img {

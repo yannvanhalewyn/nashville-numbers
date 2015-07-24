@@ -1,5 +1,5 @@
 .search-field {
-    
+
     // The search icon
     span {
         width: 5%;
@@ -21,7 +21,7 @@
 
 .search-dropdown {
     background: $MAIN-BG;
-    position: fixed;
+    position: absolute;
 
     ul {
         padding: 0;
@@ -44,6 +44,6 @@
 
         &:first-child {
             border-top: 2px solid $GREY-2;
-        }   
+        }
     }
 }

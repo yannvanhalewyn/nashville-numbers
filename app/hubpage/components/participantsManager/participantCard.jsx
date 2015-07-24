@@ -35,7 +35,7 @@
             <PermissionsSelector onChange={this._onSelect} currentPermissions={this.props.relationship.properties.permissions}/>
           </div>
           <div className="col-3-12">
-            <button className="btn btn-red" onClick={this._onBannishParticipant}><span className="fa fa-times" /> Banish</button>
+            <button className="btn btn-red" onClick={this._onRemoveClicked}><span className="fa fa-times" /> Banish</button>
           </div>
         </li>
       )
@@ -48,12 +48,14 @@
       return this.renderJoinee();
     },
 
-    _onBannishParticipant: function() {
-      Actions.bannishParticipant(this.props.cid);
-    },
-
     _onSelect: function(permissionValue) {
       Actions.updateParticipantPermissions(this.props.cid, permissionValue);
+    },
+
+    _onRemoveClicked: function() {
+      var title = "You're about to remove a participant.";
+      var body = "Are you sure you want to remove " + this.props.firstName + " from this hub?";
+      Actions.showConfirmationModal(title, body, Actions.removeParticipant.bind(null, this.props.cid));
     }
   });
 

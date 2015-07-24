@@ -20,7 +20,9 @@
   var InvitationCollection = Backbone.Collection.extend({
     model: InvitationModel,
 
-    initialize: function(params) {
+    // Models is not used, I need access to the passed in params to store the
+    // parent hubID
+    initialize: function(models, params) {
       this.url = "/hubs/" + params.hubID + "/invitations"
     },
 
