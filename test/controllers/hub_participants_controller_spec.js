@@ -79,6 +79,48 @@ describe('HubParticipantsController', function() {
     }); // End of context 'on error'
 
   }); // End of describe 'DELETE/destroy'
+
+  describe('DELETE/leave', function() {
+    var PARTICIPANT;
+    beforeEach(function() {
+      return Factory('user').then(function(participant) {
+        PARTICIPANT = participant;
+        req.user = participant;
+        req.target_hub = HUB;
+        req.params = {hub_id: HUB._id, participant_id: 'me'};
+      });
+    });
+
+    context("on success", function() {
+      beforeEach(function(done) {
+        sinon.stub(HUB, 'removeParticipant').returns(Q());
+        Controller.leave(req, res);
+        res.on('end', done);
+      });
+
+      it("calls hub.removeParticipant with the logged in user ID", function() {
+        expect(HUB.removeParticipant).to.have.been.calledWith(PARTICIPANT._id);
+      });
+
+      it("redirects to hubs page", function() {
+        expect(res.redirect).to.have.been.calledWith('/hubs');
+      });
+    }); // End of context 'on success'
+
+    context("on error", function() {
+      beforeEach(function(done) {
+        sinon.stub(HUB, 'removeParticipant').returns(rejectionPromise("THE ERROR"));
+        Controller.leave(req, res);
+        res.on('end', done);
+      });
+
+      it("sends a 400 with the error (2)", function() {
+        expect(res.status).to.have.been.calledWith(400);
+        expect(res.send).to.have.been.calledWith("THE ERROR");
+      });
+    }); // End of context 'on error'
+
+  }); // End of describe 'DELETE/destroy'
 }); // End of describe 'HubParticipantsController'
 
 function dummyParticipants() {

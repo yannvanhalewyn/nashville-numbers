@@ -11,7 +11,8 @@
       index:   [ensureAuth, getTargetHub],
       show:    [],
       update:  [],
-      destroy: [ensureAuth, getTargetHubWithRelationship]
+      destroy: [ensureAuth, getTargetHubWithRelationship],
+      leave: [ensureAuth, getTargetHubWithRelationship]
     },
 
     index: function(req, res) {
@@ -27,6 +28,15 @@
     destroy: function(req, res) {
       req.target_hub.removeParticipant(req.params.participant_id).then(function(foo) {
         res.json({destroyed: true});
+      }, function(error) {
+        res.status(400);
+        res.send(error);
+      });
+    },
+
+    leave: function(req, res) {
+      req.target_hub.removeParticipant(req.user._id).then(function() {
+        res.redirect('/hubs');
       }, function(error) {
         res.status(400);
         res.send(error);
