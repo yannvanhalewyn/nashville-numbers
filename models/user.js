@@ -233,7 +233,10 @@
       if (_.isEmpty(result)) {
         throw "User " + this._id + " is not related to hub " + hubID;
       }
-      return result[0];
+      return {
+        hub: new Hub(result[0].hub),
+        relationship: result[0].relationship
+      }
     }.bind(this));
   }
 

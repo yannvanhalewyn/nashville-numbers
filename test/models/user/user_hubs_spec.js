@@ -9,6 +9,7 @@ var include    = require('include')
   , Factory    = include('/test/util/factory')
   , db         = include('/config/db')
   , _          = require('lodash')
+  , hub        = include('/models/hub')
 chai.use(sinonChai);
 chai.use(chaiThings);
 
@@ -107,10 +108,16 @@ describe('USER-HUBS methods', function() {
         });
       });
 
-      it("returns an object containing the hub and the relationship", function() {
+      it("returns an object containing the relationship", function() {
         return USER.getRelationshipToHub(HUB._id.toString()).then(function(result) {
           expect(result.relationship._id).to.eql(RELATIONSHIP._id);
+        });
+      });
+
+      it("it returns an object containing the hub as instance of the Hub Model", function() {
+        return USER.getRelationshipToHub(HUB._id.toString()).then(function(result) {
           expect(result.hub._id).to.eql(HUB._id);
+          expect(result.hub).to.be.an.instanceof(Hub);
         });
       });
     }); // End of context 'when the user joined the hub'
