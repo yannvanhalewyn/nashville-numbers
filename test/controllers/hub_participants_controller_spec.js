@@ -1,12 +1,13 @@
-var include    = require('include')
-  , chai       = require('chai')
-  , sinonChai  = require('sinon-chai')
-  , expect     = chai.expect
-  , sinon      = require('sinon')
-  , reqres     = require('reqres')
-  , Factory    = include('/test/util/factory')
-  , Q          = require('q')
-  , Controller = include('/controllers/hubs/hub_participants_controller');
+var include          = require('include')
+  , chai             = require('chai')
+  , sinonChai        = require('sinon-chai')
+  , expect           = chai.expect
+  , sinon            = require('sinon')
+  , reqres           = require('reqres')
+  , Factory          = include('/test/util/factory')
+  , Q                = require('q')
+  , Controller       = include('/controllers/hubs/hub_participants_controller')
+  , rejectionPromise = include('/test/util/rejectionPromise')
 chai.use(sinonChai);
 
 describe('HubParticipantsController', function() {
@@ -36,6 +37,48 @@ describe('HubParticipantsController', function() {
       expect(res.json).to.have.been.calledWith(dummyParticipants());
     });
   }); // End of describe 'GET/index'
+
+  describe('DELETE/destroy', function() {
+    var PARTICIPANT;
+    beforeEach(function() {
+      return Factory('user').then(function(participant) {
+        PARTICIPANT = participant;
+        req.user = CREATOR;
+        req.target_hub = HUB;
+        req.params = {hub_id: HUB._id, participant_id: 123};
+      });
+    });
+
+    context("on success", function() {
+      beforeEach(function(done) {
+        sinon.stub(HUB, 'removeParticipant').returns(Q());
+        Controller.destroy(req, res);
+        res.on('end', done);
+      });
+
+      it("calls hub.removeParticipant with the participant_id", function() {
+        expect(HUB.removeParticipant).to.have.been.calledWith(123);
+      });
+
+      it("sends {destroyed: true} as json", function() {
+        expect(res.json).to.have.been.calledWith({destroyed: true});
+      });
+    }); // End of context 'on success'
+
+    context("on error", function() {
+      beforeEach(function(done) {
+        sinon.stub(HUB, 'removeParticipant').returns(rejectionPromise("THE ERROR"));
+        Controller.destroy(req, res);
+        res.on('end', done);
+      });
+
+      it("sends a 400 with the error", function() {
+        expect(res.status).to.have.been.calledWith(400);
+        expect(res.send).to.have.been.calledWith("THE ERROR");
+      });
+    }); // End of context 'on error'
+
+  }); // End of describe 'DELETE/destroy'
 }); // End of describe 'HubParticipantsController'
 
 function dummyParticipants() {

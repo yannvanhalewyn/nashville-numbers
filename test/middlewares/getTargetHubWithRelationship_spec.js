@@ -52,7 +52,7 @@ describe('getTargetHubWithRelationship', function() {
     var next;
     beforeEach(function(done) {
       next = sinon.spy();
-      sinon.stub(USER, 'getRelationshipToHub').returns(Q(rejectionPromise("NOT ALLOWED")));
+      sinon.stub(USER, 'getRelationshipToHub').returns(rejectionPromise("NOT ALLOWED"));
       middleware(req, res, next);
       res.on('end', done);
     });
