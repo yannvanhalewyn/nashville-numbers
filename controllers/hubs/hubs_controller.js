@@ -2,13 +2,13 @@
 
   var include      = require('include')
     , ensureAuth   = include('/middlewares/auth')
-    , getTargetHub = include('/middlewares/getTargetHub')
+    , getTargetHubWithRelationship = include('/middlewares/getTargetHubWithRelationship')
 
   module.exports = {
 
     middlewares: {
       index:   [ensureAuth],
-      show:    [ensureAuth, getTargetHub],
+      show:    [ensureAuth, getTargetHubWithRelationship],
       create:  [ensureAuth],
       update:  [],
       destroy: []

@@ -70,6 +70,11 @@
           participant.destroy();
           break;
 
+        case Constants.SHOW_CONFIRMATION_MODAL:
+          delete payload.actionType;
+          this.trigger('modal-confirm', payload);
+          break;
+
         default:
           console.error("Invalid actiontype: " + payload.actionType);
           break;

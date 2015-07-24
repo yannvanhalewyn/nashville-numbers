@@ -9,7 +9,8 @@
     INVITE_FRIEND: null,
     CANCEL_INVITATION: null,
     UPDATE_INVITED_USER_PERMISSIONS: null,
-    REMOVE_PARTICIPANT: null
+    REMOVE_PARTICIPANT: null,
+    SHOW_CONFIRMATION_MODAL: null
   });
 
   var HubpageActions = {
@@ -46,6 +47,15 @@
       Dispatcher.dispatch({
         actionType: HubpageConstants.REMOVE_PARTICIPANT,
         cid: cid
+      });
+    },
+
+    showConfirmationModal: function(title, body, onSuccess) {
+      Dispatcher.dispatch({
+        actionType: HubpageConstants.SHOW_CONFIRMATION_MODAL,
+        title: title,
+        body: body,
+        onSuccess: onSuccess
       });
     }
   }
