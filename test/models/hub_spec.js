@@ -165,4 +165,28 @@ describe('HUB', function() {
       });
     }); // End of context 'when there is no invitation'
   }); // End of describe 'getInvitations'
+
+  describe('removeParticipant', function() {
+    var HUB, CREATOR, PARTICIPANT;
+    beforeEach(function() {
+      return Factory('hub').then(function(entities) {
+        HUB = entities.hub;
+        CREATOR = entities.user;
+        return db.query(
+          "MATCH (h:Hub) WHERE id(h) = {hid} CREATE (p:Person)-[:JOINED]->(h) RETURN p",
+          {hid: HUB._id}
+        ).then(function(result) {
+          PARTICIPANT = result[0].p;
+        });
+      });
+    });
+
+    it("destroys the JOINED relationship", function() {
+      return HUB.removeParticipant(PARTICIPANT._id.toString()).then(function() {
+        return db.query("MATCH ()-[r:JOINED]-() RETURN r").then(function(result) {
+          expect(result).to.be.empty;
+        });
+      });
+    });
+  }); // End of describe 'removeParticipant'
 }); // End of describe 'HUB'

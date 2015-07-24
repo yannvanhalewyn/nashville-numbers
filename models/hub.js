@@ -40,6 +40,20 @@
   }
 
   /**
+   * Removes a participant from the hub.
+   *
+   * @param {string/number} userID The userID of the participant.
+   */
+  Hub.prototype.removeParticipant = function(userID) {
+    return db.query(
+      "MATCH (p:Person)-[joined:JOINED]->(hub:Hub) " +
+      "WHERE id(hub) = {hid} AND id(p) = {pid} " +
+      "DELETE joined",
+      {hid: this._id, pid: parseInt(userID)}
+    );
+  }
+
+  /**
    * Creates a new hub
    *
    * @param {object} params The params to create the hub. It needs a 'creator_id' property to create the CREATED relationship to the hub.
