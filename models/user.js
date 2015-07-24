@@ -216,6 +216,28 @@
   }
 
   /**
+   * Gets the relationship between user and a hub.
+   *
+   * @param {string/number} hubID The ID of the hub.
+   * @return {object} An object containing a hub property with the target hub
+   * data and a relationship property with the relationship data.
+   * @throws {notRelated} An error when there is no relationship between the
+   * user and the hub.
+   */
+  User.prototype.getRelationshipToHub = function(hubID) {
+    return db.query(
+      "MATCH (u:Person)-[relationship]->(hub:Hub) " +
+      "WHERE id(u) = {uid} AND id(hub) = {hid} RETURN relationship, hub",
+      {uid: this._id, hid: parseInt(hubID)}
+    ).then(function(result) {
+      if (_.isEmpty(result)) {
+        throw "User " + this._id + " is not related to hub " + hubID;
+      }
+      return result[0];
+    }.bind(this));
+  }
+
+  /**
    * Creates a HubInvitation linked to the user as sender, target user as
    * receiver and hub as means. Will not create a HubInvitation in the following
    * cirumstances:

@@ -88,6 +88,44 @@ describe('USER-HUBS methods', function() {
     });
   }); // End of describe 'user#createHub()'
 
+  describe('getRelationshipToHub', function() {
+    var HUB, RELATIONSHIP
+    beforeEach(function() {
+      return Factory('hub').then(function(entities) {
+        HUB = entities.hub;
+      });
+    });
+
+    context("when the user has a relationship to the hub", function() {
+      beforeEach(function() {
+        return db.query(
+          "MATCH (p:Person), (hub:Hub) WHERE id(p) = {uid} AND id(hub) = {hid} " +
+          "CREATE (p)-[joined:JOINED]->(hub) RETURN joined",
+          {uid: USER._id, hid: HUB._id}
+        ).then(function(result) {
+          RELATIONSHIP = result[0].joined;
+        });
+      });
+
+      it("returns an object containing the hub and the relationship", function() {
+        return USER.getRelationshipToHub(HUB._id.toString()).then(function(result) {
+          expect(result.relationship._id).to.eql(RELATIONSHIP._id);
+          expect(result.hub._id).to.eql(HUB._id);
+        });
+      });
+    }); // End of context 'when the user joined the hub'
+
+    context("when the user has no relationship to the hub", function() {
+      it("throws a 'notInHub' error", function(done) {
+        return USER.getRelationshipToHub(HUB._id).catch(function(error) {
+          expect(error).to.eql("User " + USER._id + " is not related to hub " + HUB._id);
+          done();
+        }).catch(done);
+      });
+    }); // End of context 'when the user has no'
+
+  }); // End of describe 'getRelationshipToHub'
+
 /*
  * ===============
  * inviteUserToHub
