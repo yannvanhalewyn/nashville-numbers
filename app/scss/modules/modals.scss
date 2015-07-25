@@ -80,16 +80,16 @@
 // DROPDOWN modal
 // ==============
 .dropdown-modal {
+    @include span(12);
     position: fixed;
-    padding: 0px 10px 20px;
-    text-align: center;
-    background: $GREY-1;
-    border-radius: 0 0 10px 5px;
     top: 0;
     left: 0;
     z-index: 1000;
-    @include skipAndSpan(4, 4);
-
+    background: $GREY-1;
+    padding: 0px 10px 20px;
+    text-align: center;
+    border-radius: 0 0 10px 5px;
+    
     h1 { margin-bottom: 10px; }
     .btn { margin: 0 10px; }
 
@@ -108,5 +108,7 @@
         box-shadow: inset -10px 0 5px -5px rgba(0,0,0,.12);
         h1 { color: white; }
         .btn:hover { box-shadow: none; }
-    }
+    }    
+    @include tablet { @include skipAndSpan(3, 7); }
+    @include desktop { @include skipAndSpan(4, 4); }
 }
