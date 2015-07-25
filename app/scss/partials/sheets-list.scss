@@ -1,52 +1,52 @@
 /* SHEETLIST
  ----------------- */
 
-.sheets-list {
-    padding: 75px 10px;
+$spacing-y: 15px;
 
-    .sheet-list-entry {
+// Iphone/Main
+.sheet-list-entry {
+    @include grid;
+    padding: $spacing-y 0;
+    .block-thumb {
+        @include span(3);
+        text-align: center;
+        font-size: 2em;
+        padding:.5em 0;
+    }
+    .block-info {
+        @include span(8);
+        .title { margin: .3em 0; }
+        .artist {
+            margin: .3em 0;
+            color: $GREY-8;
+        }
+        .info {
+            color: $GREY-3;
+        }
+    }
+    .block-actions {
+        @include span(1);
+        color: $GREY-7;
+        margin-top: 15px;
+    }
+}
+
+@include desktop {
+    .sheets-list {
         @include grid;
-        border-bottom: 1px solid $GREY-2;
-        cursor: pointer;
-        a {
-            color: inherit;
-        }
-        &:hover {
-            background: $GREY-2;
-        }
-        .block-thumb {
-            @include span(2);
-            text-align: center;
-            font-size: 50px;
-            margin-top: 20px;
-        }
-        .block-info {
-            @include span(8);
-            .title {
-                margin: 20px 0 0;
-                font-size: 1.2em;
-            }
-            .artist {
-                margin-bottom: 20px;
-                color: #555;
-            }
-            .info {
-                margin-bottom: 40px;
-                color: $GREY-3;
-            }
-        }
-
-        .block-actions {
-            @include span(1);
-            color: $GREY-7;
-            font-size: 1.3em;
-            cursor: pointer;
-            span {
-                margin: 20px 5px;
-            }
-            :hover {
-                color: black;
+        margin-top: 40px;
+        padding: 0 10px;
+        .sheet-list-entry {
+            border: none;
+            padding: 20px;
+            box-shadow: 0 0 4px $GREY-3;
+            @include span(6);
+            .block-thumb { @include span(2); }
+            .block-info { @include span(9); }
+            .block-actions { 
+                @include span(1);
+                span:hover { color: black; }
             }
         }
     }
- }
+}

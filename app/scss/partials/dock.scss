@@ -6,7 +6,7 @@
 $mobile-dock-height: 50px;
 $mobile-dock-padding-y: 15px; 
 $icon-size: $mobile-dock-height - 2*$mobile-dock-padding-y;
-$dock-fixed-left-width: 90px;
+
 
 
 // PHONES/MAIN
@@ -55,7 +55,7 @@ $dock-fixed-left-width: 90px;
         top: 0;
         min-height: 600px;
         height: 100%;
-        width: $dock-fixed-left-width;
+        width: $dock-left-width;
 
         //Reset full width of elements;
         .user-avatar,

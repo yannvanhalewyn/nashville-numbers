@@ -18,10 +18,13 @@ a {
   color: inherit;
 }
 
+// Move away from dock when on left side
 .main-content {
-    position: fixed;
-    left: 90px;
-    width: calc(100% - 90px);
+    @include desktop {
+        position: fixed;
+        left: $dock-left-width;
+        width: calc(100% - #{$dock-left-width});
+    }
 }
 
 
