@@ -8,7 +8,7 @@
 
     render: function() {
       return (
-        <div className="user-stats col-2-4">
+        <div className="user-stats">
           <span className={"emblem " + this.props.insignia}></span>
           <div className="statistics">
             <ul>

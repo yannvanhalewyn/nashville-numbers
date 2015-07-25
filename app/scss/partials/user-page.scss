@@ -1,5 +1,6 @@
 .user-widget,
 .user-stats {
+    @extend %col-6-12;
     padding: 5%;
     height: 100%;
 
@@ -15,7 +16,6 @@
 }
 
 .user-widget {
-    // padding: 5%;
     border-right: 1px solid $GREY-2;
 
     img {

@@ -20,7 +20,7 @@
 
     render: function() {
       return (
-        <div className="col-2-4 participants">
+        <div className="participants">
           <h2>PARTICIPANTS</h2>
           <ul className="list">
             {this.props.participants.map(this.renderParticipantCard)}

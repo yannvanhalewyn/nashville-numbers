@@ -1,58 +1,36 @@
 /* GRID-SYSTEM
  ----------------- */
 
-* {
-    box-sizing: border-box;
-}
-
 $pad: 10px;
 
 .grid {
     margin: 0 0 $pad 0;
-
     &:after {
-        content: "";
         display: table;
         clear: both;
-    }
-
-    [class*='col-'] {
-        padding-right: $pad;
-        float: left;
-
-        &:last-of-type {
-            padding-right: 0;
-        }
-        &:first-child.skip-1-3 {
-            margin-left: 33.33%;
-        }
-        &:first-child.skip-2-3 {
-            margin-left: 66.33%;
-        }
-    }
-
-    .skip-1-3:before {
-        margin-left: 33,33%;
-    }
-
-    .col-1-3 { width: 33.33%; } 
-    .col-2-3 { width: 66.33%; }
-
-    .col-1-4 { width: 25%; } 
-    .col-2-4 { width: 50%; } 
-    .col-3-4 { width: 75%; } 
-
-    .col-1-12 { width: calc(100%/12); }
-    .col-2-12 { width: calc(100%/6); }
-    .col-3-12 { width: 25%; }
-    .col-4-12 { width: calc(100%/3); }
-    .col-5-12 { width: calc(100%*5/12); }
-    .col-6-12 { width: 50%; }
-    .col-7-12 { width: calc(100%*7/12); }
-    .col-8-12 { width: calc(100%*2/3); }
-    .col-9-12 { width: 75%; }
-    .col-10-12 { width: calc(1000%/12); }
-    .col-11-12 { width: calc(100%*11/12); }
+        content: "";
+    } 
 }
 
+%col-base {
+    padding-right: $pad;
+    float: left;
+    &:last-of-type {
+        padding-right: 0;
+    }
+}
 
+// Genate a set for col-x-10 and col-x-12
+@each $gridsize in 10 12 {
+    // Generate all intermittend widths from col-1-x to col-x-x
+    @for $col from 1 through $gridsize {
+        // Define the extendable
+        %col-#{$col}-#{$gridsize} {
+            @extend %col-base;
+            width: ($col/$gridsize) * 100%;
+        }
+        %skip-#{$col}-#{$gridsize} {
+            margin-left: ($col/$gridsize) * 100%;
+        }
+    }
+}

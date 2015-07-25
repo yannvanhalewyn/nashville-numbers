@@ -1,3 +1,7 @@
+* {
+    box-sizing: border-box;
+}
+
 body {
     margin: 0px;
     background: $MAIN_BG;
@@ -26,48 +30,4 @@ a {
 
 .clearFloats {
     clear: both;
-}
-
-.outer-modal {
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 0%;
-    width: 100%;
-    z-index: 1000;
-
-    .modal {
-        text-align: center;
-        padding-bottom: 20px;
-        background: #efefef;
-        border-radius: 0 0 10px 5px;
-
-        h1 { margin-bottom: 10px; }
-        .btn { margin: 0 10px; }
-
-        &.modal-inverted {
-            color: white;
-            background: #103542;
-            box-shadow: inset -10px 0 5px -5px rgba(0,0,0,.12);
-
-            h1 { color: white; }
-            .btn:hover { box-shadow: none; }
-        }
-
-        // SLIDING OUT
-        transition-duration: .4s;
-        transform: translate(0, -100%);
-        &.modal-active {
-            transform: translate(0, 0);
-            box-shadow: 0px 2px 10px #999;
-        }
-    }
-}
-
-.pointer-up {
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-bottom: 10px solid white;
-    position: absolute;
-    top: -10px;
 }

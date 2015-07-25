@@ -21,7 +21,7 @@
 
     render: function() {
       return (
-        <div className="col-2-4 pending-invitations">
+        <div className="pending-invitations">
           <h2>INVITATIONS</h2>
           <ul className="list">
             {this.props.invitations.map(this.renderInvitationCard)}
