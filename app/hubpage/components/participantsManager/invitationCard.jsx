@@ -9,7 +9,7 @@
   var InvitationCard = React.createClass({
     render: function() {
       return (
-        <li className="invitation-card grid">
+        <li className="invitation-card">
           <span className="name">{this.props.firstName} {this.props.lastName}</span>
           <div className="thumb">
             <img src={this.props.thumb} alt="user profile picture" />

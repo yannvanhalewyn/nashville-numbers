@@ -5,42 +5,44 @@
       </a>
     </div>
 
-    <a href="/dashboard" class="dock-elem {{#if active_dashboard}}active{{/if}}">
-        <div class="pointer-left"></div>
-        <i class="fa fa-dashboard"></i>
-        <div href="#">Dashboard</div>
-    </a>
-    <a href="/users/me/sheets" class="dock-elem {{#if active_sheets}}active{{/if}}">
-        <div class="pointer-left"></div>
-        <i class="fa fa-music fa-NN-sheets"></i>
-        <div>Sheets</div>
-    </a>
-    <a href="/hubs" class="dock-elem {{#if active_hubs}}active{{/if}}">
-        <div class="pointer-left"></div>
-        <i class="fa fa-github fa-NN-hubs"></i>
-        <div>Hubs</div>
-    </a>
-    <a href="/explore" class="dock-elem {{#if active_explore}}active{{/if}}">
-        <div class="pointer-left"></div>
-        <i class="fa fa-compass fa-NN-explore"></i>
-        <div>Explore</div>
-    </a>
+    <div class="group-1">
+      <a href="/dashboard" class="dock-elem {{#if active_dashboard}}active{{/if}}">
+          <div class="pointer-left"></div>
+          <i class="fa fa-dashboard"></i>
+          <span>Dashboard</span>
+      </a>
+      <a href="/users/me/sheets" class="dock-elem {{#if active_sheets}}active{{/if}}">
+          <div class="pointer-left"></div>
+          <i class="fa fa-music fa-NN-sheets"></i>
+          <span>Sheets</span>
+      </a>
+      <a href="/hubs" class="dock-elem {{#if active_hubs}}active{{/if}}">
+          <div class="pointer-left"></div>
+          <i class="fa fa-github fa-NN-hubs"></i>
+          <span>Hubs</span>
+      </a>
+      <a href="/explore" class="dock-elem {{#if active_explore}}active{{/if}}">
+          <div class="pointer-left"></div>
+          <i class="fa fa-compass fa-NN-explore"></i>
+          <span>Explore</span>
+      </a>
+    </div>
 
-    <div class="floor-wrap">
+    <div class="group-2">
         <a href="/users/me/friends" class="dock-elem {{#if active_friends}}active{{/if}}">
             <div class="pointer-left"></div>
             <i class="fa fa-thumbs-up"></i>
-            <div>Friends</div>
+            <span>Friends</span>
         </a>
         <a href="/account" class="dock-elem {{#if active_account}}active{{/if}}">
             <div class="pointer-left"></div>
             <i class="fa fa-user"></i>
-            <div>Account</div>
+            <span>Account</span>
         </a>
         <a href="/show-some-love" class="dock-elem {{#if active_love}}active{{/if}}">
             <div class="pointer-left"></div>
             <i class="fa fa-heart fa-NN-love"></i>
-            <div>Love Me</div>
+            <span>Love Me</span>
         </a>
     </div>
 </div>

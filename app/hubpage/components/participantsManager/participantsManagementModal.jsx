@@ -14,7 +14,7 @@
           <label htmlFor="participant-modal-trigger" className="modal-close-trigger"></label>
           <div className="modal-wrap participants-management-modal">
             <LiveFriendsSearcher friends={this.props.friends}/>
-            <div className="overview grid">
+            <div className="overview">
               <PendingInvitations invitations={this.props.invitations} />
               <Participants participants={this.props.participants} />
             </div>

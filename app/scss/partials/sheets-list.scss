@@ -5,6 +5,7 @@
     padding: 75px 10px;
 
     .sheet-list-entry {
+        @include grid;
         border-bottom: 1px solid $GREY-2;
         cursor: pointer;
         a {
@@ -14,13 +15,13 @@
             background: $GREY-2;
         }
         .block-thumb {
-            @include col(1,10);
+            @include span(2);
             text-align: center;
             font-size: 50px;
             margin-top: 20px;
         }
         .block-info {
-            @include col(8,10);
+            @include span(8);
             .title {
                 margin: 20px 0 0;
                 font-size: 1.2em;
@@ -36,7 +37,7 @@
         }
 
         .block-actions {
-            @include col(1,10);
+            @include span(1);
             color: $GREY-7;
             font-size: 1.3em;
             cursor: pointer;

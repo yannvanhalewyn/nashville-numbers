@@ -1,6 +1,6 @@
 .user-widget,
 .user-stats {
-    @include col(6);
+    @include span(6);
     padding: 5%;
     height: 100%;
 

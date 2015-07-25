@@ -88,8 +88,7 @@
     top: 0;
     left: 0;
     z-index: 1000;
-    @include col(4);
-    @include skip(4);
+    @include skipAndSpan(4, 4);
 
     h1 { margin-bottom: 10px; }
     .btn { margin: 0 10px; }

@@ -3,13 +3,13 @@ $desktop: 1024px;
 
 
 @mixin tablet {
-	@media (min-width: #{$tablet}) and (max-width: #{$desktop}) {
+	@media screen and (min-width: #{$tablet}) {
 		@content;
 	}
 }
 
 @mixin desktop {
-	@media (min-width: #{$desktop}) {
+	@media screen and (min-width: #{$desktop}) {
 		@content;
 	}
 }
