@@ -30,17 +30,15 @@
 
     render: function() {
       var classes = {
-        'modal-active': this.state.open
+        'active': this.state.open
       };
       return (
-        <div className="outer-modal grid">
-          <div className={"modal skip-1-3 col-1-3 " + classNames(classes)}>
+          <div className={"dropdown-modal " + classNames(classes)}>
             <h1>{this.state.title}</h1>
             <p>{this.state.body}</p>
             <div className="btn btn-red" onClick={this._onCancel}>No!</div>
             <div className="btn" onClick={this._onConfirm}>Yes!</div>
           </div>
-        </div>
       )
     },
 

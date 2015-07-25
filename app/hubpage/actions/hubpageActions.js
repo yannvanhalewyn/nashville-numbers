@@ -35,7 +35,7 @@
       });
     },
 
-    updateInvitedHubPermissions: function(cid, newPermission) {
+    updateInvitedUserPermissions: function(cid, newPermission) {
       Dispatcher.dispatch({
         actionType: HubpageConstants.UPDATE_INVITED_USER_PERMISSIONS,
         cid: cid,

@@ -1,3 +1,6 @@
+// =============
+// OVERLAY modal
+// =============
 .modal-overlay {
     background: rgba(0, 0, 0, .75);
     position: fixed;
@@ -5,7 +8,6 @@
     left: 0;
     bottom: 0;
     right: 0;
-    padding: 5% 10%;
 
     // Default it to hidden
     opacity: 0;
@@ -15,25 +17,50 @@
     
     .modal-wrap {
         background: white;
-        border-radius: 7px;
         height: 100%;
+        overflow: auto;
         position: relative;
+    }
 
-        .modal-close-trigger {
-            cursor: pointer;
+    .modal-close-trigger {
+        display: block;
+        cursor: pointer;
+        color: white;
+        padding: 5px 0;
+        text-align: center;
+        background: black;
+        border-radius: 10px 10px 0 0;
+
+        &:after {
+            content: '\0f077';
+            font-family: FontAwesome;
+            padding: 10px;   
+        }
+
+        @include desktop {
+            position: relative;
             background: black;
-            color: white;
-            padding: 7px;
+            float: right;
             border-radius: 50%;
-            font-size: 1em;
-            position: absolute;
-            right: -.75em;
-            top: -.75em;
-
-            // Animation on hover
-            &:hover {
-                transform: scale(1.2);
+            top: -.8em;
+            right: 1em;
+            z-index: 800;
+            &:after {
+                content: '\0f00d';
             }
+            &:hover {
+                transform: scale(1.1);
+            }
+        }
+    }
+
+    @include tablet {
+        padding: 5% 5%;
+    }
+    @include desktop {
+        padding: 5% 10%;
+        .modal-wrap {
+            border-radius: 7px;
         }
     }
 }
@@ -44,5 +71,43 @@
         opacity: 1;
         z-index: 600;
         transform: scale(1);
+    }
+}
+
+
+
+// ==============
+// DROPDOWN modal
+// ==============
+.dropdown-modal {
+    position: fixed;
+    padding: 0px 10px 20px;
+    text-align: center;
+    background: $GREY-1;
+    border-radius: 0 0 10px 5px;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    @include col(4);
+    @include skip(4);
+
+    h1 { margin-bottom: 10px; }
+    .btn { margin: 0 10px; }
+
+    // Transition
+    transform: translate(0, -100%);
+    transition-duration: .4s;
+    &.active {
+        transform: translate(0, 0);
+        box-shadow: 0px 2px 10px $GREY-6;
+    }
+    
+    // Extra theme might be necessary
+    &.modal-inverted {
+        color: white;
+        background: #103542;
+        box-shadow: inset -10px 0 5px -5px rgba(0,0,0,.12);
+        h1 { color: white; }
+        .btn:hover { box-shadow: none; }
     }
 }

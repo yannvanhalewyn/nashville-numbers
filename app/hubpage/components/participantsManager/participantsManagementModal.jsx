@@ -11,8 +11,8 @@
     render: function() {
       return (
         <div className="modal-overlay">
+          <label htmlFor="participant-modal-trigger" className="modal-close-trigger"></label>
           <div className="modal-wrap participants-management-modal">
-            <label htmlFor="participant-modal-trigger"><span className="fa fa-times modal-close-trigger"></span></label>
             <LiveFriendsSearcher friends={this.props.friends}/>
             <div className="overview grid">
               <PendingInvitations invitations={this.props.invitations} />

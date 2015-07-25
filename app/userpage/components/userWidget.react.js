@@ -8,7 +8,7 @@
   var UserWidgetComponent = React.createClass({
     render: function() {
       return (
-        <div className="user-widget col-2-4">
+        <div className="user-widget">
           <img src={this.props.picture} alt={this.props.firstName + "'s profile picture"} />
           <div className="info">
             <h2>{this.props.firstName + " " + this.props.lastName}</h2>

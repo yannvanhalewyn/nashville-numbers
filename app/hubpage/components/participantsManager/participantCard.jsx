@@ -16,25 +16,25 @@
 
     renderCreator: function() {
       return <li className="creator-card grid">
-        <div className="col-2-12">
+        <div className="thumb">
           <img src={this.props.thumb} alt="user profile picture" />
         </div>
-        <span className="col-8-12 name">{this.props.firstName} {this.props.lastName}</span>
-        <span className="col-2-12" >CREATOR</span>
+        <span className="name">{this.props.firstName} {this.props.lastName}</span>
+        <label className="" >CREATOR</label>
       </li>
     },
 
     renderJoinee: function() {
       return (
         <li className="participant-card grid">
-          <span className="col-4-12 name">{this.props.firstName} {this.props.lastName}</span>
-          <div className="col-2-12">
+          <span className="name">{this.props.firstName} {this.props.lastName}</span>
+          <div className="thumb">
             <img src={this.props.thumb} alt="user profile picture" />
           </div>
-          <div className="permissions col-3-12">
+          <div className="permissions">
             <PermissionsSelector onChange={this._onSelect} currentPermissions={this.props.relationship.properties.permissions}/>
           </div>
-          <div className="col-3-12">
+          <div className="button">
             <button className="btn btn-red" onClick={this._onRemoveClicked}><span className="fa fa-times" /> Banish</button>
           </div>
         </li>
