@@ -107,16 +107,14 @@
     }
 
     .pending-invitations {
-        @extend %col-6-12;
+        @include col(6);
         padding-right: 0; // Override .col- padding
         height: 90%;
         border-right: 1px solid $GREY-3;
     }
 
-    
-
     .participants {
-        @extend %col-6-12;
+        @include col(6);
         height: 90%;
     }
 
@@ -124,12 +122,12 @@
         background: $DARK-RED;
         color: $MAIN-BG;
         .name {
-            @extend %col-8-12;
+            @include col(8);
             color: $MAIN-BG;
             padding: 10px;
         }
-        .thumb { @extend %col-2-12; }
-        label { @extend %col-2-12; }
+        .thumb { @include col(2); }
+        label { @include col(2); }
         &:hover {
             background: #8C4646;
         }
@@ -175,8 +173,8 @@
 // Gridding
 .invitation-card,
 .participant-card {
-    .name { @extend %col-4-12; }
-    .thumb { @extend %col-2-12; }
-    .permissions { @extend %col-3-12; }
-    .button { @extend %col-3-12; }
+    .name { @include col(4); }
+    .thumb { @include col(2); }
+    .permissions { @include col(3); }
+    .button { @include col(3); }
 }

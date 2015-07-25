@@ -12,25 +12,15 @@ $pad: 10px;
     } 
 }
 
-%col-base {
+@mixin col($col, $gridsize:12) {
     padding-right: $pad;
     float: left;
     &:last-of-type {
         padding-right: 0;
     }
+    width: ($col/$gridsize) * 100%;
 }
 
-// Genate a set for col-x-10 and col-x-12
-@each $gridsize in 10 12 {
-    // Generate all intermittend widths from col-1-x to col-x-x
-    @for $col from 1 through $gridsize {
-        // Define the extendable
-        %col-#{$col}-#{$gridsize} {
-            @extend %col-base;
-            width: ($col/$gridsize) * 100%;
-        }
-        %skip-#{$col}-#{$gridsize} {
-            margin-left: ($col/$gridsize) * 100%;
-        }
-    }
+@mixin skip($col, $gridsize:12) {
+    margin-left: ($col/$gridsize) * 100%;
 }
