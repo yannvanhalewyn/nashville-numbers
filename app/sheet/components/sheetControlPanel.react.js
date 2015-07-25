@@ -28,10 +28,11 @@
             ref="deleteConfirmationModal"
             onConfirm={this._handleDelete}
           />
-          <span className="SC-icon fa fa-trash-o" onClick={this._deleteClicked}></span>
-
-          <span className="SC-icon fa fa-star-o" id="SC-fav-icon"></span>
-          <SheetControlEditActions />
+          <div className="action-icons">
+            <span className="SC-icon fa fa-trash-o" onClick={this._deleteClicked}></span>
+            <span className="SC-icon fa fa-star-o" id="SC-fav-icon"></span>
+            <SheetControlEditActions />
+          </div>
           <div className="btn" id="save-button" onClick={this._handleSave}>Save!</div>
           <span className="fa fa-expand" id="play-mode-toggle"></span>
         </div>

@@ -26,7 +26,7 @@
 
     render: function() {
       return (
-        <div className="musicRow" >
+        <div className="row" >
           {this.props.bars.map(this.renderBar)}
         </div>
       );
