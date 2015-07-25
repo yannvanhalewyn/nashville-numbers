@@ -94,7 +94,6 @@
 
 // The modal body
 .overview {
-    height: 100%;
     text-align: center;
     padding-top: 7px;
 
@@ -107,15 +106,15 @@
     }
 
     .pending-invitations {
-        @include col(6);
-        padding-right: 0; // Override .col- padding
-        height: 90%;
-        border-right: 1px solid $GREY-3;
+        @include col-desktop(6);
+        @include desktop {
+            border-right: 1px solid $GREY-3;
+        }
     }
 
     .participants {
-        @include col(6);
-        height: 90%;
+        @include col-desktop(6);
+        background: $MAIN-BG;
     }
 
     .creator-card {
@@ -140,14 +139,19 @@
 
     .permissions-selector {
         border-radius: 3px;
-        padding: 7px 0;
         margin-top: 10%;
         background: $SELECT-BLUE;
+        position: relative;
         &:after {
             content: "\0f078";
             color: white;
             font-size: .8em;
+            position: absolute;
+            z-index: 0;
+            right: 20%;
+            top: 33%;
             font-family: FontAwesome;
+            pointer-events: none;
         }
     }
 
@@ -158,7 +162,9 @@
         color: white;
         font-size: .9em;
         appearance: none;
-
+        padding: 10px 20%;
+        width: 100%;
+    
         .rank-option {
             color: red;
             font-size: 1.5em;

@@ -8,7 +8,6 @@
     left: 0;
     bottom: 0;
     right: 0;
-    padding: 5% 10%;
 
     // Default it to hidden
     opacity: 0;
@@ -18,25 +17,50 @@
     
     .modal-wrap {
         background: white;
-        border-radius: 7px;
         height: 100%;
+        overflow: auto;
         position: relative;
+    }
 
-        .modal-close-trigger {
-            cursor: pointer;
+    .modal-close-trigger {
+        display: block;
+        cursor: pointer;
+        color: white;
+        padding: 5px 0;
+        text-align: center;
+        background: black;
+        border-radius: 10px 10px 0 0;
+
+        &:after {
+            content: '\0f077';
+            font-family: FontAwesome;
+            padding: 10px;   
+        }
+
+        @include desktop {
+            position: relative;
             background: black;
-            color: white;
-            padding: 7px;
+            float: right;
             border-radius: 50%;
-            font-size: 1em;
-            position: absolute;
-            right: -.75em;
-            top: -.75em;
-
-            // Animation on hover
-            &:hover {
-                transform: scale(1.2);
+            top: -.8em;
+            right: 1em;
+            z-index: 800;
+            &:after {
+                content: '\0f00d';
             }
+            &:hover {
+                transform: scale(1.1);
+            }
+        }
+    }
+
+    @include tablet {
+        padding: 5% 5%;
+    }
+    @include desktop {
+        padding: 5% 10%;
+        .modal-wrap {
+            border-radius: 7px;
         }
     }
 }

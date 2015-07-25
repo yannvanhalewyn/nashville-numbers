@@ -21,6 +21,18 @@ $pad: 10px;
     width: ($col/$gridsize) * 100%;
 }
 
+@mixin col-tablet($col) {
+    @include tablet {
+        @include col($col);
+    }
+}
+
+@mixin col-desktop($col) {
+    @include desktop {
+        @include col($col);
+    }
+}
+
 @mixin skip($col, $gridsize:12) {
     margin-left: ($col/$gridsize) * 100%;
 }
