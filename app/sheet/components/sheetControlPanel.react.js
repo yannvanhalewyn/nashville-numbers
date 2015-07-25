@@ -32,8 +32,8 @@
 
           <span className="SC-icon fa fa-star-o" id="SC-fav-icon"></span>
           <SheetControlEditActions />
-          <span className="fa fa-expand" id="play-mode-toggle"></span>
           <div className="btn" id="save-button" onClick={this._handleSave}>Save!</div>
+          <span className="fa fa-expand" id="play-mode-toggle"></span>
         </div>
       )
     },

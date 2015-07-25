@@ -1,171 +1,142 @@
 /*
- * =====
- * SHEET
- * =====
- */
+* =====
+* SHEET
+* =====
+*/
 @font-face {
-  font-family: NashvillechordSymbols;
-  src: url(../fonts/NashvilleChordSymbols-regular.ttf)
+    font-family: NashvillechordSymbols;
+    src: url(../fonts/NashvilleChordSymbols-regular.ttf)
 }
 
 .sheet {
-  padding: 0 20px;
+    padding: 0 20px;
 }
 
-/* CONTROL PANEL
-------------------*/
+// TODO A lot of pixel nudging here!
 .sheet-control-panel {
-  background: #eee;
-  box-shadow: 0px 2px 10px #999;
-  min-height: 36px;
-  padding: 0px 10px;
-  margin-bottom: 40px;
-
-  .SC-icon {
-    cursor: pointer;
-    display: inline-block;
-    margin: 0px 10px;
-    font-size: 1.2em;
-    margin-top: 7px;
-
-    &#SC-fav-icon:hover {
-      color: $YELLOW;
-      text-shadow: 0px 0px 5px $YELLOW;
+    @include grid;
+    background: $GREY-1;
+    box-shadow: 0px 2px 10px $GREY-6;
+    padding: 0 10px;
+    .SC-icon {
+        @include span(2, 16);
+        padding: 5px;
     }
-  }
 
-  .SC-edit-actions {
-    display: inline-block;
+    #save-button {
+        @include skipAndSpan(3, 4, 16);
+        padding-right: 0;
+        padding-left: 0;
+        text-align: center;
+    }
+    #play-mode-toggle {
+        @include skip(1, 16);
+        border: 2px solid $LIGHT-GREEN-2;
+        color: $LIGHT-GREEN-2;
+        width: 27px;
+        padding: 5px;
+        &:active,
+        &:hover {
+            color: white;
+            cursor: pointer;
+            background: $LIGHT-GREEN-2;
+        }
+    }
+}
+
+// Edit popup
+.SC-edit-actions {
     position: relative;
     .sheet-operations-popup {
-      color: white;
-      border: 10%;
-      margin-top: 10px;
-      padding: 10px 5px 0;
-      background: $BLUE;
-      box-shadow: 0px 0px 20px #444;
-      position: absolute;
-      width: 145px;
-      left: -60px;
-
-      .pointer-up {
-        left: 68px;
-        border-bottom-color: $BLUE;
-      }
-    }
-  }
-
-  #save-button {
-    margin-top: 3px;
-    font-weight: 800;
-    float: right;
-    margin-right: 50px;
-  }
-
-  #play-mode-toggle {
-    margin-top: 2px;
-    cursor: pointer;
-    float: right;
-    font-size: 0.8em;
-    border: 2px solid $LIGHT-GREEN-2;
-    padding: 7px;
-    border-radius: 10%;
-
-    &:hover {
-      color: white;
-      background: $LIGHT-GREEN-2;
-    }
-  }
-}
-
-/* EDIT-OP-POPUP
--------------------*/
-.add-or-remove-buttons {
-  margin-bottom: 10px;
-  display: inline-block;
-  width: 100%;
-  text-align: center;
-
-  .btn {
-    margin: 0;
-    padding: 4px 8px;
-
-    &.control-add {
-      background: #58AC7E;
-      float: right;
-      &:hover {
-        box-shadow: 0px 0px 4px #588C7E;
-      }
+        padding: 10px 5px 0;
+        width: 145px;
+        position: absolute;
+        top: 32px;
+        left: -60px;
+        background: $BLUE;
+        color: white;
+        box-shadow: 0 0 20px #444;
+        &:before {
+            content: "";
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 10px solid $BLUE;
+            margin-left: 38%;
+            position: absolute;
+            top: -10px;
+        }
     }
 
-    &.control-remove {
-      background: #D96459;
-      float: left;
-      &:hover {
-        box-shadow: 0px 0px 6px #D96459;
-      }
+    .add-or-remove-buttons {
+        text-align: center;
+        margin-bottom: 10px;
+        .btn {
+            padding: 4px 8px;
+            &.control-add {
+                background: $ADD-ENTITY;
+                float: right;
+            }
+            &.control-remove {
+                background: $REMOVE-ENTITY;
+                float: left;
+            }
+        }
     }
-  }
 }
 
 /* TITLE
 ------------------*/
 .sheet-title {
-  text-align: center;
-  text-transform: uppercase;
-  .artist {
-    color: #bbb;
-    font-size: 0.7em;
-    text-transform: none;
-  }
+    text-align: center;
+    text-transform: uppercase;
+    .artist {
+        color: #bbb;
+        font-size: 0.7em;
+        text-transform: none;
+    }
 }
 
 /* SECTION
 ------------------*/
 .section-name {
-  color: #999;
-  text-transform: uppercase;
-  margin-bottom: 5px;
+    color: #999;
+    text-transform: uppercase;
+    margin-bottom: 5px;
 }
 
-/* BAR
-------------------*/
+// * BAR
+// ------------------*/
 .bar {
-  display: inline-block;
-  margin-right: 2%;
-  width: 23%;
-  &.multi-chords {
-    border-bottom: 3px solid black;
-  }
+    @include span(1,4);
+    &.multi-chords {
+        border-bottom: 3px solid black;
+    }
 }
 
-/* CHORD
-------------------*/
+// /* CHORD
+// ------------------*/
 .chord {
-  height: 60px;
-  width: 23%;
-  margin-right: 1%;
-  border: none;
-  border-radius: 10%;
-  font-family: NashvillechordSymbols;
-  font-size: 2em;
-  cursor: pointer;
-  box-shadow: 1px 1px 10px #efefef;
-  text-align: center;
-  background: inherit;
+    @include span(1, 2);
+    height: 60px;
+    border: none;
+    border-radius: 5px;
+    font-family: NashvillechordSymbols;
+    font-size: 2em;
+    cursor: pointer;
+    text-align: center;
 
-  &:focus {
-    outline: none;
-  }
+    &:focus {
+        outline: none;
+    }
 
-  &.chord-empty {
-    box-shadow: 0px 0px 7px #999;
-  }
+    &.chord-empty {
+        box-shadow: 0px 0px 7px #999;
+    }
 
-  &.chord-editing {
-    background: $CHORD-EDITING;
-    font-family: inherit;
-    cursor: auto;
-    transition: background 300ms;
-  }
+    &.chord-editing {
+        background: $CHORD-EDITING;
+        font-family: inherit;
+        cursor: auto;
+        transition: background 300ms;
+    }
 }

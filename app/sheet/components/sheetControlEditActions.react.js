@@ -27,7 +27,6 @@
       if (!this.state.visible) return null;
       return (
         <div className="sheet-operations-popup">
-          <div className="pointer-up"> </div>
           {this.renderAddOrRemoveButton("Section", SheetActions.addSection,
                                                    SheetActions.removeSection)}
           {this.renderAddOrRemoveButton("Row", SheetActions.addRow,
@@ -42,9 +41,9 @@
 
     render: function() {
       return (
-        <div className="SC-edit-actions" onMouseLeave={this._onMouseLeave}>
+        <div className="SC-edit-actions SC-icon" onMouseLeave={this._onMouseLeave}>
           <span
-            className="SC-icon fa fa-pencil"
+            className="fa fa-pencil"
             onMouseEnter={this._openPopup}
             onClick={this._openPopup}>
           </span>
