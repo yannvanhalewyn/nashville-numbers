@@ -62,9 +62,7 @@
         box-shadow: 0 0 20px #444;
         &:before {
             content: "";
-            border-left: 10px solid transparent;
-            border-right: 10px solid transparent;
-            border-bottom: 10px solid $BLUE;
+            @include caretUp(10px, $BLUE);
             margin-left: 38%;
             position: absolute;
             top: -10px;
@@ -157,8 +155,8 @@
     .sheet-control-panel {
         padding: 5px;
         .action-icons { @include span(2); }
-        #save-button { @include skipAndSpan(4, 2); }
-        #play-mode-toggle { @include skip(3); }
+        #save-button { @include skipAndSpan(3, 2); }
+        #play-mode-toggle { @include skip(4); }
     }
 }
 
@@ -172,8 +170,7 @@
         #save-button { @include skipAndSpan(8, 1); }
         #play-mode-toggle { @include skip(1); }
     }
+    .chord {
+        @include span(3);
+    }
 }
-
-
-
-
