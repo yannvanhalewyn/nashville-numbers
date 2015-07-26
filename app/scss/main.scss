@@ -18,6 +18,11 @@ a {
   color: inherit;
 }
 
+ul {
+    // TODO is this expensive?
+    padding: 0;
+}
+
 // Move away from dock when on left side
 .main-content {
     @include desktop {

@@ -101,7 +101,7 @@ gulp.task('sass', function() {
   gulp.src('app/scss/index.scss')
     .pipe(sass())
     .on('error', console.error)
-    .pipe(postcss([ autoprefixer({ browsers: ['last 2 version'] }) ]))
+    .pipe(postcss([ autoprefixer({ browsers: ['last 4 version'] }) ]))
     .pipe(gulp.dest('public/css/'));
 });
 
