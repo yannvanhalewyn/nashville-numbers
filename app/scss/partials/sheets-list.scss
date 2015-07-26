@@ -36,17 +36,23 @@ $spacing-y: 15px;
         @include grid;
         margin-top: 40px;
         padding: 0 10px;
-        .sheet-list-entry {
-            border: none;
-            padding: 20px;
-            box-shadow: 0 0 4px $GREY-3;
-            @include span(6);
-            .block-thumb { @include span(2); }
-            .block-info { @include span(9); }
-            .block-actions { 
-                @include span(1);
-                span:hover { color: black; }
-            }
+    }
+    .sheet-list-entry {
+        border: none;
+        padding: 20px;
+        box-shadow: 0 0 4px $GREY-3;
+        @include span(6);
+        .block-thumb { @include span(2); }
+        .block-info { @include span(9); }
+        .block-actions { 
+            @include span(1);
+            span:hover { color: black; }
         }
+    }
+}
+
+@include XL {
+    .sheet-list-entry {
+        @include span(4);
     }
 }
