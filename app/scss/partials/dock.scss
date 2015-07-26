@@ -25,20 +25,34 @@ $icon-size: $mobile-dock-height - 2*$mobile-dock-padding-y;
         img {
             width: $mobile-dock-height - 2 * $mobile-dock-padding-y;
             max-width: 100%;
+            border-radius: 50%;
         }
     }
     .group-1 { @include skipAndSpan(1, 5); }
     .group-2 { @include span(5); }
+}
 
-    .dock-elem {
-        @include span(3);
-        i { font-size: $icon-size; }
-        color: $DOCK-TEXT;
-        text-align: center;
-        transition: color .1s linear;
-        &:active { color: white; }
+.dock-elem {
+    @include span(3);
+    i { font-size: $icon-size; }
+    color: $DOCK-TEXT;
+    text-align: center;
+    transition: color .1s linear;
+    &.active { 
+        i { color: white; }
+        position: relative;
+        .pointer {
+            position: absolute;
+            width: 100%;
+            top: 6px;
+            &:after {
+                content: "";
+                @include caretUp(10px);
+                margin-left: -12%;
+            }
+        }
     }
- }
+}
 
 .fa-NN-love { color: $RED; }
 .fa-NN-explore { color: $ORANGE; }
@@ -96,12 +110,12 @@ $icon-size: $mobile-dock-height - 2*$mobile-dock-padding-y;
             }
 
             &.active {
-                .pointer-left {
-                    position: absolute;
+                .pointer {
                     right: 0px;
-                    border-top: 10px solid transparent;
-                    border-bottom: 10px solid transparent;
-                    border-right: 10px solid $MAIN-BG;
+                    margin: 0;
+                    top: 5px;
+                    @include caretLeft(10px, $MAIN-BG);
+                    &:after {  display: none; }
                 }
             }
         }
