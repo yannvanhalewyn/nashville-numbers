@@ -1,8 +1,9 @@
 var include = require('include')
   , expect  = require('chai').expect
   , Sheet   = include('/models/sheet')
+  , User    = include('/models/user')
   , Factory = include('/test/util/factory')
-  , db = include('/config/db')
+  , db      = include('/config/db')
 
 describe('Sheet', function() {
   describe("instantiation", function() {
@@ -151,4 +152,42 @@ describe('Sheet', function() {
       });
     }); // End of context 'when not found'
   }); // End of describe '.findById()'
+
+  describe('findByIdWithAuthor()', function() {
+    context("when sheet exists", function() {
+      var SHEET, AUTHOR, RESULT;
+      beforeEach(function() {
+        return Factory('sheet').then(function(entities) {
+          SHEET = entities.sheet;
+          AUTHOR = entities.user;
+          return Sheet.findByIdWithAuthor(SHEET._id.toString()).then(function(result) {
+            RESULT = result;
+          });
+        });
+      });
+
+      it("returns an object with the sheet instance as sheet", function() {
+        expect(RESULT.sheet).to.be.an.instanceof(Sheet);
+        expect(RESULT.sheet).to.eql(SHEET);
+      });
+
+      it("returns an object with the user instance as author", function() {
+        expect(RESULT.author).to.be.an.instanceOf(User);
+        expect(RESULT.author).to.eql(AUTHOR);
+      });
+    }); // End of context 'when sheet exists'
+
+    context("when sheet doesn't exist", function() {
+      var ERROR;
+      beforeEach(function() {
+        return Sheet.findByIdWithAuthor(999999).catch(function(error) {
+          ERROR = error;
+        });
+      });
+
+      it("throws a not found error", function() {
+        expect(ERROR).to.eql("Could not find sheet with id " + 999999);
+      });
+    }); // End of context 'when sheet doesn't exist'
+  }); // End of describe 'findByIdWithAuthor()'
 }); // End of describe 'Shewhen sheet is not found

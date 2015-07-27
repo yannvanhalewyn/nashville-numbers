@@ -5,6 +5,7 @@
     , db      = require('../config/db')
     , _       = require('lodash')
     , Cypher  = include('/helpers/cypher')
+    , User    = include('/models/user') // This is a circular dep. There seems to be no issues .. ?
 
   var DEFAULT = {
     title: "title",
@@ -105,6 +106,29 @@
       if (_.isEmpty(response)) throw "Could not find sheet with id " + id;
       return new Sheet(response[0].s)
     });
+  }
+
+  /**
+   * Finds a sheet in the databased based on the given ID and returns the user
+   * that AUTHORED the sheet.
+   *
+   * @param {string/number} sheetID the ID of the sheet.
+   * @return {object} An object containing a Sheet instance as sheet and a User
+   * instance as author.
+   * @throws {Error} When no sheet has been found by that ID.
+   */
+  Sheet.findByIdWithAuthor = function(sheetID) {
+    return db.query(
+      "MATCH (sheet:Sheet)<-[:AUTHORED]-(author:Person) " +
+      "WHERE id(sheet) = {sid} RETURN sheet, author",
+      {sid: parseInt(sheetID)}
+    ).then(function(result) {
+      if (_.isEmpty(result)) throw "Could not find sheet with id " + sheetID;
+      return {
+        sheet: new Sheet(result[0].sheet),
+        author: new User(result[0].author)
+      };
+    })
   }
 
   module.exports = Sheet;
