@@ -25,6 +25,7 @@
     overflow: auto;
     position: relative;
     @include desktop { border-radius: 7px; }
+    h2 { text-align: center; }
 }
 
 .modal-close-trigger {
@@ -55,9 +56,9 @@
     }
 }
 
-@mixin modalWithTrigger($trigger, $target-div:".modal-overlay") {
+@mixin modalWithTrigger($trigger) {
     #{$trigger} { display: none; }
-    #{$trigger}:checked ~ #{$target-div} {
+    #{$trigger}:checked ~ .modal-overlay {
         opacity: 1;
         z-index: 600;
         transform: scale(1);
@@ -108,7 +109,29 @@
 // ==========
 // MODAL FORM
 // ==========
-.form-overlay {
-    @include tablet { padding: 0 20%; } 
-    @include desktop { padding: 10% 30%; } 
+.form-modal {
+    @include span(12);
+    position: fixed;
+    background: $MAIN-BG;
+    border-radius: 0 0 10px 5px;
+    z-index: -100;
+    top: 0;
+    left: 0;
+    // Slide out as default
+    transform: translate(0, -100%);
+    transition: all linear .2s;
+    h2 { text-align: center; }
+    @include tablet { @include skipAndSpan(3, 6); }
 }
+
+@mixin formModalWithTrigger($trigger) {
+    #{$trigger} { display: none; }
+    #{$trigger}:checked ~ .form-modal {
+        transform: translate(0, 0);
+        box-shadow: 0px 2px 10px $GREY-6;
+        z-index: 600;
+    }
+}
+// .form-overlay {
+//     @include desktop { padding: 10% 30%; } 
+// }

@@ -1,4 +1,3 @@
 .new-hub-modal {
-	@include modalWithTrigger("#new-hub-form-trigger");
-	h2 { text-align: center; }
+	@include formModalWithTrigger("#new-hub-form-trigger");
 }

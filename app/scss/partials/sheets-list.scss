@@ -3,6 +3,10 @@
 
 $spacing-y: 15px;
 
+.new-sheet-modal {
+    @include formModalWithTrigger("#new-sheet-form-trigger");
+}
+
 // Iphone/Main
 .sheet-list-entry {
     @include grid;

@@ -19,7 +19,7 @@
     render: function() {
       return (
         <div className="sheet-control-panel">
-          <form action={this._url()} method="post" ref="deleteForm">
+          <form action={this._url()} method="post" ref="deleteForm" className="hidden-form">
             <input type="hidden" value="DELETE" name="_method"/>
           </form>
           <Modal
