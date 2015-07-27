@@ -14,60 +14,50 @@
     z-index: -100;
     transform: scale(.5);
     transition: all .6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    
-    .modal-wrap {
-        background: white;
-        height: 100%;
-        overflow: auto;
-        position: relative;
+
+    @include tablet { padding: 5% 5%; }
+    @include desktop { padding: 5% 10%; }
+}
+
+.modal-wrap {
+    background: white;
+    height: 100%;
+    overflow: auto;
+    position: relative;
+    @include desktop { border-radius: 7px; }
+}
+
+.modal-close-trigger {
+    display: block;
+    cursor: pointer;
+    color: white;
+    padding: 5px 0;
+    text-align: center;
+    background: black;
+    border-radius: 10px 10px 0 0;
+
+    &:after {
+        content: '\0f077';
+        font-family: FontAwesome;
+        padding: 10px;   
     }
 
-    .modal-close-trigger {
-        display: block;
-        cursor: pointer;
-        color: white;
-        padding: 5px 0;
-        text-align: center;
-        background: black;
-        border-radius: 10px 10px 0 0;
-
-        &:after {
-            content: '\0f077';
-            font-family: FontAwesome;
-            padding: 10px;   
-        }
-
-        @include desktop {
-            position: relative;
-            background: black;
-            float: right;
-            border-radius: 50%;
-            top: -.8em;
-            right: 1em;
-            z-index: 800;
-            &:after {
-                content: '\0f00d';
-            }
-            &:hover {
-                transform: scale(1.1);
-            }
-        }
-    }
-
-    @include tablet {
-        padding: 5% 5%;
-    }
     @include desktop {
-        padding: 5% 10%;
-        .modal-wrap {
-            border-radius: 7px;
-        }
+        position: relative;
+        background: black;
+        float: right;
+        border-radius: 50%;
+        top: -.8em;
+        right: 1em;
+        z-index: 800;
+        &:after { content: '\0f00d'; }
+        &:hover { transform: scale(1.1); }
     }
 }
 
-@mixin modalWithTrigger($trigger) {
+@mixin modalWithTrigger($trigger, $target-div:".modal-overlay") {
     #{$trigger} { display: none; }
-    #{$trigger}:checked ~ .modal-overlay {
+    #{$trigger}:checked ~ #{$target-div} {
         opacity: 1;
         z-index: 600;
         transform: scale(1);
@@ -111,4 +101,14 @@
     }    
     @include tablet { @include skipAndSpan(3, 7); }
     @include desktop { @include skipAndSpan(4, 4); }
+}
+
+
+
+// ==========
+// MODAL FORM
+// ==========
+.form-overlay {
+    @include tablet { padding: 0 20%; } 
+    @include desktop { padding: 10% 30%; } 
 }
