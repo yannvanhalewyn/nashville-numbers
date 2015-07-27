@@ -1,93 +1,130 @@
 /* DOCK
  ----------------- */
 
+// Had a hard time with vertical alignment, solution was to
+// Have fixed heights and icon/img sizes
+$mobile-dock-height: 50px;
+$mobile-dock-padding-y: 15px; 
+$icon-size: $mobile-dock-height - 2*$mobile-dock-padding-y;
+
+
+
+// PHONES/MAIN
 .dock {
-    color: white;
+    height: $mobile-dock-height;
     background: $BLUE;
-    min-height: 600px;
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    z-index: 0;
+    padding: $mobile-dock-padding-y 20px;
     box-shadow: inset -10px 0 5px -5px rgba(0,0,0,.12);
-    width: 90px;
-    a {
-      display: block;
-      text-decoration: none;
+    span { display: none; }
+
+    .user-avatar {
+        @include span(1);
+        float: right;
+        position: relative;
+        padding: 0;
+        img {
+            width: $mobile-dock-height - 2 * $mobile-dock-padding-y;
+            max-width: 100%;
+            border-radius: 50%;
+        }
     }
-
-    .floor-wrap {
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-    }
-}
-
-.user-avatar {
-    margin: 20px auto;
-    text-align: center;
-}
-
-.avatar {
-    width: 60px;
-    border-radius: 50%;
+    .group-1 { @include skipAndSpan(1, 5); }
+    .group-2 { @include span(5); }
 }
 
 .dock-elem {
+    @include span(3);
+    i { font-size: $icon-size; }
     color: $DOCK-TEXT;
-    font-size: 14px;
-    margin-bottom: 20px;
-    cursor: pointer;
-    transition: color 200ms linear;
-
-    i {
-        width: 100%;
-        text-align: center;
-        display: inline-block;
-        font-size: 30px;
-        &:after {
-            color: red;
-        }
-    }
-
-    div {
-        text-decoration: none;
-        text-align: center;
-        text-shadow: 0 0 1px #000;
-        margin-top: 5px;
-    }
-
-    &:hover {
-        color: white;
-        .fa {
-            color: inherit;
-        }
-    }
-
-    &.active {
-        color: white;
-        .pointer-left {
+    text-align: center;
+    transition: color .1s linear;
+    &.active { 
+        i { color: white; }
+        position: relative;
+        .pointer {
             position: absolute;
-            right: 0px;
-            border-top: 10px solid transparent;
-            border-bottom: 10px solid transparent;
-            border-right: 10px solid $MAIN-BG;
+            width: 100%;
+            top: 6px;
+            &:after {
+                content: "";
+                @include caretUp(10px);
+                margin-left: -12%;
+            }
         }
     }
 }
 
-.fa-NN-love {
-    color: $RED;
-}
+.fa-NN-love { color: $RED; }
+.fa-NN-explore { color: $ORANGE; }
+.fa-NN-sheets { color: $GREEN; }
+.fa-NN-hubs { color: $LEMON; }
 
-.fa-NN-explore {
-    color: $ORANGE;
-}
+// DESKTOP
+@include desktop {
+    .dock {
+        padding: 0;
+        position: fixed;
+        bottom: 0;
+        top: 0;
+        min-height: 600px;
+        height: 100%;
+        width: $dock-left-width;
 
-.fa-NN-sheets {
-    color: $GREEN;
-}
+        //Reset full width of elements;
+        .user-avatar,
+        .group-1,
+        .group-2,
+        .dock-elem {
+            @include resetCol;
+        }
 
-.fa-NN-hubs {
-    color: $LEMON;
+        .user-avatar {
+            text-align: center;
+            img {
+                border-radius: 50%;
+                padding: 15px;
+                width: 100%;
+            }
+        }
+
+        .dock-elem {
+            font-size: .9em;
+            margin-bottom: 20px;
+            cursor: pointer;
+            span { 
+                text-align: center;
+                display: inline-block; 
+                text-shadow: 0 0 1px #000;
+                margin-top: 5px;
+            }
+            i {
+                width: 100%;
+                font-size: 1.9em;
+            }
+
+            &:hover {
+                color: white;
+                .fa {
+                    color: inherit;
+                }
+            }
+
+            &.active {
+                .pointer {
+                    right: 0px;
+                    margin: 0;
+                    top: 5px;
+                    @include caretLeft(10px, $MAIN-BG);
+                    &:after {  display: none; }
+                }
+            }
+        }
+        
+        // Lower friends/account/love icons
+        .group-2 {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+    }
 }

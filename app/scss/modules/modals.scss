@@ -14,54 +14,45 @@
     z-index: -100;
     transform: scale(.5);
     transition: all .6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    
-    .modal-wrap {
-        background: white;
-        height: 100%;
-        overflow: auto;
-        position: relative;
+
+    @include tablet { padding: 5% 5%; }
+    @include desktop { padding: 5% 10%; }
+}
+
+.modal-wrap {
+    background: white;
+    height: 100%;
+    overflow: auto;
+    position: relative;
+    @include desktop { border-radius: 7px; }
+    h2 { text-align: center; }
+}
+
+.modal-close-trigger {
+    display: block;
+    cursor: pointer;
+    color: white;
+    padding: 5px 0;
+    text-align: center;
+    background: black;
+    border-radius: 10px 10px 0 0;
+
+    &:after {
+        content: '\0f077';
+        font-family: FontAwesome;
+        padding: 10px;   
     }
 
-    .modal-close-trigger {
-        display: block;
-        cursor: pointer;
-        color: white;
-        padding: 5px 0;
-        text-align: center;
-        background: black;
-        border-radius: 10px 10px 0 0;
-
-        &:after {
-            content: '\0f077';
-            font-family: FontAwesome;
-            padding: 10px;   
-        }
-
-        @include desktop {
-            position: relative;
-            background: black;
-            float: right;
-            border-radius: 50%;
-            top: -.8em;
-            right: 1em;
-            z-index: 800;
-            &:after {
-                content: '\0f00d';
-            }
-            &:hover {
-                transform: scale(1.1);
-            }
-        }
-    }
-
-    @include tablet {
-        padding: 5% 5%;
-    }
     @include desktop {
-        padding: 5% 10%;
-        .modal-wrap {
-            border-radius: 7px;
-        }
+        position: relative;
+        background: black;
+        float: right;
+        border-radius: 50%;
+        top: -.8em;
+        right: 1em;
+        z-index: 800;
+        &:after { content: '\0f00d'; }
+        &:hover { transform: scale(1.1); }
     }
 }
 
@@ -80,17 +71,16 @@
 // DROPDOWN modal
 // ==============
 .dropdown-modal {
+    @include span(12);
     position: fixed;
-    padding: 0px 10px 20px;
-    text-align: center;
-    background: $GREY-1;
-    border-radius: 0 0 10px 5px;
     top: 0;
     left: 0;
     z-index: 1000;
-    @include col(4);
-    @include skip(4);
-
+    background: $GREY-1;
+    padding: 0px 10px 20px;
+    text-align: center;
+    border-radius: 0 0 10px 5px;
+    
     h1 { margin-bottom: 10px; }
     .btn { margin: 0 10px; }
 
@@ -109,5 +99,39 @@
         box-shadow: inset -10px 0 5px -5px rgba(0,0,0,.12);
         h1 { color: white; }
         .btn:hover { box-shadow: none; }
+    }    
+    @include tablet { @include skipAndSpan(3, 7); }
+    @include desktop { @include skipAndSpan(4, 4); }
+}
+
+
+
+// ==========
+// MODAL FORM
+// ==========
+.form-modal {
+    @include span(12);
+    position: fixed;
+    background: $MAIN-BG;
+    border-radius: 0 0 10px 5px;
+    z-index: -100;
+    top: 0;
+    left: 0;
+    // Slide out as default
+    transform: translate(0, -100%);
+    transition: all linear .2s;
+    h2 { text-align: center; }
+    @include tablet { @include skipAndSpan(3, 6); }
+}
+
+@mixin formModalWithTrigger($trigger) {
+    #{$trigger} { display: none; }
+    #{$trigger}:checked ~ .form-modal {
+        transform: translate(0, 0);
+        box-shadow: 0px 2px 10px $GREY-6;
+        z-index: 600;
     }
 }
+// .form-overlay {
+//     @include desktop { padding: 10% 30%; } 
+// }

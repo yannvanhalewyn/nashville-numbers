@@ -15,7 +15,7 @@
     },
 
     renderCreator: function() {
-      return <li className="creator-card grid">
+      return <li className="creator-card">
         <div className="thumb">
           <img src={this.props.thumb} alt="user profile picture" />
         </div>
@@ -26,7 +26,7 @@
 
     renderJoinee: function() {
       return (
-        <li className="participant-card grid">
+        <li className="participant-card">
           <span className="name">{this.props.firstName} {this.props.lastName}</span>
           <div className="thumb">
             <img src={this.props.thumb} alt="user profile picture" />

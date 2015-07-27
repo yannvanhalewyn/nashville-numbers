@@ -3,7 +3,7 @@
 
 $pad: 10px;
 
-.grid {
+@mixin grid {
     margin: 0 0 $pad 0;
     &:after {
         display: table;
@@ -12,7 +12,7 @@ $pad: 10px;
     } 
 }
 
-@mixin col($col, $gridsize:12) {
+@mixin span($col, $gridsize:12) {
     padding-right: $pad;
     float: left;
     &:last-of-type {
@@ -21,18 +21,47 @@ $pad: 10px;
     width: ($col/$gridsize) * 100%;
 }
 
-@mixin col-tablet($col) {
+@mixin span-tablet($col) {
     @include tablet {
-        @include col($col);
+        @include span($col);
     }
 }
 
-@mixin col-desktop($col) {
+@mixin span-desktop($col) {
     @include desktop {
-        @include col($col);
+        @include span($col);
     }
 }
 
 @mixin skip($col, $gridsize:12) {
     margin-left: ($col/$gridsize) * 100%;
 }
+
+@mixin skipAndSpan($skip, $col, $gridsize:12) {
+    @include skip($skip, $gridsize);
+    @include span($col, $gridsize);
+}
+
+@mixin resetCol {
+    display: inherit;
+    float: none;
+    padding: inherit;
+    width: inherit;
+    margin: inherit;
+}
+
+// .grid {
+//     background: orange;
+//     @include grid;
+// }
+
+// $baseline: 40px;
+
+// .col {
+//     @include col(1);
+//     background: red;
+//     font-size: $baseline;
+//     line-height: $baseline*3;
+//     margin-bottom: $baseline;
+//     margin-top: $baseline;
+// }

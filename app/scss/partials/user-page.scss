@@ -1,84 +1,85 @@
-.user-widget,
-.user-stats {
-    @include col(6);
-    padding: 5%;
-    height: 100%;
+.userpage {
+    padding: 10px;
+}
 
-    img {
-        border-radius: 20%;
-        height: 100px;
-    }
-
-    div {
-        display: inline-block;
-        vertical-align: top;
-    }
+.user-header {
+    margin-top: 20px;
+    @include grid;
 }
 
 .user-widget {
-    border-right: 1px solid $GREY-2;
-
-    img {
+    margin-bottom: 30px;
+    .profile-picture-wrap {
+        width: 100%;
+        text-align: center;
+    }
+    .profile-picture {
+        width: 100%;
+        max-width: 150px;
+        border-radius: 10%;
         border: 2px solid $BLUE;
     }
+    .info { text-align: center; }
+    .message { margin-bottom: 20px; }
+}
 
-    .info {
-        margin-left: 10%;
-        text-align: center;
-        h2 {
-            margin: 0 0 10px;
-        }
+.friend-confirmed-label {
+    border: 2px solid $LIGHT-GREEN;
+    display: inline-block;
+    width: 100px;
+    border-radius: 8px;
+    color: $LIGHT-GREEN;
+    cursor: pointer;
+    &:before {
+        font-family: FontAwesome;
+        content: "\0f00c";
     }
-
-    // Messages like 'friend request sent!'
-    .message {
-        margin: 3px 0;
-        font-size: 0.9em;
-    }
-
-    .friendship-button {
-        margin: 10px 5px;
-    }
-
-    .friend-confirmed-label {
-        border: 2px solid $LIGHT-GREEN;
-        display: block;
-        width: 100px;
-        margin: 10px auto;
-        border-radius: 8px;
-        color: $LIGHT-GREEN;
-        cursor: pointer;
-
-        &:before {
-            font-family: FontAwesome;
-            content: "\0f00c";
-        }
-        &:after { content: " Friends"; }
-        &:hover {
-            border: 2px solid #A55;
-            color: #A55;
-            &:before { content: "\0f00d"; }
-            &:after { content: " Delete" }
-        }
+    &:after { content: " Friends"; }
+    &:hover {
+        border-color: $DARK-RED;
+        color: $DARK-RED;
+        &:before { content: "\0f00d"; }
+        &:after { content: " Delete" }
     }
 }
 
 .user-stats {
-    .emblem {
-        width: 50%;
+    .emblem { width: 100%; }
+    .stats { 
+        @include skipAndSpan(4, 4); 
+        text-align: center;
     }
-    .statistics {
-        margin-left: 5%;
-        li {
-            list-style: none;
-            padding: 3px 10px;
-            margin-bottom: 7px;
-            color: #b5b5b5;
-            border-left: 3px solid $ORANGE;
+    .stat {
+        list-style: none;
+        margin-bottom: 7px;
+        color: #b5b5b5;
+        border-left: 3px solid $ORANGE;
+        strong { color: black; }
+    }
+}
 
-            strong {
-                color: black;
-            }
+// TABLET
+@include tablet {
+    .user-widget {
+        @include span(6);
+        border-right: 1px solid $GREY-2;
+    }
+    .user-stats { @include span(6); }
+}
+
+// DESKTOP
+@include desktop {
+    .user-widget {
+        .profile-picture-wrap { @include skipAndSpan(1, 3); }
+        .info { 
+            @include span(8);
         }
+    }
+    .user-stats {
+        .emblem { 
+            padding-left: 20px;
+            @include span(7); 
+        }
+        .stats { @include skipAndSpan(1, 4); }
     }
 }

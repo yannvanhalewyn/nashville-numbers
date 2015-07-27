@@ -1,10 +1,20 @@
 <h1>Welcome to Hubs!</h1>
 <p>This is the magical place where magical musicians get to come together and share all sheets related to a project</p>
-<form action="/hubs/" method="POST">
-  <input type="text" name="name">
-  <input class="btn" type="submit" value="Create new hub!">
-</form>
-
+<div class="new-hub-modal">
+  <input type="checkbox" id="new-hub-form-trigger">
+  <label for="new-hub-form-trigger" class="btn">Create one!</label>
+  <div class="form-modal">
+    <h2>Create a new hub!</h2>
+    <form id="new-hub-form" action="/hubs/" method="POST">
+      <div class="input-group">
+        <label for="name" class="input-label"><span class="fa fa-home"></span></label>
+        <input type="text" name="name" id="name" placeholder="Name (e.g: My Band)">
+      </div>
+      <label for="new-hub-form-trigger" class="cancel-button">Cancel</label>
+      <input type="submit" value="Create">
+    </form>
+  </div>
+</div>
 <div id="hubspage-container">Loading...</div>
 
 <script type="application/json" id="initial_state">{{{hubs}}}</script>

@@ -106,27 +106,33 @@
     }
 
     .pending-invitations {
-        @include col-desktop(6);
+        @include span-desktop(6);
         @include desktop {
             border-right: 1px solid $GREY-3;
         }
     }
 
     .participants {
-        @include col-desktop(6);
+        @include span-desktop(6);
         background: $MAIN-BG;
+    }
+
+    .creator-card,
+    .invitation-card,
+    .participant-card {
+        @include grid;
     }
 
     .creator-card {
         background: $DARK-RED;
         color: $MAIN-BG;
         .name {
-            @include col(8);
+            @include span(8);
             color: $MAIN-BG;
             padding: 10px;
         }
-        .thumb { @include col(2); }
-        label { @include col(2); }
+        .thumb { @include span(2); }
+        label { @include span(2); }
         &:hover {
             background: #8C4646;
         }
@@ -179,8 +185,8 @@
 // Gridding
 .invitation-card,
 .participant-card {
-    .name { @include col(4); }
-    .thumb { @include col(2); }
-    .permissions { @include col(3); }
-    .button { @include col(3); }
+    .name { @include span(4); }
+    .thumb { @include span(2); }
+    .permissions { @include span(3); }
+    .button { @include span(3); }
 }

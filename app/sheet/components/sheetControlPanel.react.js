@@ -19,7 +19,7 @@
     render: function() {
       return (
         <div className="sheet-control-panel">
-          <form action={this._url()} method="post" ref="deleteForm">
+          <form action={this._url()} method="post" ref="deleteForm" className="hidden-form">
             <input type="hidden" value="DELETE" name="_method"/>
           </form>
           <Modal
@@ -28,12 +28,13 @@
             ref="deleteConfirmationModal"
             onConfirm={this._handleDelete}
           />
-          <span className="SC-icon fa fa-trash-o" onClick={this._deleteClicked}></span>
-
-          <span className="SC-icon fa fa-star-o" id="SC-fav-icon"></span>
-          <SheetControlEditActions />
-          <span className="fa fa-expand" id="play-mode-toggle"></span>
+          <div className="action-icons">
+            <span className="SC-icon fa fa-trash-o" onClick={this._deleteClicked}></span>
+            <span className="SC-icon fa fa-star-o" id="SC-fav-icon"></span>
+            <SheetControlEditActions />
+          </div>
           <div className="btn" id="save-button" onClick={this._handleSave}>Save!</div>
+          <span className="fa fa-expand" id="play-mode-toggle"></span>
         </div>
       )
     },
