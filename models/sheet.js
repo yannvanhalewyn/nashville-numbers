@@ -1,21 +1,24 @@
 (function() {
 
+  // Define and export constructor for circular dep with User.
+  var _ = require('lodash');
+  var Sheet = function(params) {
+    _.merge(this, params);
+  }
+  module.exports = Sheet;
+
+
   // var moment = require('moment');
   var include = require('include')
     , db      = require('../config/db')
-    , _       = require('lodash')
     , Cypher  = include('/helpers/cypher')
-    , User    = include('/models/user') // This is a circular dep. There seems to be no issues .. ?
+    , User    = include('/models/user')
 
   var DEFAULT = {
     title: "title",
     artist: "artist",
     visibility: "public"
   };
-
-  var Sheet = function(params) {
-    _.merge(this, params);
-  }
 
 /*
  * ========
@@ -130,7 +133,5 @@
       };
     })
   }
-
-  module.exports = Sheet;
 
 }())
