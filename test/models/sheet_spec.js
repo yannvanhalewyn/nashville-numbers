@@ -5,23 +5,23 @@ var include = require('include')
   , db = include('/config/db')
 
 describe('Sheet', function() {
-  beforeEach(function(done) {
-    Factory('user').then(function(user) {
-      this.user = user;
-      this.params = {
-        title: "theTitle",
-        artist: "theArtist",
-        visibility: 'public',
-        uid: user._id,
-        data: "FOOBAR"
-      };
-      done();
-    }.bind(this))
-  });
-
   describe("instantiation", function() {
+    var USER, VALID_PARAMS;
+    beforeEach(function() {
+      return Factory('user').then(function(user) {
+        USER = user;
+        VALID_PARAMS = {
+          title: "theTitle",
+          artist: "theArtist",
+          visibility: 'public',
+          uid: user._id,
+          data: "FOOBAR"
+        };
+      });
+    });
+
     it("stores the information", function() {
-      return Sheet.create(this.params)
+      return Sheet.create(VALID_PARAMS)
       .then(function(sheet) {
         expect(sheet._id).to.be.above(0);
         expect(sheet.properties.title).to.eql("theTitle");
@@ -31,7 +31,7 @@ describe('Sheet', function() {
     });
 
     it("stores JSON data with correct main values", function() {
-      return Sheet.create(this.params).then(function(sheet) {
+      return Sheet.create(VALID_PARAMS).then(function(sheet) {
         var data = JSON.parse(sheet.properties.data);
         expect(data.main.title).to.eql("theTitle");
         expect(data.main.artist).to.eql("theArtist");
@@ -39,19 +39,19 @@ describe('Sheet', function() {
     });
 
     it("stores a relationship to the user", function() {
-      return Sheet.create(this.params).then(function(sheet) {
+      return Sheet.create(VALID_PARAMS).then(function(sheet) {
         return db.query(
           "MATCH (p:Person)-[:AUTHORED]->(s:Sheet) WHERE id(s) = {sid} RETURN p",
           {sid: sheet._id}
         ).then(function(res) {
-          expect(res[0].p._id).to.eql(this.user._id);
-        }.bind(this));
-      }.bind(this));
+          expect(res[0].p._id).to.eql(USER._id);
+        });
+      });
     });
 
     context("with missing params", function() {
       it("sets the default title, artist and visibility", function() {
-        return Sheet.create({uid: this.user._id})
+        return Sheet.create({uid: USER._id})
         .then(function(sheet) {
           expect(sheet.properties.title).to.eql("title");
           expect(sheet.properties.artist).to.eql("artist");
@@ -68,83 +68,79 @@ describe('Sheet', function() {
   }); // End of describe 'instantiation'
 
   describe("#update()", function() {
+    var SHEET;
+    beforeEach(function() {
+      return Factory('sheet').then(function(entities) {
+        SHEET = entities.sheet;
+      });
+    });
+
     it("stores the updated data", function() {
-      return Sheet.create(this.params).then(function(sheet) {
-        return sheet.update({title: "updated-title", artist: "updated-artist"}).then(function() {
-          return db.query("MATCH (s:Sheet) WHERE id(s) = {sid} RETURN s", {sid: sheet._id})
-          .then(function(updatedSheet) {
-            expect(updatedSheet[0].s.properties.title).to.eql("updated-title");
-            expect(updatedSheet[0].s.properties.artist).to.eql("updated-artist");
-          });
+      return SHEET.update({title: "updated-title", artist: "updated-artist"}).then(function() {
+        return db.query("MATCH (s:Sheet) WHERE id(s) = {sid} RETURN s", {sid: SHEET._id})
+        .then(function(updatedSheet) {
+          expect(updatedSheet[0].s.properties.title).to.eql("updated-title");
+          expect(updatedSheet[0].s.properties.artist).to.eql("updated-artist");
         });
       });
     });
   }); // End of describe '#update()'
 
   describe('#destroy()', function() {
+    var SHEET;
     beforeEach(function() {
-      return Sheet.create(this.params).then(function(sheet) {
-        this.sheet = sheet;
-        return sheet.destroy()
-      }.bind(this));
+      return Factory('sheet').then(function(entities) {
+        SHEET = entities.sheet;
+        return SHEET.destroy();
+      });
     });
 
     it("Has deleted the sheet from the database", function() {
-      return db.query("MATCH (s:Sheet) WHERE id(s) = {sid} RETURN s", {sid: this.sheet._id})
+      return db.query("MATCH (s:Sheet) WHERE id(s) = {sid} RETURN s", {sid: SHEET._id})
       .then(function(res) {
         expect(res.length).to.eql(0);
-      }.bind(this));
+      });
     });
   }); // End of describe '#destroy()'
 
   describe('#author()', function() {
+    var SHEET, USER;
     beforeEach(function() {
       return Factory('sheet').then(function(entities) {
-        this.sheet = entities.sheet;
-        this.user = entities.user;
-      }.bind(this));
+        SHEET = entities.sheet;
+        USER = entities.user;
+      });
     });
 
     it("returns the correct author", function() {
-      return this.sheet.author().then(function(author) {
-        expect(author).to.eql(this.user);
-      }.bind(this));
+      return SHEET.author().then(function(author) {
+        expect(author).to.eql(USER);
+      });
     });
   }); // End of describe '#author()'
 
   // STATIC
   describe('.findById()', function() {
     context("when valid id", function() {
+      var CREATED_SHEET, FOUND_SHEET;
       beforeEach(function() {
         return Factory('sheet').then(function(entities) {
-          this.createdSheet = entities.sheet;
-          return Sheet.findById(this.createdSheet._id).then(function(foundSheet) {
-            this.foundSheet = foundSheet;
-          }.bind(this));
-        }.bind(this));
+          CREATED_SHEET = entities.sheet;
+          return Sheet.findById(CREATED_SHEET._id.toString()).then(function(foundSheet) {
+            FOUND_SHEET = foundSheet;
+          });
+        });
       });
 
       it("returns an instance of Sheet", function() {
-        expect(this.foundSheet).not.to.be.undefined;
-        expect(this.foundSheet).to.be.an.instanceof(Sheet);
+        expect(FOUND_SHEET).not.to.be.undefined;
+        expect(FOUND_SHEET).to.be.an.instanceof(Sheet);
       });
 
       it("returns the searched for sheet", function() {
-        expect(this.foundSheet).to.eql(this.createdSheet);
-        expect(this.foundSheet).to.eql(this.createdSheet);
+        expect(FOUND_SHEET).to.eql(CREATED_SHEET);
       });
     }); // End of context 'when found'
-
-    context("when id is a string", function() {
-      it("finds the correct sheet anyway", function() {
-        return Factory('sheet').then(function(entities) {
-          this.createdSheet = entities.sheet;
-          return Sheet.findById(this.createdSheet._id.toString()).then(function(foundSheet) {
-            expect(foundSheet).not.to.be.empty;
-          }.bind(this));
-        }.bind(this));
-      });
-    }); // End of context 'when id is a string'
 
     context("when not found", function() {
       it("throws a not found error", function(done) {
