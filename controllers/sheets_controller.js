@@ -35,6 +35,7 @@
 
     // POST#create
     create: function(req, res) {
+      req.body.public = req.body.public === "on";
       return req.user.createSheet(req.body).then(function(sheet) {
         res.redirect('/sheets/' + sheet._id + '/edit');
       });

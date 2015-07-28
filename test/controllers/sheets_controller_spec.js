@@ -52,24 +52,41 @@ describe('SheetsController', function() {
 
   describe('POST/create', function() {
     var USER;
-    beforeEach(function(done) {
+    beforeEach(function() {
       return Factory('user').then(function(user) {
         USER = user;
         sinon.stub(user, 'createSheet').returns(Q({_id: 1234}));
         req.user = user;
+      });
+    });
+
+    context("when a public flag is given", function() {
+      beforeEach(function(done) {
+        req.body = {dummyBody: true, public: 'on'};
+        Controller.create(req, res);
+        res.on('end', done);
+      });
+
+      it("sets the flag to 'true' and calls createSheet on user", function() {
+        expect(USER.createSheet).to.have.been.calledWith({dummyBody: true, public: true});
+      });
+    }); // End of context 'when a public flag is given'
+
+    context("wen a public flag isn't given", function() {
+      beforeEach(function(done) {
         req.body = {dummyBody: true};
         Controller.create(req, res);
         res.on('end', done);
       });
-    });
 
-    it("calls createSheet on logged in user with the request body params", function() {
-      expect(USER.createSheet).to.have.been.calledWith({dummyBody: true});
-    });
+      it("sets the public flag to false and calls createSheet on user", function() {
+        expect(USER.createSheet).to.have.been.calledWith({dummyBody: true, public: false});
+      });
 
-    it("redirects to the edit page of the new sheet", function() {
-      expect(res.redirect).to.have.been.calledWith("/sheets/1234/edit");
-    });
+      it("redirects to the edit page of the new sheet", function() {
+        expect(res.redirect).to.have.been.calledWith("/sheets/1234/edit");
+      });
+    }); // End of context 'wen a public flag isn't given'
   }); // End of describe 'POST/create'
 
   describe('PUT/update', function() {
