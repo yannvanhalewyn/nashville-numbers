@@ -14,7 +14,7 @@
       edit:    [ensureAuth, getTargetSheetWithAuthor, ensureAuthored],
       create:  [ensureAuth],
       update:  [ensureAuth, getTargetSheetWithAuthor, ensureAuthored],
-      destroy: [ensureAuth]
+      destroy: [ensureAuth, getTargetSheetWithAuthor, ensureAuthored]
     },
 
     // GET#index
@@ -50,30 +50,9 @@
 
     // DELETE#destroy
     destroy: function(req, res) {
-      // Find the sheet by it's ID
-      Sheet.findById(req.params.sheet_id).then(function(sheet) {
-
-        // Find the sheet's author
-        sheet.author().then(function(author) {
-          // If the found sheet's author is the user
-          if (author._id === req.user._id) {
-            // Destroy the sheet
-            sheet.destroy().then(function() {
-              // Redirect to the user's sheets page
-              return res.redirect('/users/me/sheets');
-            })
-
-          // If he's not the author
-          } else {
-            res.status(403);
-            return res.send("You're not the author of this sheet");
-          }
-        });
-
-      // Error on sheet.findById = not found
-      }, function(err) {
-        res.sendStatus(404);
-      })
+      req.target_sheet.destroy().then(function() {
+        res.redirect("/users/me/sheets");
+      });
     }
   };
 }())

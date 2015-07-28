@@ -81,6 +81,27 @@ describe('SheetsController', function() {
       expect(res.json).to.have.been.calledWith({dummySheet: true});
     });
   }); // End of describe 'PUT/update'
+
+  describe('DELETE/destroy', function() {
+    var SHEET;
+    beforeEach(function() {
+      return Factory('sheet').then(function(entities) {
+        SHEET = entities.sheet;
+        sinon.stub(SHEET, 'destroy').returns(Q());
+        req.target_sheet = SHEET;
+        Controller.destroy(req, res);
+      });
+    });
+
+    it("calls destroy on target_sheet", function() {
+      expect(SHEET.destroy).to.have.been.called;
+    });
+
+    // TODO this should change when front-end editor uses backbone as model.
+    it("redirects to the user's sheets page", function() {
+      expect(res.redirect).to.have.been.calledWith("/users/me/sheets");
+    });
+  }); // End of describe 'DELETE/destroy'
 }); // End of describe 'SheetsController'
 
 function dummySheetData() {
