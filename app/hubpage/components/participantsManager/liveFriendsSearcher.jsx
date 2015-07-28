@@ -13,7 +13,11 @@
 
     render: function() {
       return (
-        <div onMouseLeave={this._onMouseLeave} onMouseEnter={this._onMouseEnter} className="live-friends-searcher">
+        <div
+          onMouseLeave={this._onMouseLeave}
+          onMouseEnter={this._onMouseEnter}
+          className="live-friends-searcher"
+        >
           <FriendsSearchField />
           {this.state.hideDropdown ? null : <FriendsSuggestionsDropdown friends={this.props.friends} />}
         </div>

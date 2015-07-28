@@ -8,6 +8,7 @@
     , ParticipantCollection = require('../models/participantCollection')
     , InvitationCollection = require('../models/invitationCollection')
     , FriendsCollection = require('../models/friendsCollection')
+    , UsersSheetsCollection = require('../models/usersSheetsCollection')
 
   // Temporary until finished up the hub-settings.
   var DEFAULT_PERMISSIONS = require('../../../models/permission').Ranks.citizen;
@@ -40,6 +41,10 @@
       // Set the friendsCollection as nestedResource
       this.friends = new FriendsCollection();
       this.friends.on('sync', this.trigger.bind(this, 'friends:sync'));
+
+      // Set the users sheets collection
+      this.usersSheets = new UsersSheetsCollection();
+      this.usersSheets.on('sync', this.trigger.bind(this, 'users-sheets:sync'));
     },
 
     dispatchCallback: function(payload) {
@@ -73,6 +78,13 @@
         case Constants.SHOW_CONFIRMATION_MODAL:
           delete payload.actionType;
           this.trigger('modal-confirm', payload);
+          break;
+
+        case Constants.FETCH_USERS_SHEETS:
+          if (!this.fetched) {
+            this.usersSheets.fetch();
+            this.fetched = true;
+          }
           break;
 
         default:
@@ -119,6 +131,10 @@
         participants: participants,
         hub: this.attributes
       }
+    },
+
+    getUsersSheets: function() {
+      return this.usersSheets.toJSON();
     }
   });
 

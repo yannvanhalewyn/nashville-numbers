@@ -10,7 +10,8 @@
     CANCEL_INVITATION: null,
     UPDATE_INVITED_USER_PERMISSIONS: null,
     REMOVE_PARTICIPANT: null,
-    SHOW_CONFIRMATION_MODAL: null
+    SHOW_CONFIRMATION_MODAL: null,
+    FETCH_USERS_SHEETS: null
   });
 
   var HubpageActions = {
@@ -56,6 +57,12 @@
         title: title,
         body: body,
         onSuccess: onSuccess
+      });
+    },
+
+    fetchUsersSheets: function() {
+      Dispatcher.dispatch({
+        actionType: HubpageConstants.FETCH_USERS_SHEETS
       });
     }
   }
