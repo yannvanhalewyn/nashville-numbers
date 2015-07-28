@@ -26,7 +26,7 @@
     },
 
     show: function(req, res) {
-      res.send("Sheet show page");
+      res.render("sheet", {active_sheets: true, data: req.target_sheet.properties.data});
     },
 
     edit: function(req, res) {

@@ -16,6 +16,23 @@ describe('SheetsController', function() {
     res = reqres.res();
   });
 
+  describe('GET/show', function() {
+    beforeEach(function() {
+      req.target_sheet = {properties: {data: {dummyData: true}}};
+      Controller.show(req, res);
+    });
+
+    it("renders the sheet template", function() {
+      expect(res.render).to.have.been.calledWith("sheet");
+    });
+
+    it("sends along the sheet data and sets the active_sheets flag", function() {
+      expect(res.render).to.have.been.calledWith("sheet", {
+        active_sheets: true, data: {dummyData: true}
+      });
+    });
+  }); // End of describe 'GET/show'
+
   describe('GET/edit', function() {
     beforeEach(function() {
       req.target_sheet = {dummySheet: true};
