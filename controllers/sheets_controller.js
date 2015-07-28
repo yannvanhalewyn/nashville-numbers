@@ -7,6 +7,7 @@
     , ensureAuthoredOrPublic   = include('/middlewares/sheets/ensureAuthoredOrPublic')
     , ensureAuthored           = include('/middlewares/sheets/ensureAuthored')
     , redirect                 = include('/middlewares/errors/redirect')
+    , errorStatus              = include('/middlewares/errors/errorStatus')
 
   module.exports = {
 
@@ -15,7 +16,7 @@
       show:    [ensureAuth, getTargetSheetWithAuthor, ensureAuthoredOrPublic, redirect.sheets],
       edit:    [ensureAuth, getTargetSheetWithAuthor, ensureAuthored, redirect.sheets],
       create:  [ensureAuth],
-      update:  [ensureAuth, getTargetSheetWithAuthor, ensureAuthored],
+      update:  [ensureAuth, getTargetSheetWithAuthor, ensureAuthored, errorStatus(500)],
       destroy: [ensureAuth, getTargetSheetWithAuthor, ensureAuthored, redirect.sheets]
     },
 
