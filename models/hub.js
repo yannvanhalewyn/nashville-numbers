@@ -90,6 +90,25 @@
   }
 
   /**
+   * Gets all sheets CONTAINED by the hub.
+   *
+   * @return {array} An array of data representing the sheets
+   */
+  Hub.prototype.getSheets = function() {
+    return db.query(
+      "MATCH (hub:Hub)-[:CONTAINS]->(sheet:Sheet) WHERE id(hub) = {hid} " +
+      "RETURN sheet ",
+      {hid: this._id}
+    ).then(function(result) {
+      // Result is in the form [{sheet: { ... }, {sheet: { ... } }]. Need to
+      // push up every sheet object a nudge. TODO performance?
+      return result.map(function(element) {
+        return element.sheet;
+      });
+    });
+  }
+
+  /**
    * Creates a new hub
    *
    * @param {object} params The params to create the hub. It needs a 'creator_id' property to create the CREATED relationship to the hub.

@@ -1,9 +1,11 @@
 var include    = require('include')
   , chai       = require('chai')
+  , chaiThings = require('chai-things')
   , expect     = chai.expect
   , Hub        = include('/models/hub')
   , db         = include('/config/db')
   , Factory    = include('/test/util/factory')
+chai.use(chaiThings);
 
 // Clear DB afterEach()
 include('/test/util/clear_db');
@@ -284,6 +286,35 @@ describe('HUB', function() {
         expect(ERROR).to.eql("Hub doesn't contain sheet with id " + 999);
       });
     }); // End of context 'when the hub doesn't contain the sheet'
-
   }); // End of describe '#removeSheet()'
+
+  describe('#getSheets()', function() {
+    var HUB, SHEET_A, SHEET_B, RELATIONSHIP_A, RELATIONSHIP_B, RESULT;
+    before(function() {
+      return Factory('hub').then(function(entities) {
+        return Factory('sheet', {uid: entities.user._id}).then(function(sheetA) {
+          return Factory('sheet', {uid: entities.user._id}).then(function(sheetB) {
+            HUB = entities.hub;
+            return HUB.addSheet(sheetA._id).then(function(relationshipA) {
+              return HUB.addSheet(sheetB._id).then(function(relationshipB) {
+                SHEET_A = sheetA;
+                SHEET_B = sheetB;
+                RELATIONSHIP_A = relationshipA;
+                RELATIONSHIP_B = relationshipB;
+                return HUB.getSheets().then(function(result) {
+                  RESULT = result;
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+
+    it("returns an array with the sheets", function() {
+      expect(RESULT.length).to.eql(2);
+      expect(RESULT).to.contain.an.item.with.property('_id', SHEET_A._id);
+      expect(RESULT).to.contain.an.item.with.property('_id', SHEET_B._id);
+    });
+  }); // End of describe '#getSheets()'
 }); // End of describe 'HUB'
