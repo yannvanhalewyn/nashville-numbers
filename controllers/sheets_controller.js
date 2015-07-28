@@ -9,6 +9,14 @@
     , redirect                 = include('/middlewares/errors/redirect')
     , errorStatus              = include('/middlewares/errors/errorStatus')
 
+  // Server side react rendering
+  require('node-jsx').install({extension: '.jsx'});
+  var React = require('react')
+    , Sheet = React.createFactory(include('/app/sheet/sheet.jsx'))
+    , denormalize = include('app/helpers/deNormalize')
+    , Immutable = require('immutable')
+
+
   module.exports = {
 
     middlewares: {
@@ -26,7 +34,10 @@
     },
 
     show: function(req, res) {
-      res.render("sheet", {active_sheets: true, data: req.target_sheet.properties.data});
+      var jsonData = req.target_sheet.properties.data;
+      var data = Immutable.fromJS(JSON.parse(jsonData));
+      var html = React.renderToString(Sheet({sheetData: denormalize(data)}));
+      res.render("sheet", {markup: html});
     },
 
     edit: function(req, res) {

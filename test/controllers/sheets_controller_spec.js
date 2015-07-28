@@ -1,13 +1,41 @@
-var include    = require('include')
-  , chai       = require('chai')
-  , sinonChai  = require('sinon-chai')
-  , expect     = chai.expect
-  , reqres     = require('reqres')
-  , sinon      = require('sinon')
-  , Q          = require('q')
-  , Controller = include('/controllers/sheets_controller')
-  , Factory    = include('/test/util/factory')
+var include     = require('include')
+  , chai        = require('chai')
+  , sinonChai   = require('sinon-chai')
+  , expect      = chai.expect
+  , reqres      = require('reqres')
+  , sinon       = require('sinon')
+  , Q           = require('q')
+  , React       = require('react')
+  , Factory     = include('/test/util/factory')
+  , denormalize = include('/app/helpers/denormalize')
+  , Immutable = require('immutable')
 chai.use(sinonChai);
+
+/*
+ * Stub out some react methods for testing. This is some complicated stub
+ * nesting, I'm looking for a better solution. This is what's going on:
+ *
+ * - When the controller LOADS, it calls React.createFactory on the
+ *   sheetComponent (ReactClass). I stub this call out to return a stubbed react
+ *   factory.
+ *
+ * - On render time, this factory will be called with the data for the props to
+ *   return a reactElement with the props in place, ready to be rendered.
+ *   Calling the stubbed factory will just return a string for testing
+ *   purpouses, and thanks to sinon I can check if the stubbed factory was
+ *   called with the correct prop data.
+ *
+ * - Lastly React.renderToString is called with that element as argument. This
+ *   gets stubbed out during the test to return some dummy markup.
+ *
+ * We need to stub all this out before require the controller, because
+ * React.createFactory is called at 'require' time. I would love to stub this in
+ * the test itself.
+ */
+
+var stubbedReactFactory = sinon.stub().returns("Stubbed React Element");
+sinon.stub(React, 'createFactory').returns(stubbedReactFactory);
+var Controller  = include('/controllers/sheets_controller')
 
 describe('SheetsController', function() {
   var req, res;
@@ -18,18 +46,26 @@ describe('SheetsController', function() {
 
   describe('GET/show', function() {
     beforeEach(function() {
-      req.target_sheet = {properties: {data: {dummyData: true}}};
+      sinon.stub(React, "renderToString").returns("The Markup");
+      req.target_sheet = {properties: {data: JSON.stringify(dummySheetData())}};
       Controller.show(req, res);
     });
 
-    it("renders the sheet template", function() {
-      expect(res.render).to.have.been.calledWith("sheet");
+    afterEach(function() {
+      React.renderToString.restore();
     });
 
-    it("sends along the sheet data and sets the active_sheets flag", function() {
-      expect(res.render).to.have.been.calledWith("sheet", {
-        active_sheets: true, data: {dummyData: true}
-      });
+    it("generates a Sheet component with the denormalized data", function() {
+      var denormalizedData = denormalize(Immutable.fromJS(dummySheetData()));
+      expect(stubbedReactFactory).to.have.been.calledWith({sheetData: denormalizedData});
+    });
+
+    it("renders the sheet component to string", function() {
+      expect(React.renderToString).to.have.been.calledWith("Stubbed React Element");
+    });
+
+    it("renders the sheet template with the outputed markup", function() {
+      expect(res.render).to.have.been.calledWith("sheet", {markup: "The Markup"});
     });
   }); // End of describe 'GET/show'
 
@@ -143,7 +179,13 @@ function dummySheetData() {
     main: {
       title: "The Title",
       artist: "The Artist",
-      sections: [1, 2, 3]
+      sections: ["section1"]
+    },
+    sections: {
+      "section1": {
+        id: "section1",
+        rows: []
+      }
     }
   }
 }
