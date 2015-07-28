@@ -2,7 +2,8 @@
 
   "use strict";
 
-  var React = require('react');
+  var React = require('react')
+    , Chord = require('../sheetEditor/chord')
 
   var ChordComponent = React.createClass({
     propTypes: {
@@ -10,7 +11,11 @@
     },
 
     render: function() {
-      return <span className="chord">{this.props.raw}</span>;
+      return <span className="chord">{this.getMusicNotationString()}</span>;
+    },
+
+    getMusicNotationString: function() {
+      return new Chord(this.props.raw).musicNotationString();
     }
   });
 
