@@ -1,13 +1,17 @@
 (function() {
 
-  var Sheet      = require('../models/sheet')
-    , ensureAuth = require('../middlewares/auth')
+  var Sheet                    = require('../models/sheet')
+    , ensureAuth               = require('../middlewares/auth')
+    , getTargetSheetWithAuthor = require('../middlewares/sheets/getTargetSheetWithAuthor')
+    , ensureAuthoredOrPublic   = require('../middlewares/sheets/ensureAuthoredOrPublic')
+    , ensureAuthored           = require('../middlewares/sheets/ensureAuthored')
 
   module.exports = {
 
     middlewares: {
       index:   [ensureAuth],
-      edit:    [ensureAuth],
+      show:    [ensureAuth, getTargetSheetWithAuthor, ensureAuthoredOrPublic],
+      edit:    [ensureAuth, getTargetSheetWithAuthor, ensureAuthored],
       create:  [ensureAuth],
       update:  [ensureAuth],
       destroy: [ensureAuth]
@@ -15,35 +19,21 @@
 
     // GET#index
     index: function(req, res) {
-      req.user.sheets().then(function(sheets) {
-        res.render('sheets', {sheets: sheets});
-      });
+      res.send("/sheets index");
+    },
+
+    show: function(req, res) {
+      res.send("Sheet show page");
     },
 
     edit: function(req, res) {
-      // Get the requested sheet
-      return Sheet.findById(req.params.sheet_id).then(function(sheet) {
-
-        // Check if requester is the author
-        return sheet.author().then(function(author) {
-          if (req.user._id != author._id) {
-            // Not the author: Redirect to sheets
-            return res.redirect('/users/me/sheets');
-          }
-          // Author: render the edit template
-          res.render('sheet', {state: sheet.properties.data, dbid: sheet._id});
-        });
-
-      // Catch any errors in finding the sheet or author (or elsewhere for the matter)
-      }).catch(function(err) {
-        res.redirect('/users/me/sheets'); // Not found
-      });
+      res.render('sheetEditor', {active_sheets: true, state: JSON.stringify(req.target_sheet)});
     },
 
     // POST#create
     create: function(req, res) {
       return req.user.createSheet(req.body).then(function(sheet) {
-        res.redirect('/users/me/sheets/' + sheet._id + '/edit');
+        res.redirect('/sheets/' + sheet._id + '/edit');
       }).catch(console.error);
     },
 

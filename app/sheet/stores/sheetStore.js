@@ -16,17 +16,13 @@
       return deNormalize(SheetStoreDataManager.getData());
     },
 
-    setInitialData: function(data) {
-      SheetStoreDataManager.setData(data);
+    setInitialData: function(sheet) {
+      SheetStoreDataManager.setData(JSON.parse(sheet.properties.data));
     },
 
     setDefaultData: function() {
       var defaultData = {main: {title: "title", artist: "artist"}};
       SheetStoreDataManager.setData(defaultData);
-    },
-
-    setDBID: function(dbid) {
-      this.dbid = dbid;
     },
 
     emitChange: function() {
