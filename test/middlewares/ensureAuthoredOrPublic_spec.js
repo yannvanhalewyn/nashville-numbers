@@ -5,7 +5,7 @@ var include          = require('include')
   , expect           = chai.expect
   , sinon            = require('sinon')
   , Factory          = include('/test/util/factory')
-  , middleware       = include('/middlewares/ensureAuthoredOrPublic')
+  , middleware       = include('/middlewares/sheets/ensureAuthoredOrPublic')
 chai.use(sinonChai);
 
 describe('ensureAuthoredOrPublic', function() {

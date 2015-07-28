@@ -2,8 +2,8 @@
 
   var include                      = require('include')
     , ensureAuth                   = include('/middlewares/auth')
-    , getTargetHub                 = include('/middlewares/getTargetHub')
-    , getTargetHubWithRelationship = include('/middlewares/getTargetHubWithRelationship');
+    , getTargetHub                 = include('/middlewares/hubs/getTargetHub')
+    , getTargetHubWithRelationship = include('/middlewares/hubs/getTargetHubWithRelationship');
 
   module.exports = {
 

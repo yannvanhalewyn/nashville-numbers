@@ -2,7 +2,8 @@
 
   "use strict";
 
-  var Sheet = require('../models/sheet');
+  var include = require('include')
+    , Sheet = include('/models/sheet');
 
   /**
    * Attempts to find the sheet whose _id is the req.params.sheet_id. If found:
