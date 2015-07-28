@@ -1,6 +1,6 @@
 var expect = require('chai').expect;
-var Factory = require('../app/sheet/chord-data-factory');
-var ChordData = require('../app/sheet/chord-data');
+var Factory = require('../app/sheetEditor/chord-data-factory');
+var ChordData = require('../app/sheetEditor/chord-data');
 
 describe('ChordDataFactory', function() {
   describe('#fromRawString()', function() {

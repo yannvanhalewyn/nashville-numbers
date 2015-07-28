@@ -1,7 +1,7 @@
 var include     = require('include');
 var expect      = require('chai').expect;
 var Immutable   = require('immutable');
-var denormalize = include('/app/sheet/stores/denormalize');
+var denormalize = include('/app/sheetEditor/stores/denormalize');
 
 describe('#denormalize()', function() {
   context("when there are no missing fields", function() {

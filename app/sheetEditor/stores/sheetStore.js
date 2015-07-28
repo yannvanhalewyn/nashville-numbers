@@ -6,7 +6,7 @@
   var EventEmitter = require('events').EventEmitter;
   var SheetConstants = require('../sheetConstants');
   var SheetStoreDataManager = require('./sheetStoreDataManager');
-  var deNormalize = require('./deNormalize');
+  var deNormalize = require('../../helpers/deNormalize');
 
   var CHANGE_EVENT = 'change';
 

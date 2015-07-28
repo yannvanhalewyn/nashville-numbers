@@ -40,6 +40,8 @@
 
   var _ = require('lodash');
 
+  // TODO dbid shouldn't be here.
+  // TODO should not EXPECT Immutable data
   module.exports = function(data) {
     var input = data.toJS();
     var ret = {
