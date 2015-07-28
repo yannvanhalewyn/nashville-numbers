@@ -13,7 +13,7 @@
   var SheetStore = assign({}, EventEmitter.prototype, {
 
     getState: function() {
-      return deNormalize(SheetStoreDataManager.getData());
+      return deNormalize(SheetStoreDataManager.getData().toJS());
     },
 
     setInitialData: function(sheet) {

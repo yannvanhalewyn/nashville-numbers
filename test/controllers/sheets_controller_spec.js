@@ -8,7 +8,6 @@ var include     = require('include')
   , React       = require('react')
   , Factory     = include('/test/util/factory')
   , denormalize = include('/app/helpers/denormalize')
-  , Immutable = require('immutable')
 chai.use(sinonChai);
 
 /*
@@ -56,7 +55,7 @@ describe('SheetsController', function() {
     });
 
     it("generates a Sheet component with the denormalized data", function() {
-      var denormalizedData = denormalize(Immutable.fromJS(dummySheetData()));
+      var denormalizedData = denormalize(dummySheetData());
       expect(stubbedReactFactory).to.have.been.calledWith({sheetData: denormalizedData});
     });
 

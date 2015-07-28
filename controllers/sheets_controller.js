@@ -35,7 +35,7 @@
 
     show: function(req, res) {
       var jsonData = req.target_sheet.properties.data;
-      var data = Immutable.fromJS(JSON.parse(jsonData));
+      var data = JSON.parse(jsonData);
       var html = React.renderToString(Sheet({sheetData: denormalize(data)}));
       res.render("sheet", {markup: html});
     },

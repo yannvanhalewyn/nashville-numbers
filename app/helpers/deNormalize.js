@@ -41,34 +41,32 @@
   var _ = require('lodash');
 
   // TODO dbid shouldn't be here.
-  // TODO should not EXPECT Immutable data
   module.exports = function(data) {
-    var input = data.toJS();
     var ret = {
-      title: input.main.title,
-      artist: input.main.artist,
-      dbid: input.main.dbid,
+      title: data.main.title,
+      artist: data.main.artist,
+      dbid: data.main.dbid,
       sections: []
     };
 
     // Loop over all sections
-    _.each(input.main.sections, function(sectionID, iii) {
-      var section = input.sections[sectionID];
+    _.each(data.main.sections, function(sectionID, iii) {
+      var section = data.sections[sectionID];
       ret.sections[iii] = section;
 
       // Loop over all rows
       _.each(section.rows, function(rowID, jjj) {
-        var row = input.rows[rowID];
+        var row = data.rows[rowID];
         ret.sections[iii].rows[jjj] = row;
 
         // Loop over all bars
         _.each(row.bars, function(barID, kkk) {
-          var bar = input.bars[barID];
+          var bar = data.bars[barID];
           ret.sections[iii].rows[jjj].bars[kkk] = bar;
 
           // Loop over all chords
           _.each(bar.chords, function(chordID, lll) {
-            var chord = input.chords[chordID];
+            var chord = data.chords[chordID];
             ret.sections[iii].rows[jjj].bars[kkk].chords[lll] = chord;
           });
         });

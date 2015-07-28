@@ -51,6 +51,10 @@ describe('getTargetSheetWithAuthor', function() {
       middleware(req, res, next);
     });
 
+    afterEach(function() {
+      Sheet.findByIdWithAuthor.restore();
+    });
+
     it("Calls next with the error message", function() {
       expect(next).to.have.been.calledWith("THE ERROR");
     });
