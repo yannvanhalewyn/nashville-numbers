@@ -13,7 +13,9 @@
     render: function() {
       return (
         <div className="sheet-header">
-          <h1>{this.props.title} <small>{this.props.artist}</small></h1>
+          <h1 className="sheet-title">
+            {this.props.title} <small className="artist">{this.props.artist}</small>
+          </h1>
         </div>
       )
     }

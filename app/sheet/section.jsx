@@ -18,7 +18,7 @@
     render: function() {
       return (
         <div className="section">
-          <h2>{this.props.name}</h2>
+          <h2 className="section-name">{this.props.name}</h2>
           {this.props.rows.map(this.renderRow)}
         </div>
       )
