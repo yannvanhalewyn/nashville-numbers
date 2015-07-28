@@ -5,25 +5,29 @@
   <input type="checkbox" id="new-sheet-form-trigger">
   <div class="form-modal">
     <h2>Create a new sheet!</h2>
-    <form action="/users/me/sheets" method="post">
+    <form action="/sheets" method="post">
       <div class="input-group">
         <label for="title" class="input-label"><i class="fa fa-microphone"></i></label>
         <input id="title" type="text" name="title" placeholder="title (e.g: 'Message in a Bottle')">
-      </div>  
+      </div>
       <div class="input-group">
         <label for="artist" class="input-label"><i class="fa fa-child"></i></label>
         <input id="artist" type="text" name="artist" placeholder="artist (e.g: 'Sting')">
-      </div> 
+      </div>
+      <div class="input-group">
+        <label for="private" class="input-label"><i class="fa fa-key"></i></label>
+        <input id="private" type="checkbox" name="private" >
+      </div>
       <label for="new-sheet-form-trigger" class="cancel-button">Cancel</label>
       <input type="submit" value="Create">
-    </form>  
+    </form>
   </div>
 </div>
 
 <div class="list sheets-list">
   {{#each sheets}}
   <li class="sheet-list-entry">
-    <a href="/users/me/sheets/{{this._id}}/edit">
+    <a href="/sheets/{{this._id}}/edit">
       <div class="block-thumb"><span class="fa fa-file-o"></span></div>
       <div class="block-info">
         <div class="title">{{this.properties.title}}</div>

@@ -1,114 +1,74 @@
 (function() {
 
-  var Sheet      = require('../models/sheet')
-    , ensureAuth = require('../middlewares/auth')
+  var include                  = require('include')
+    , Sheet                    = include('/models/sheet')
+    , ensureAuth               = include('/middlewares/auth')
+    , getTargetSheetWithAuthor = include('/middlewares/sheets/getTargetSheetWithAuthor')
+    , ensureAuthoredOrPublic   = include('/middlewares/sheets/ensureAuthoredOrPublic')
+    , ensureAuthored           = include('/middlewares/sheets/ensureAuthored')
+    , redirect                 = include('/middlewares/errors/redirect')
+    , errorStatus              = include('/middlewares/errors/errorStatus')
+
+  // Server side react rendering
+  require('node-jsx').install({extension: '.jsx'});
+  var React = require('react')
+    , Sheet = React.createFactory(include('/app/sheet/sheet.jsx'))
+    , denormalize = include('app/helpers/deNormalize')
+    , Immutable = require('immutable')
+
 
   module.exports = {
 
     middlewares: {
       index:   [ensureAuth],
-      edit:    [ensureAuth],
+      show:    [ensureAuth, getTargetSheetWithAuthor, ensureAuthoredOrPublic, redirect.sheets],
+      edit:    [ensureAuth, getTargetSheetWithAuthor, ensureAuthored, redirect.sheets],
       create:  [ensureAuth],
-      update:  [ensureAuth],
-      destroy: [ensureAuth]
+      update:  [ensureAuth, getTargetSheetWithAuthor, ensureAuthored, errorStatus(500)],
+      destroy: [ensureAuth, getTargetSheetWithAuthor, ensureAuthored, redirect.sheets]
     },
 
     // GET#index
     index: function(req, res) {
-      req.user.sheets().then(function(sheets) {
-        res.render('sheets', {sheets: sheets});
-      });
+      res.send("/sheets index");
+    },
+
+    show: function(req, res) {
+      var jsonData = req.target_sheet.properties.data;
+      var data = JSON.parse(jsonData);
+      var html = React.renderToString(Sheet({sheetData: denormalize(data)}));
+      res.render("sheet", {markup: html});
     },
 
     edit: function(req, res) {
-      // Get the requested sheet
-      return Sheet.findById(req.params.sheet_id).then(function(sheet) {
-
-        // Check if requester is the author
-        return sheet.author().then(function(author) {
-          if (req.user._id != author._id) {
-            // Not the author: Redirect to sheets
-            return res.redirect('/users/me/sheets');
-          }
-          // Author: render the edit template
-          res.render('sheet', {state: sheet.properties.data, dbid: sheet._id});
-        });
-
-      // Catch any errors in finding the sheet or author (or elsewhere for the matter)
-      }).catch(function(err) {
-        res.redirect('/users/me/sheets'); // Not found
-      });
+      res.render('sheetEditor', {active_sheets: true, state: JSON.stringify(req.target_sheet)});
     },
 
     // POST#create
     create: function(req, res) {
+      req.body.private = req.body.private === "on";
       return req.user.createSheet(req.body).then(function(sheet) {
-        res.redirect('/users/me/sheets/' + sheet._id + '/edit');
-      }).catch(console.error);
+        res.redirect('/sheets/' + sheet._id + '/edit');
+      });
     },
 
     // PUT#update
     update: function(req, res) {
-      // Find the sheet by it's ID
-      return Sheet.findById(req.params.sheet_id).then(function(sheet) {
-
-        // Find the sheet's author TODO double db call
-        return sheet.author().then(function(author) {
-
-          // If the found sheet's author is the user
-          if (author._id === req.user._id) {
-            // Update the sheet with sent in params
-            return sheet.update({
-              title: req.body.main.title,
-              artist: req.body.main.artist,
-              data: JSON.stringify(req.body),
-            })
-            // Then respond with 200 if successfull
-            .then(function() {
-              return res.sendStatus(200);
-            });
-
-          // Else send a 403
-          } else {
-            res.status(403)
-            return res.send("You're not the author of this sheet.");
-          }
-        });
-
-      // Catches any errors in findById
-      }).catch(function(err) {
-        // If not found, 404 will be sent
-        res.status(404);
-        return res.send(err);
+      req.target_sheet.update({
+        title: req.body.main.title,
+        artist: req.body.main.artist,
+        data: JSON.stringify(req.body),
+      }).then(function(updatedSheet) {
+        res.json(updatedSheet);
       });
     },
 
     // DELETE#destroy
     destroy: function(req, res) {
-      // Find the sheet by it's ID
-      Sheet.findById(req.params.sheet_id).then(function(sheet) {
-
-        // Find the sheet's author
-        sheet.author().then(function(author) {
-          // If the found sheet's author is the user
-          if (author._id === req.user._id) {
-            // Destroy the sheet
-            sheet.destroy().then(function() {
-              // Redirect to the user's sheets page
-              return res.redirect('/users/me/sheets');
-            })
-
-          // If he's not the author
-          } else {
-            res.status(403);
-            return res.send("You're not the author of this sheet");
-          }
-        });
-
-      // Error on sheet.findById = not found
-      }, function(err) {
-        res.sendStatus(404);
-      })
+      req.target_sheet.destroy().then(function() {
+        res.redirect("/users/me/sheets");
+      });
     }
   };
+
 }())

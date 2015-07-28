@@ -1,7 +1,7 @@
 var include     = require('include');
 var expect      = require('chai').expect;
 var _           = require('lodash');
-var DataManager = include('/app/sheet/stores/sheetStoreDataManager');
+var DataManager = include('/app/sheetEditor/stores/sheetStoreDataManager');
 
 var DEFAULT_NUM_BARS_IN_ROW = 4;
 

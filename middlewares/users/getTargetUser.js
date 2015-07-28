@@ -2,7 +2,8 @@
 
   "use strict";
 
-  var User = require('../models/user');
+  var include = require('include')
+    , User = include('/models/user');
 
   var getTargetUser = function(req, res, next) {
     return User.findById(req.params.user_id).then(function(user) {

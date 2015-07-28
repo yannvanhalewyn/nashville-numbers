@@ -2,21 +2,18 @@
 
   "use strict";
 
-  var include = require('include')
-    , db      = require('../config/db')
-    , _       = require('lodash')
-    , Cypher  = include('/helpers/cypher')
-    , Sheet   = include('/models/sheet') // For sheet instantiation
-    , Hub     = include('/models/hub')
-
-/*
- * ===========
- * CONSTRUCTOR
- * ===========
- */
+  // Define and export contructor for circular dep with Sheet.
+  var _ = require('lodash')
   var User = function(params) {
     _.merge(this, params);
   };
+  module.exports = User;
+
+  var include = require('include')
+    , db      = require('../config/db')
+    , Cypher  = include('/helpers/cypher')
+    , Sheet   = include('/models/sheet') // For sheet instantiation
+    , Hub     = include('/models/hub')
 
 /*
  * ===============
@@ -428,8 +425,6 @@
       return new User(res[0].p);
     });
   }
-
-  module.exports = User;
 
   /**
    * Splits the given string of words and returns a match string matching the

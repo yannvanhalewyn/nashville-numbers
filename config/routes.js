@@ -7,10 +7,10 @@
   // Controllers
   var UserSession        = include('/controllers/user_session_controller')
     , Dashboard          = include('/controllers/dashboard_controller')
-    , Sheets             = include('/routers/sheets')
     , Friends            = include('/routers/friends')
     , FriendRequests     = include('/routers/friend_requests')
     , Users              = include('/routers/users')
+    , Sheets             = include('/routers/sheets')
     , UserHubInvitations = include('/routers/user_hub_invitations')
     , Hubs               = include('/routers/hubs')
     , HubParticipants    = include('/routers/hub_participants')
@@ -58,7 +58,7 @@
  * =================
  */
     app.use('/users', Users);
-    app.use('/users/:user_id/sheets', Sheets);
+    app.use('/sheets', Sheets);
     app.use('/users/:user_id/friends', Friends);
     app.use('/users/:user_id/friends/requests', FriendRequests);
     app.use('/users/me/hubinvitations', UserHubInvitations);

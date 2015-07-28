@@ -9,6 +9,7 @@
   var SheetsRouter = require('express').Router({mergeParams: true});
 
   SheetsRouter.get('/', middlewares.index, Controller.index);
+  SheetsRouter.get('/:sheet_id', middlewares.show, Controller.show);
   SheetsRouter.get('/:sheet_id/edit', middlewares.edit, Controller.edit);
   SheetsRouter.post('/', middlewares.create, Controller.create);
   SheetsRouter.put('/:sheet_id', middlewares.update, Controller.update);

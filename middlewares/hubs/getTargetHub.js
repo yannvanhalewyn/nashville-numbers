@@ -2,7 +2,8 @@
 
   "use strict";
 
-  var Hub = require('../models/hub');
+  var include = require('include')
+    , Hub = include('/models/hub');
 
   var getTargetHub = function(req, res, next) {
     return Hub.findById(req.params.hub_id).then(function(hub) {

@@ -1,7 +1,6 @@
 var include     = require('include');
 var expect      = require('chai').expect;
-var Immutable   = require('immutable');
-var denormalize = include('/app/sheet/stores/denormalize');
+var denormalize = include('/app/helpers/denormalize');
 
 describe('#denormalize()', function() {
   context("when there are no missing fields", function() {
@@ -40,11 +39,11 @@ describe('#denormalize()', function() {
 });
 
 function _normalizedWithMissingSectionsInMain() {
-  return Immutable.fromJS({main: {title: "theTitle", artist: "theArtist"}});
+  return {main: {title: "theTitle", artist: "theArtist"}};
 }
 
 function _normalizedWithMissingChordsArrayInBar() {
-  return Immutable.fromJS({
+  return {
     main: {
       title: "theTitle",
       artist: "theArtist",
@@ -59,11 +58,11 @@ function _normalizedWithMissingChordsArrayInBar() {
     bars: {
       bar1: { id: "bar1" }
     }
-  });
+  };
 }
 
 function _normalizedWithMissingBarsArrayInRow() {
-  return Immutable.fromJS({
+  return {
     main: {
       title: "theTitle",
       artist: "theArtist",
@@ -75,14 +74,14 @@ function _normalizedWithMissingBarsArrayInRow() {
     rows: {
       row1: { id: "row1" },
     }
-  });
+  };
 }
 
 function _normalizedWithMissingRowsArrayInSection() {
-  return Immutable.fromJS({
+  return {
     main: { title: "theTitle", artist: "theArtist", sections: [ "section1" ] },
     sections: { section1: { id: "section1", name: "intro" }, },
-  });
+  };
 }
 
 
@@ -148,7 +147,7 @@ function _deNormalizedData() {
 }
 
 function _normalizedData() {
-  return Immutable.fromJS({
+  return {
     main: {
       title: "theTitle",
       artist: "theArtist",
@@ -178,5 +177,5 @@ function _normalizedData() {
       chord5: { id: "chord5", raw: "chord5-raw" },
       chord6: { id: "chord6", raw: "chord6-raw" }
     }
-  })
+  }
 }

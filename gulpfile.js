@@ -23,8 +23,8 @@ var watchify     = require('watchify')
 gulp.task('server', function() {
   nodemon({
     script: 'server.js',
-    ext: 'js handlebars',
-    ignore: ['gulpfile.js', 'test/', 'app/', 'public/'],
+    ext: 'js handlebars jsx',
+    ignore: ['gulpfile.js', 'test/', 'public/'],
     env: { 'NODE_ENV': 'development' }
   });
 });
@@ -40,7 +40,7 @@ gulp.task('watchify', function() {
 
   // The starting files = feature in-points
   var files = [
-    './app/sheet/editor.js',
+    './app/sheetEditor/editor.js',
     './app/friendslist/friendslist.js',
     './app/userpage/userpage.js',
     './app/hubs/hubs.js',

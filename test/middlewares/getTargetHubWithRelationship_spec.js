@@ -5,7 +5,7 @@ var include    = require('include')
   , expect     = chai.expect
   , reqres     = require('reqres')
   , Q          = require('q')
-  , middleware = include('/middlewares/getTargetHubWithRelationship')
+  , middleware = include('/middlewares/hubs/getTargetHubWithRelationship')
   , Factory    = include('/test/util/factory')
   , rejectionPromise = include('/test/util/rejectionPromise');
 chai.use(sinonChai);
