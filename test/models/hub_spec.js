@@ -190,7 +190,7 @@ describe('HUB', function() {
     });
   }); // End of describe 'removeParticipant'
 
-  describe('addSheet()', function() {
+  describe('#addSheet()', function() {
     var HUB, CREATOR;
     before(function() {
       return Factory('hub').then(function(entities) {
@@ -239,4 +239,51 @@ describe('HUB', function() {
       });
     }); // End of context 'when the sheet doesn't exist'
   }); // End of describe 'addSheet()'
+
+  describe('#removeSheet()', function() {
+    var HUB, CREATOR;
+    before(function() {
+      return Factory('hub').then(function(entities) {
+        HUB = entities.hub;
+        CREATOR = entities.user;
+      });
+    });
+
+    context("when the hub contains the sheet", function() {
+      var SHEET, FOUND;
+      before(function() {
+        return Factory('sheet', {uid: CREATOR._id}).then(function(sheet) {
+          return HUB.addSheet(sheet._id).then(function(relationship) {
+            return HUB.removeSheet(sheet._id).then(function() {
+              return db.query(
+                "MATCH (hub:Hub)-[r:CONTAINS]->(sheet:Sheet)" +
+                "WHERE id(hub) = {hid} AND id(sheet) = {sid} RETURN r",
+                {hid: HUB._id, sid: sheet._id}
+              ).then(function(found) {
+                FOUND = found;
+              });
+            });
+          });
+        });
+      });
+
+      it("destroys the CONTAINS relationship", function() {
+        expect(FOUND).to.be.empty;
+      });
+    }); // End of context 'when the hub contains the sheet'
+
+    context("when the hub doesn't contain the sheet", function() {
+      var ERROR;
+      beforeEach(function() {
+        return HUB.removeSheet(999).catch(function(error) {
+          ERROR = error;
+        });
+      });
+
+      it("throws an error", function() {
+        expect(ERROR).to.eql("Hub doesn't contain sheet with id " + 999);
+      });
+    }); // End of context 'when the hub doesn't contain the sheet'
+
+  }); // End of describe '#removeSheet()'
 }); // End of describe 'HUB'

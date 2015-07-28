@@ -73,6 +73,23 @@
   }
 
   /**
+   * Destroys a CONTAINS relationship between hub and sheet.
+   *
+   * @param {string/number} sheetID The ID of the sheet.
+   * @throws {NotFound} When the hub doesn't contain the sheet
+   */
+  Hub.prototype.removeSheet = function(sheetID) {
+    return db.query(
+      "MATCH (hub:Hub)-[contains:CONTAINS]->(sheet:Sheet) " +
+      "WHERE id(hub) = {hid} AND id(sheet) = {sid} " +
+      "DELETE contains RETURN hub",
+      {hid: this._id, sid: parseInt(sheetID)}
+    ).then(function(result) {
+      if (_.isEmpty(result)) throw "Hub doesn't contain sheet with id " + sheetID;
+    });
+  }
+
+  /**
    * Creates a new hub
    *
    * @param {object} params The params to create the hub. It needs a 'creator_id' property to create the CREATED relationship to the hub.
