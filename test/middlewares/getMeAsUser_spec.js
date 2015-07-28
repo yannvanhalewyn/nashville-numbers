@@ -5,7 +5,7 @@ var include     = require('include')
   , reqres      = require('reqres')
   , sinon       = require('sinon')
   , Factory     = include('/test/util/factory')
-  , getMeAsUser = include('/middlewares/getMeAsUser')
+  , getMeAsUser = include('/middlewares/users/getMeAsUser')
 chai.use(sinonChai);
 
 describe('MIDDLEWARE|getMeAsUser', function() {

@@ -5,7 +5,7 @@ var include          = require('include')
   , expect           = chai.expect
   , sinon            = require('sinon')
   , Factory          = include('/test/util/factory')
-  , middleware       = include('/middlewares/ensureAuthoredOrPublic')
+  , middleware       = include('/middlewares/sheets/ensureAuthoredOrPublic')
 chai.use(sinonChai);
 
 describe('ensureAuthoredOrPublic', function() {
@@ -16,14 +16,10 @@ describe('ensureAuthoredOrPublic', function() {
   });
 
   context("when targetSheet is public", function() {
-    var next;
-    beforeEach(function(done) {
-      req.target_sheet = { properties: { public: true }};
-      next = sinon.spy(done);
-      middleware(req, res, next);
-    });
-
     it("calls next (1)", function() {
+      req.target_sheet = { properties: { public: true }};
+      var next = sinon.spy();
+      middleware(req, res, next);
       expect(next).to.have.been.called;
     });
   }); // End of context 'when targetSheet is public'
@@ -34,35 +30,22 @@ describe('ensureAuthoredOrPublic', function() {
     });
 
     context("when logged in user is author", function() {
-      var next;
-      beforeEach(function(done) {
+      it("calls next (2)", function() {
         req.target_sheet_author = { _id: 123 };
         req.user = { _id: 123 };
-        next = sinon.spy(done);
+        var next = sinon.spy();
         middleware(req, res, next);
-      });
-
-      it("calls next (2)", function() {
         expect(next).to.have.been.called;
       });
     }); // End of context 'when logged in user is author'
 
     context("when logged in user isn't author", function() {
-      var next;
-      beforeEach(function(done) {
+      it("calls next with an error message", function() {
         req.target_sheet_author = { _id: 123 };
         req.user = { _id: 124 };
-        next = sinon.spy();
+        var next = sinon.spy();
         middleware(req, res, next);
-        res.on('end', done);
-      });
-
-      it("doesn't call next", function() {
-        expect(next).not.to.have.been.called;
-      });
-
-      it("resirects to the users sheets page", function() {
-        expect(res.redirect).to.have.been.calledWith("/users/me/sheets");
+        expect(next).to.have.been.calledWith("You have no right to visit this sheet.");
       });
     }); // End of context 'when logged in user isn't author'
   }); // End of context 'when targetSheet is private'

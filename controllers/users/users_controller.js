@@ -5,8 +5,8 @@
   var include       = require('include')
     , User          = include('/models/user')
     , ensureAuth    = include('/middlewares/auth')
-    , getTargetUser = include('/middlewares/getTargetUser')
-    , getMeAsUser   = include('/middlewares/getMeAsUser')
+    , getTargetUser = include('/middlewares/users/getTargetUser')
+    , getMeAsUser   = include('/middlewares/users/getMeAsUser')
     , _             = require('lodash')
 
   var UsersController = {

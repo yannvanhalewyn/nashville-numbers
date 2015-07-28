@@ -2,7 +2,8 @@
 
   "use strict";
 
-  var Sheet = require('../models/sheet');
+  var include = require('include')
+    , Sheet = include('/models/sheet');
 
   /**
    * Attempts to find the sheet whose _id is the req.params.sheet_id. If found:
@@ -20,7 +21,7 @@
       req.target_sheet_author = result.author;
       next();
     }, function(error) {
-      res.redirect("/users/me/sheets");
+      next(error);
     });
   }
 

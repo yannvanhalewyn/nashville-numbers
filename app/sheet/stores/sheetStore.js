@@ -16,17 +16,14 @@
       return deNormalize(SheetStoreDataManager.getData());
     },
 
-    setInitialData: function(data) {
-      SheetStoreDataManager.setData(data);
+    setInitialData: function(sheet) {
+      this.dbid = sheet._id;
+      SheetStoreDataManager.setData(JSON.parse(sheet.properties.data));
     },
 
     setDefaultData: function() {
       var defaultData = {main: {title: "title", artist: "artist"}};
       SheetStoreDataManager.setData(defaultData);
-    },
-
-    setDBID: function(dbid) {
-      this.dbid = dbid;
     },
 
     emitChange: function() {
@@ -58,7 +55,7 @@
     saveSheet: function() {
       var data = SheetStoreDataManager.getData();
       $.ajax({
-        url: '/users/me/sheets/' + this.dbid,
+        url: '/sheets/' + this.dbid,
         method: "PUT",
         contentType: 'application/json',
         data: JSON.stringify(data.toJS())

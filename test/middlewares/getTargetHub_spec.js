@@ -5,7 +5,7 @@ var include      = require('include')
   , reqres       = require('reqres')
   , sinon        = require('sinon')
   , Factory      = include('/test/util/factory')
-  , getTargetHub = include('/middlewares/getTargetHub')
+  , getTargetHub = include('/middlewares/hubs/getTargetHub')
   , Hub          = include('/models/hub')
   , Q            = require('q')
 chai.use(sinonChai);

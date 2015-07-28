@@ -2,7 +2,8 @@
 
   "use strict";
 
-  var HubInvitation = require('../models/hub_invitation');
+  var include = require('include')
+    , HubInvitation = include('/models/hub_invitation');
 
   var getTargetInvitation = {
 

@@ -4,23 +4,16 @@ var React = require('react');
 var SheetEditor = require('./components/sheetEditor.react');
 var SheetStore = require('./stores/sheetStore');
 
+var data;
 try {
-  var data = JSON.parse(document.getElementById('initial-state').innerHTML);
+  data = JSON.parse(document.getElementById('initial-state').innerHTML);
   SheetStore.setInitialData(data);
 } catch(e) {
   SheetStore.setDefaultData();
 }
 
-try {
-  var dbid = document.getElementById('dbid').value;
-  SheetStore.setDBID(dbid);
-} catch(e) {
-  console.log("ERROR");
-  console.log(e);
-}
-
 React.render(
-  <SheetEditor dbid={dbid}/>,
+  <SheetEditor dbid={data._id}/>,
   document.getElementById('sheet-container')
 );
 
