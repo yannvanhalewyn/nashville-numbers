@@ -34,7 +34,7 @@
     create: function(req, res) {
       return req.user.createSheet(req.body).then(function(sheet) {
         res.redirect('/sheets/' + sheet._id + '/edit');
-      }).catch(console.error);
+      });
     },
 
     // PUT#update
