@@ -10,7 +10,7 @@
    */
   var ensureAuthored = function(req, res, next) {
     if (req.user._id != req.target_sheet_author._id) {
-      return res.redirect('/users/me/sheets');
+      return next("You are not the author.");
     }
     next();
   }

@@ -1,20 +1,22 @@
 (function() {
 
-  var Sheet                    = require('../models/sheet')
-    , ensureAuth               = require('../middlewares/auth')
-    , getTargetSheetWithAuthor = require('../middlewares/sheets/getTargetSheetWithAuthor')
-    , ensureAuthoredOrPublic   = require('../middlewares/sheets/ensureAuthoredOrPublic')
-    , ensureAuthored           = require('../middlewares/sheets/ensureAuthored')
+  var include                  = require('include')
+    , Sheet                    = include('/models/sheet')
+    , ensureAuth               = include('/middlewares/auth')
+    , getTargetSheetWithAuthor = include('/middlewares/sheets/getTargetSheetWithAuthor')
+    , ensureAuthoredOrPublic   = include('/middlewares/sheets/ensureAuthoredOrPublic')
+    , ensureAuthored           = include('/middlewares/sheets/ensureAuthored')
+    , redirect                 = include('/middlewares/errors/redirect')
 
   module.exports = {
 
     middlewares: {
       index:   [ensureAuth],
-      show:    [ensureAuth, getTargetSheetWithAuthor, ensureAuthoredOrPublic],
-      edit:    [ensureAuth, getTargetSheetWithAuthor, ensureAuthored],
+      show:    [ensureAuth, getTargetSheetWithAuthor, ensureAuthoredOrPublic, redirect.sheets],
+      edit:    [ensureAuth, getTargetSheetWithAuthor, ensureAuthored, redirect.sheets],
       create:  [ensureAuth],
       update:  [ensureAuth, getTargetSheetWithAuthor, ensureAuthored],
-      destroy: [ensureAuth, getTargetSheetWithAuthor, ensureAuthored]
+      destroy: [ensureAuth, getTargetSheetWithAuthor, ensureAuthored, redirect.sheets]
     },
 
     // GET#index
@@ -55,4 +57,5 @@
       });
     }
   };
+
 }())

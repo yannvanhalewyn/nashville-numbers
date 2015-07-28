@@ -44,23 +44,15 @@ describe('getTargetSheetWithAuthor', function() {
   }); // End of context 'when Sheet.findByIdWithAuthor returns something'
 
   context("when Sheet.findByIdWithAuthor throws (eg no sheet was found)", function() {
+    var next;
     beforeEach(function(done) {
       sinon.stub(Sheet, 'findByIdWithAuthor').returns(rejectionPromise("THE ERROR"));
-      next = sinon.spy();
+      next = sinon.spy(done.bind(null, null));
       middleware(req, res, next);
-      res.on('end', done);
     });
 
-    afterEach(function() {
-      Sheet.findByIdWithAuthor.restore();
-    });
-
-    it("doesn't call next", function() {
-      expect(next).not.to.have.been.called;
-    });
-
-    it("redirects to /sheets", function() {
-      expect(res.redirect).to.have.been.calledWith("/users/me/sheets");
+    it("Calls next with the error message", function() {
+      expect(next).to.have.been.calledWith("THE ERROR");
     });
   }); // End of context 'when Sheet.findByIdWithAuthor throws (eg no sheet was found)'
 }); // End of describe 'getTargetSheetWithAuthor'

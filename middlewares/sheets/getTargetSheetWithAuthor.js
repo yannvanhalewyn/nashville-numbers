@@ -21,7 +21,7 @@
       req.target_sheet_author = result.author;
       next();
     }, function(error) {
-      res.redirect("/users/me/sheets");
+      next(error);
     });
   }
 

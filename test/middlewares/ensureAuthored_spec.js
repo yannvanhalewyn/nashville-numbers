@@ -8,7 +8,7 @@ var include          = require('include')
   , middleware       = include('/middlewares/sheets/ensureAuthored')
 chai.use(sinonChai);
 
-describe('ensureAuthoredOrPublic', function() {
+describe('MIDDLEWARE|ensureAuthored', function() {
   var req, res;
   beforeEach(function() {
     req = reqres.req();
@@ -26,20 +26,11 @@ describe('ensureAuthoredOrPublic', function() {
   }); // End of context 'when targetSheet is public'
 
   context("when targetSheet was not authored", function() {
-    var next;
-    beforeEach(function(done) {
+    it("calls next with an error message", function() {
       req.target_sheet_author = { _id: 124 };
       next = sinon.spy();
       middleware(req, res, next);
-      res.on('end', done);
-    });
-
-    it("doesn't call next", function() {
-      expect(next).not.to.have.been.called;
-    });
-
-    it("resirects to the logged in user's sheets page", function() {
-      expect(res.redirect).to.have.been.calledWith("/users/me/sheets");
+      expect(next).to.have.been.calledWith("You are not the author.");
     });
   }); // End of context 'when targetSheet is private'
 }); // End of describe 'ensureAuthoredOrPublic'
