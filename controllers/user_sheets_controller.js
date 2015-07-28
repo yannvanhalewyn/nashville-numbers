@@ -18,6 +18,9 @@
     },
 
     indexMe: function(req, res) {
+      if (req.xhr) {
+        return res.json(req.target_user_sheets);
+      }
       res.render("sheets", {active_sheets: true, sheets: req.target_user_sheets});
     }
   };
