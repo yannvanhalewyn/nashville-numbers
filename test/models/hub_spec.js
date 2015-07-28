@@ -189,4 +189,54 @@ describe('HUB', function() {
       });
     });
   }); // End of describe 'removeParticipant'
+
+  describe('addSheet()', function() {
+    var HUB, CREATOR;
+    before(function() {
+      return Factory('hub').then(function(entities) {
+        HUB = entities.hub;
+        CREATOR = entities.user;
+      });
+    });
+
+    context("when the sheet exists", function() {
+      var SHEET, RETURNED, FOUND;
+      before(function() {
+        return Factory('sheet', {uid: CREATOR._id}).then(function(sheet) {
+          SHEET = sheet;
+          return HUB.addSheet(sheet._id.toString()).then(function(returned) {
+            RETURNED = returned;
+            return db.query(
+              "MATCH (hub:Hub)-[r:CONTAINS]->(sheet:Sheet)" +
+              "WHERE id(hub) = {hid} AND id(sheet) = {sid} RETURN r",
+              {hid: HUB._id, sid: SHEET._id}
+            ).then(function(found) {
+              FOUND = found;
+            });
+          });
+        });
+      });
+
+      it("creates a CONTAINS relationship from HUB to SHEET", function() {
+        expect(FOUND.length).to.eql(1);
+      });
+
+      it("returns the created relationship", function() {
+        expect(FOUND[0].r).to.eql(RETURNED);
+      });
+    }); // End of context 'when the sheet exists'
+
+    context("when the sheet doesn't exist", function() {
+      var ERROR;
+      beforeEach(function() {
+        return HUB.addSheet(999).catch(function(error) {
+          ERROR = error;
+        });
+      });
+
+      it("throws a not found error", function() {
+        expect(ERROR).to.eql("Could not find sheet with id " + 999);
+      });
+    }); // End of context 'when the sheet doesn't exist'
+  }); // End of describe 'addSheet()'
 }); // End of describe 'HUB'
