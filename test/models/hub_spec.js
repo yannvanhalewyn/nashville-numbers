@@ -194,7 +194,7 @@ describe('HUB', function() {
 
   describe('#addSheet()', function() {
     var HUB, CREATOR;
-    before(function() {
+    beforeEach(function() {
       return Factory('hub').then(function(entities) {
         HUB = entities.hub;
         CREATOR = entities.user;
@@ -203,7 +203,7 @@ describe('HUB', function() {
 
     context("when the sheet exists", function() {
       var SHEET, RETURNED, FOUND;
-      before(function() {
+      beforeEach(function() {
         return Factory('sheet', {uid: CREATOR._id}).then(function(sheet) {
           SHEET = sheet;
           return HUB.addSheet(sheet._id.toString()).then(function(returned) {
@@ -226,6 +226,29 @@ describe('HUB', function() {
       it("returns the created relationship", function() {
         expect(FOUND[0].r).to.eql(RETURNED);
       });
+
+      context("when the hub already CONTAINS the sheet", function() {
+        var RESULT, FOUND;
+        beforeEach(function() {
+          return HUB.addSheet(SHEET._id).then(function(result) {
+            RESULT = result;
+            return db.query(
+              "MATCH (h:Hub)-[r:CONTAINS]->(s:Sheet) WHERE id(h) = {hid} RETURN r",
+              {hid: HUB._id}
+            ).then(function(found) {
+              FOUND = found;
+            });
+          });
+        });
+
+        it("doesn't create a second CONTAINS relationship", function() {
+          expect(FOUND.length).to.eql(1);
+        });
+
+        it("returns the existing relationship", function() {
+          expect(RESULT).to.eql(FOUND[0].r);
+        });
+      }); // End of context 'when the hub already CONTAINS the sheet'
     }); // End of context 'when the sheet exists'
 
     context("when the sheet doesn't exist", function() {

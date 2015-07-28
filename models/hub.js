@@ -64,7 +64,7 @@
   Hub.prototype.addSheet = function(sheetID) {
     return db.query(
       "MATCH (h:Hub), (s:Sheet) WHERE id(h) = {hid} AND id(s) = {sid} " +
-      "CREATE (h)-[contains:CONTAINS]->(s) RETURN contains",
+      "MERGE (h)-[contains:CONTAINS]->(s) RETURN contains",
       {hid: this._id, sid: parseInt(sheetID)}
     ).then(function(result) {
       if (_.isEmpty(result)) throw "Could not find sheet with id " + sheetID;
