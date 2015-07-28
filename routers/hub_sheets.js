@@ -10,7 +10,7 @@
   HubSheetsRouter.get('/', middlewares.index, Controller.index);
   HubSheetsRouter.get('/:sheet_id', middlewares.show, Controller.show);
   HubSheetsRouter.post('/', middlewares.create, Controller.create);
-  HubSheetsRouter.delete('/:participant_id', middlewares.destroy, Controller.destroy);
+  HubSheetsRouter.delete('/:sheet_id', middlewares.destroy, Controller.destroy);
 
   module.exports = HubSheetsRouter;
 

@@ -1,11 +1,17 @@
 (function() {
 
+  var include                      = require('include')
+    , ensureAuth                   = include('/middlewares/auth')
+    , getTargetHub                 = include('/middlewares/hubs/getTargetHub')
+    , getTargetHubWithRelationship = include('/middlewares/hubs/getTargetHubWithRelationship')
+    , errorStatus                  = include('/middlewares/errors/errorStatus')
+
   module.exports = {
 
     middlewares: {
       index:   [],
       show:    [],
-      create:  [],
+      create:  [ensureAuth, getTargetHub, errorStatus(400)],
       destroy: []
     },
 
@@ -18,7 +24,12 @@
     },
 
     create: function(req, res) {
-      res.send("HS CREATE " + req.body);
+      req.target_hub.addSheet(req.body.sheet_id).then(function(relationship) {
+        res.json(relationship);
+      }, function(error) {
+        res.status(400);
+        res.send(error);
+      });
     },
 
     destroy: function(req, res) {
