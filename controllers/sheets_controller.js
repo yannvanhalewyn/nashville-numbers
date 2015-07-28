@@ -13,7 +13,7 @@
       show:    [ensureAuth, getTargetSheetWithAuthor, ensureAuthoredOrPublic],
       edit:    [ensureAuth, getTargetSheetWithAuthor, ensureAuthored],
       create:  [ensureAuth],
-      update:  [ensureAuth],
+      update:  [ensureAuth, getTargetSheetWithAuthor, ensureAuthored],
       destroy: [ensureAuth]
     },
 
@@ -39,37 +39,12 @@
 
     // PUT#update
     update: function(req, res) {
-      // Find the sheet by it's ID
-      return Sheet.findById(req.params.sheet_id).then(function(sheet) {
-
-        // Find the sheet's author TODO double db call
-        return sheet.author().then(function(author) {
-
-          // If the found sheet's author is the user
-          if (author._id === req.user._id) {
-            // Update the sheet with sent in params
-            return sheet.update({
-              title: req.body.main.title,
-              artist: req.body.main.artist,
-              data: JSON.stringify(req.body),
-            })
-            // Then respond with 200 if successfull
-            .then(function() {
-              return res.sendStatus(200);
-            });
-
-          // Else send a 403
-          } else {
-            res.status(403)
-            return res.send("You're not the author of this sheet.");
-          }
-        });
-
-      // Catches any errors in findById
-      }).catch(function(err) {
-        // If not found, 404 will be sent
-        res.status(404);
-        return res.send(err);
+      req.target_sheet.update({
+        title: req.body.main.title,
+        artist: req.body.main.artist,
+        data: JSON.stringify(req.body),
+      }).then(function(updatedSheet) {
+        res.json(updatedSheet);
       });
     },
 

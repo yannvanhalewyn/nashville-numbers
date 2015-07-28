@@ -40,7 +40,7 @@
     },
 
     _url: function() {
-      return "/users/me/sheets/" + this.props.dbid;
+      return "/sheets/" + this.props.dbid;
     },
 
     _handleSave: function(e) {
