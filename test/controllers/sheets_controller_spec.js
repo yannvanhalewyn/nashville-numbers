@@ -95,15 +95,15 @@ describe('SheetsController', function() {
       });
     });
 
-    context("when a public flag is given", function() {
+    context("when a private flag is given", function() {
       beforeEach(function(done) {
-        req.body = {dummyBody: true, public: 'on'};
+        req.body = {dummyBody: true, private: 'on'};
         Controller.create(req, res);
         res.on('end', done);
       });
 
       it("sets the flag to 'true' and calls createSheet on user", function() {
-        expect(USER.createSheet).to.have.been.calledWith({dummyBody: true, public: true});
+        expect(USER.createSheet).to.have.been.calledWith({dummyBody: true, private: true});
       });
     }); // End of context 'when a public flag is given'
 
@@ -115,7 +115,7 @@ describe('SheetsController', function() {
       });
 
       it("sets the public flag to false and calls createSheet on user", function() {
-        expect(USER.createSheet).to.have.been.calledWith({dummyBody: true, public: false});
+        expect(USER.createSheet).to.have.been.calledWith({dummyBody: true, private: false});
       });
 
       it("redirects to the edit page of the new sheet", function() {

@@ -9,7 +9,7 @@
    *
    */
   var ensureAuthoredOrPublic = function(req, res, next) {
-    if (req.target_sheet.properties.public) return next();
+    if (!req.target_sheet.properties.private) return next();
     if (req.target_sheet_author._id == req.user._id) return next();
     next("You have no right to visit this sheet.");
   };
