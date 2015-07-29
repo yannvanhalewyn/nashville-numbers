@@ -17,7 +17,10 @@
    */
   Hub.prototype.destroy = function() {
     return db.query(
-      "MATCH (hub:Hub) OPTIONAL MATCH (hub)-[r]-() WHERE id(hub) = {hid} DELETE hub, r",
+      "MATCH (hub:Hub) WHERE id(hub) = {hid} " +
+      "OPTIONAL MATCH (hub)-[r1]-() " +
+      "OPTIONAL MATCH (hub)-[r2]-(hi:HubInvitation)-[r3]-() " +
+      "DELETE hub, r1, r2, r3, hi",
       {hid: this._id}
     );
   };

@@ -52,20 +52,51 @@ describe('HUB', function() {
   }); // End of describe 'Hub.create()'
 
   describe('#destroy()', function() {
-    var HUB;
+    var HUB, CREATOR;
     beforeEach(function() {
       return Factory('hub').then(function(entities) {
         HUB = entities.hub;
-        return HUB.destroy();
+        CREATOR = entities.user;
       });
     });
 
     it("destroys the hub", function() {
-      return db.query("MATCH (h:Hub) WHERE id(h) = {hid} RETURN h", {hid: HUB._id})
-      .then(function(result) {
-        expect(result).to.be.empty;
+      return HUB.destroy().then(function() {
+        return db.query("MATCH (h:Hub) WHERE id(h) = {hid} RETURN h", {hid: HUB._id})
+        .then(function(result) {
+          expect(result).to.be.empty;
+        });
       });
     });
+
+    it("doesn't destroy other hubs", function() {
+      return Factory('hub').then(function(otherEntities) {
+        return HUB.destroy().then(function() {
+          return db.query("MATCH (h:Hub) WHERE id(h) = {hid} RETURN h", {hid: otherEntities.hub._id})
+          .then(function(result) {
+            expect(result.length).to.eql(1);
+          });
+        });
+      });
+    });
+
+    context("when the hub has hubInvitations attached", function() {
+      var INVITEE;
+      beforeEach(function() {
+        return Factory('user').then(function(user) {
+          INVITEE = user;
+          return CREATOR.inviteToHub(HUB._id, INVITEE._id);
+        });
+      });
+
+      it("destroys the hubInvitation node with relationships", function() {
+        return HUB.destroy().then(function() {
+          return db.query("MATCH (hi:HubInvitation) RETURN hi").then(function(result) {
+            expect(result).to.be.empty;
+          });
+        });
+      });
+    }); // End of context 'when the hub has hubInvitations attached'
   }); // End of describe '#destroy()'
 
 /*
