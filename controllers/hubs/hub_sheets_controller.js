@@ -9,14 +9,16 @@
   module.exports = {
 
     middlewares: {
-      index:   [],
+      index:   [ensureAuth, getTargetHub, errorStatus(400)],
       show:    [],
       create:  [ensureAuth, getTargetHub, errorStatus(400)],
       destroy: []
     },
 
     index: function(req, res) {
-      res.send("HS INDEX");
+      req.target_hub.getSheets().then(function(sheets) {
+        res.json(sheets);
+      });
     },
 
     show: function(req, res) {

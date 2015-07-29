@@ -16,6 +16,24 @@ describe('HubSheetsController', function() {
     res = reqres.res();
   });
 
+  describe('GET/index', function() {
+    var getSheetsStub;
+    beforeEach(function(done) {
+      getSheetsStub = sinon.stub().returns(Q(["a", "dummy", "array"]));
+      req.target_hub = {getSheets: getSheetsStub}
+      Controller.index(req, res);
+      res.on('end', done)
+    });
+
+    it("calls target_hub.getSheets()", function() {
+      expect(getSheetsStub).to.have.been.called;
+    });
+
+    it("sends along the resulting data via JSON", function() {
+      expect(res.json).to.have.been.calledWith(["a", "dummy", "array"]);
+    });
+  }); // End of describe 'GET/index'
+
   describe('POST/create', function() {
     context("when addSheet is successful", function() {
       var addSheetStub;
