@@ -8,11 +8,13 @@
     , ParticipantsSection = require('./ParticipantsSection.jsx')
     , Modal = require('../../utility_react_components/modal.react')
 
+  // TODO maybe split the update functions up in GetStateParticipants and GetStateSheets?
   var HubPageComponent = React.createClass({
     componentDidMount: function() {
       this.props.store.on('participants:sync participants:destroy ' +
                           'invitations:sync invitations:destroy friends:sync', this._update);
       this.props.store.on('users-sheets:sync', this._usersSheetsSynced);
+      this.props.store.on('hub-sheets:sync', this._update);
       this.props.store.on('modal-confirm', this._showModal);
     },
 
@@ -23,7 +25,8 @@
         friends: [],
         invitations: [],
         hub: {properties: { name: "Hub" }},
-        usersSheets: []
+        usersSheets: [],
+        sheets: []
       };
     },
 
@@ -39,7 +42,11 @@
             friends={this.state.friends}
             invitations={this.state.invitations}
           />
-          <SheetsSection usersSheets={this.state.usersSheets} />
+          <SheetsSection
+            hubID={this.state.hub._id}
+            sheets={this.state.sheets}
+            usersSheets={this.state.usersSheets}
+          />
         </div>
       )
     },
@@ -50,6 +57,10 @@
 
     _usersSheetsSynced: function() {
       this.setState({usersSheets: this.props.store.getUsersSheets()});
+    },
+
+    _hubSheetsSynced: function() {
+      console.log(arguments);
     },
 
     _showModal: function(params) {

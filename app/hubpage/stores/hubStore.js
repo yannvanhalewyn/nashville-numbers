@@ -50,6 +50,7 @@
       // Set the hub's sheets collection
       this.hubSheets = new HubSheetsCollection([], {hubID: this.id});
       this.hubSheets.on('sync', this.trigger.bind(this, 'hub-sheets:sync'));
+      this.hubSheets.fetch();
     },
 
     dispatchCallback: function(payload) {
@@ -107,6 +108,7 @@
     // model attributes in a collection as Immutable data, maybe use
     // ImmutableJS?
     getState: function() {
+
       // Invitations are all atributes on all models in the invitations collection
       var invitations = this.invitations.models.map(function(invitation) {
         var obj = invitation.toJSON();
@@ -138,7 +140,8 @@
         invitations: invitations,
         friends: friends,
         participants: participants,
-        hub: this.attributes
+        hub: this.attributes,
+        sheets: this.hubSheets.toJSON()
       }
     },
 
