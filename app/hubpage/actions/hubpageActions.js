@@ -11,7 +11,8 @@
     UPDATE_INVITED_USER_PERMISSIONS: null,
     REMOVE_PARTICIPANT: null,
     SHOW_CONFIRMATION_MODAL: null,
-    FETCH_USERS_SHEETS: null
+    FETCH_USERS_SHEETS: null,
+    ADD_SHEET_TO_HUB: null
   });
 
   var HubpageActions = {
@@ -63,6 +64,13 @@
     fetchUsersSheets: function() {
       Dispatcher.dispatch({
         actionType: HubpageConstants.FETCH_USERS_SHEETS
+      });
+    },
+
+    addSheetToHub: function(dbid) {
+      Dispatcher.dispatch({
+        actionType: HubpageConstants.ADD_SHEET_TO_HUB,
+        dbid: dbid
       });
     }
   }

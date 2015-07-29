@@ -2,7 +2,8 @@
 
   "use strict";
 
-  var React = require('react');
+  var React = require('react')
+    , Actions = require('../../actions/hubpageActions')
 
   var SheetSuggestion = React.createClass({
     propTypes: {
@@ -22,7 +23,7 @@
     },
 
     _onClick: function() {
-      console.log("CLICK", this.props.dbid);
+      Actions.addSheetToHub(this.props.dbid);
     }
   });
 

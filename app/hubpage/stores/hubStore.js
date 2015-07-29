@@ -9,6 +9,7 @@
     , InvitationCollection = require('../models/invitationCollection')
     , FriendsCollection = require('../models/friendsCollection')
     , UsersSheetsCollection = require('../models/usersSheetsCollection')
+    , HubSheetsCollection = require('../models/hubSheetsCollection')
 
   // Temporary until finished up the hub-settings.
   var DEFAULT_PERMISSIONS = require('../../../models/permission').Ranks.citizen;
@@ -42,9 +43,13 @@
       this.friends = new FriendsCollection();
       this.friends.on('sync', this.trigger.bind(this, 'friends:sync'));
 
-      // Set the users sheets collection
+      // Set the user's sheets collection
       this.usersSheets = new UsersSheetsCollection();
       this.usersSheets.on('sync', this.trigger.bind(this, 'users-sheets:sync'));
+
+      // Set the hub's sheets collection
+      this.hubSheets = new HubSheetsCollection([], {hubID: this.id});
+      this.hubSheets.on('sync', this.trigger.bind(this, 'hub-sheets:sync'));
     },
 
     dispatchCallback: function(payload) {
@@ -85,6 +90,10 @@
             this.usersSheets.fetch();
             this.fetched = true;
           }
+          break;
+
+        case Constants.ADD_SHEET_TO_HUB:
+          this.hubSheets.create({sheet_id: payload.dbid});
           break;
 
         default:
