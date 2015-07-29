@@ -40,14 +40,12 @@ describe('HUBS_CONTROLLER', function() {
   }); // End of describe 'GET/index'
 
   describe('GET/show', function() {
-    var HUB;
-    beforeEach(function(done) {
-      return Factory('hub', {creator_id: USER._id}).then(function(hub) {
-        HUB = hub;
-        req.target_hub = hub;
-        Controller.show(req, res);
-        res.on('end', done);
-      });
+    var HUB = {_id: 123, properties: {dummyHub: true}};
+    var RELATIONSHIP = {dummyRelationship: true};
+    beforeEach(function() {
+      req.target_hub = HUB;
+      req.target_hub_relationship_to_user = RELATIONSHIP;
+      Controller.show(req, res);
     });
 
     it("renders the hub template", function() {
@@ -55,7 +53,9 @@ describe('HUBS_CONTROLLER', function() {
     });
 
     it("sends along the correct data", function() {
-      expect(res.render).to.have.been.calledWith('hub', {hub: JSON.stringify(HUB)});
+      expect(res.render).to.have.been.calledWith('hub', {state: JSON.stringify({
+        hub: HUB, relationship: RELATIONSHIP
+      })});
     });
   }); // End of describe 'GET/show'
 
@@ -76,6 +76,42 @@ describe('HUBS_CONTROLLER', function() {
       expect(res.redirect).to.have.been.calledWith("/hubs/" + dummyHub()._id);
     });
   }); // End of describe 'POST/create'
+
+  describe('DELETE/destroy', function() {
+    var destroyStub;
+    beforeEach(function() {
+      destroyStub = sinon.stub().returns(Q());
+      req.target_hub = {destroy: destroyStub}
+    });
+
+    context("when request is xhr", function() {
+      beforeEach(function(done) {
+        req.xhr = true;
+        Controller.destroy(req, res);
+        res.on('end', done)
+      });
+
+      it("destroys the target hub", function() {
+        expect(destroyStub).to.have.been.called;
+      });
+
+      it("sends a JSON destroyed flag", function() {
+        expect(res.json).to.have.been.calledWith({destroyed: true});
+      });
+    }); // End of context 'when request is xhr'
+
+    context("when request is not xhr", function() {
+      beforeEach(function(done) {
+        req.xhr = false;
+        Controller.destroy(req, res);
+        res.on('end', done)
+      });
+
+      it("redirects to the hubs page", function() {
+        expect(res.redirect).to.have.been.calledWith("/hubs");
+      });
+    }); // End of context 'when request is not xhr'
+  }); // End of describe 'DELETE/destroy'
 }); // End of describe 'HUBS_CONTROLLER'
 
 function dummyHub() {

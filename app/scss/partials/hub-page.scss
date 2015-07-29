@@ -10,7 +10,7 @@
 
 .participants-section {
     h2 {
-        display: inline;
+        display: inline-block;
         margin-right: 20px;
     }
 
@@ -59,6 +59,10 @@
 .participants-management {
     display: inline-block; // For the 'manage' label to be next to 'participants' title.
     @include modalWithTrigger("#participant-modal-trigger");
+}
+
+.manage-sheets-button {
+    padding: 8px;
 }
 
 .live-friends-searcher {
@@ -180,6 +184,61 @@
             outline: none;
         }
     }
+}
+
+.sheets-section {
+    h2 {
+        display: inline-block;
+        margin-right: 20px;
+    } 
+
+    .title { 
+        margin-left: 5%;
+        width: 65%;
+        text-align: left;
+        color: darken($GREY-8, 10);
+    }
+    .artist { color: $GREY-4; }
+}
+
+// =======================
+// SHEETS MANAGEMENT MODAL
+// =======================
+.sheets-management {
+    display: inline-block;
+    @include modalWithTrigger("#sheets-modal-trigger");
+}
+
+.live-sheets-searcher {
+    .sheet-suggestions {
+        width: 100%;
+        z-index: 300;
+    }
+    .sheet-suggestion {
+        .title { 
+            margin-left: 5%;
+            width: 65%;
+            text-align: left;
+            color: darken($GREY-8, 10);
+        }
+        .artist { color: $GREY-4; }
+        .add-button { 
+            width: 30%;
+            display: inline-block;
+        }
+        &:hover { .title { color: white; } }
+    }
+}
+
+.sheets-overview-list {
+    .title {
+        display: inline-block;
+        margin-left: 5%;
+        width: 65%;
+        text-align: left;
+        color: darken($GREY-8, 10);
+    }
+    .artist { color: $GREY-4; }
 }
 
 // Gridding

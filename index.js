@@ -22,7 +22,8 @@ app.use(cookieParser())
 app.use(session({
   resave: false,
   secret: 'a dirty little secret',
-  saveUninitialized: false
+  saveUninitialized: false,
+  httpOnly: true
 }));
 app.use(methodOverride(function(req, res){
   if (req.body && typeof req.body === 'object' && '_method' in req.body) {

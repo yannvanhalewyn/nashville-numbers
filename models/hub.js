@@ -12,6 +12,20 @@
 
 
   /**
+   * Destroys the hub.
+   *
+   */
+  Hub.prototype.destroy = function() {
+    return db.query(
+      "MATCH (hub:Hub) WHERE id(hub) = {hid} " +
+      "OPTIONAL MATCH (hub)-[r1]-() " +
+      "OPTIONAL MATCH (hub)-[r2]-(hi:HubInvitation)-[r3]-() " +
+      "DELETE hub, r1, r2, r3, hi",
+      {hid: this._id}
+    );
+  };
+
+  /**
    * Returns all the participants that have a relationship to the hub.
    *
    * @return {array} The list of participants in the hub (including the
@@ -51,6 +65,80 @@
       "DELETE joined",
       {hid: this._id, pid: parseInt(userID)}
     );
+  }
+
+  /**
+   * Creates a CONTAINS relationship between the hub and provided sheet.
+   *
+   * @param {string/number} sheetID the ID of the sheet.
+   * @return {object} An object describing the relationship between the hub and the sheet.
+   * @throws {NotFound} When the sheet could not be found (no relationship could
+   * be created)
+   */
+  Hub.prototype.addSheet = function(sheetID) {
+    return db.query(
+      "MATCH (h:Hub), (sheet:Sheet) WHERE id(h) = {hid} AND id(sheet) = {sid} " +
+      "MERGE (h)-[relationship:CONTAINS]->(sheet) RETURN relationship, sheet",
+      {hid: this._id, sid: parseInt(sheetID)}
+    ).then(function(result) {
+      if (_.isEmpty(result)) throw "Could not find sheet with id " + sheetID;
+      return result[0];
+    });
+  }
+
+  /**
+   * Destroys a CONTAINS relationship between hub and sheet.
+   *
+   * @param {string/number} sheetID The ID of the sheet.
+   * @throws {NotFound} When the hub doesn't contain the sheet
+   */
+  Hub.prototype.removeSheet = function(sheetID) {
+    return db.query(
+      "MATCH (hub:Hub)-[contains:CONTAINS]->(sheet:Sheet) " +
+      "WHERE id(hub) = {hid} AND id(sheet) = {sid} " +
+      "DELETE contains RETURN hub",
+      {hid: this._id, sid: parseInt(sheetID)}
+    ).then(function(result) {
+      if (_.isEmpty(result)) throw "Hub doesn't contain sheet with id " + sheetID;
+    });
+  }
+
+  /**
+   * Gets all sheets CONTAINED by the hub.
+   *
+   * @return {array} An array of data representing the sheets
+   */
+  Hub.prototype.getSheets = function() {
+    return db.query(
+      "MATCH (hub:Hub)-[:CONTAINS]->(sheet:Sheet) WHERE id(hub) = {hid} " +
+      "RETURN sheet ",
+      {hid: this._id}
+    ).then(function(result) {
+      // Result is in the form [{sheet: { ... }, {sheet: { ... } }]. Need to
+      // push up every sheet object a nudge. TODO performance?
+      return result.map(function(element) {
+        return element.sheet;
+      });
+    });
+  }
+
+  /**
+   * Finds a specific sheet in the hub.
+   *
+   * @param {string/number} sheetID The ID of the sheet we're looking for.
+   * @return {object} An object representing the searched for sheet data.
+   * @throws {NotFound} When no hub-sheet relationship was found.
+   */
+  Hub.prototype.getSheet = function(sheetID) {
+    return db.query(
+      "MATCH (hub:Hub)-[:CONTAINS]->(sheet:Sheet) " +
+      "WHERE id(hub) = {hid} AND id(sheet) = {sid}" +
+      "RETURN sheet",
+      {hid: this._id, sid: parseInt(sheetID)}
+    ).then(function(result) {
+      if (_.isEmpty(result)) throw "Could not find sheet " + sheetID + " in hub " + this._id;
+      return result[0].sheet;
+    }.bind(this));
   }
 
   /**

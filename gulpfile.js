@@ -23,8 +23,8 @@ var watchify     = require('watchify')
 gulp.task('server', function() {
   nodemon({
     script: 'server.js',
-    ext: 'js handlebars jsx',
-    ignore: ['gulpfile.js', 'test/', 'public/'],
+    ext: 'js handlebars',
+    ignore: ['gulpfile.js', 'test/', 'app/', 'public/'],
     env: { 'NODE_ENV': 'development' }
   });
 });

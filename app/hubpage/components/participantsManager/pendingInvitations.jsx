@@ -9,12 +9,12 @@
     renderInvitationCard: function(invitation) {
       return (
         <InvitationCard
-          key={invitation.cid}
+          key={invitation._id}
           firstName={invitation.invitee.properties.firstName}
           lastName={invitation.invitee.properties.lastName}
           thumb={invitation.invitee.properties.thumb}
           permissions={invitation.properties.permissions}
-          cid={invitation.cid}
+          _id={invitation._id}
         />
       )
     },

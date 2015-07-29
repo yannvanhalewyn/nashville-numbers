@@ -347,6 +347,11 @@ describe('USER-HUBS methods', function() {
     }); // End of context 'When user has no open invitations'
   }); // End of describe 'getHubInvitations'
 
+/*
+ * ===================
+ * acceptHubInvitation
+ * ===================
+ */
   describe('acceptHubInvitation', function() {
     context("when the invitation exists", function() {
       var USER_B, HUB, INVITATION;
@@ -440,6 +445,37 @@ describe('USER-HUBS methods', function() {
           expect(ERROR).to.eql("Cannot accept someone else's hub invitation.");
         });
       }); // End of context 'when another user accepts the invitation'
+
+      context("when multiple invitations are sent out to multiple users", function() {
+        var INVITATION_B, USER_C;
+        beforeEach(function() {
+          return Factory('user').then(function(userC) {
+            return USER_B.inviteToHub(HUB._id, userC._id).then(function(invitation) {
+              USER_C = userC;
+              INVITATION_B = invitation.invitation;
+              return USER.acceptHubInvitation(INVITATION._id);
+            });
+          });
+        });
+
+        it("creates only 1 joined relationship", function() {
+          return db.query(
+            "MATCH (u)-[joined:JOINED]-(hub) WHERE id(u) = {uid} RETURN joined",
+            {uid: USER._id}
+          ).then(function(result) {
+            expect(result.length).to.eql(1);
+          });
+        });
+
+        it("doesn't detroy the other TO_JOIN relationship", function() {
+          return db.query(
+            "MATCH (u)-[:SENT]-(hi)-[:TO_JOIN]-(hub) WHERE id(hi) = {iid} RETURN hi",
+            {iid: INVITATION_B._id}
+          ).then(function(result) {
+            expect(result).not.to.be.empty;
+          });
+        });
+      }); // End of context 'when multiple invitations are sent out to multiple users'
     }); // End of context 'when the invitation exists'
 
     context("when the invitation doesn't exists", function() {

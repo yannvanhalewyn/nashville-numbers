@@ -43,8 +43,8 @@ describe('getTargetHubWithRelationship', function() {
       expect(req.target_hub).to.eql({dummy: "hub"});
     });
 
-    it("stores the returned relationship as req.relationshipToTargetHub", function() {
-      expect(req.relationshipToTargetHub).to.eql({dummy: "relationship"});
+    it("stores the returned relationship as req.target_hub_relationship_to_user", function() {
+      expect(req.target_hub_relationship_to_user).to.eql({dummy: "relationship"});
     });
   }); // End of context 'when user.getRelationshipToHub returns successfuly'
 

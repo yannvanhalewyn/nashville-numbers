@@ -10,7 +10,10 @@
     CANCEL_INVITATION: null,
     UPDATE_INVITED_USER_PERMISSIONS: null,
     REMOVE_PARTICIPANT: null,
-    SHOW_CONFIRMATION_MODAL: null
+    SHOW_CONFIRMATION_MODAL: null,
+    FETCH_USERS_SHEETS: null,
+    ADD_SHEET_TO_HUB: null,
+    REMOVE_SHEET_FROM_HUB: null
   });
 
   var HubpageActions = {
@@ -28,25 +31,25 @@
       });
     },
 
-    cancelInvitation: function(cid) {
+    cancelInvitation: function(_id) {
       Dispatcher.dispatch({
         actionType: HubpageConstants.CANCEL_INVITATION,
-        cid: cid
+        _id: _id
       });
     },
 
-    updateInvitedUserPermissions: function(cid, newPermission) {
+    updateInvitedUserPermissions: function(_id, newPermission) {
       Dispatcher.dispatch({
         actionType: HubpageConstants.UPDATE_INVITED_USER_PERMISSIONS,
-        cid: cid,
+        _id: _id,
         value: newPermission
       });
     },
 
-    removeParticipant: function(cid) {
+    removeParticipant: function(_id) {
       Dispatcher.dispatch({
         actionType: HubpageConstants.REMOVE_PARTICIPANT,
-        cid: cid
+        _id: _id
       });
     },
 
@@ -56,6 +59,26 @@
         title: title,
         body: body,
         onSuccess: onSuccess
+      });
+    },
+
+    fetchUsersSheets: function() {
+      Dispatcher.dispatch({
+        actionType: HubpageConstants.FETCH_USERS_SHEETS
+      });
+    },
+
+    addSheetToHub: function(dbid) {
+      Dispatcher.dispatch({
+        actionType: HubpageConstants.ADD_SHEET_TO_HUB,
+        dbid: dbid
+      });
+    },
+
+    removeSheetFromHub: function(_id) {
+      Dispatcher.dispatch({
+        actionType: HubpageConstants.REMOVE_SHEET_FROM_HUB,
+        _id: _id
       });
     }
   }

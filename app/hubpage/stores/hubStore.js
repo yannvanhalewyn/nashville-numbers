@@ -8,6 +8,8 @@
     , ParticipantCollection = require('../models/participantCollection')
     , InvitationCollection = require('../models/invitationCollection')
     , FriendsCollection = require('../models/friendsCollection')
+    , UsersSheetsCollection = require('../models/usersSheetsCollection')
+    , HubSheetsCollection = require('../models/hubSheetsCollection')
 
   // Temporary until finished up the hub-settings.
   var DEFAULT_PERMISSIONS = require('../../../models/permission').Ranks.citizen;
@@ -20,7 +22,9 @@
     initialize: function() {
       // Get and set initial state from hidden script field
       var jsonState = document.getElementById('initial_state').innerHTML;
-      this.set(JSON.parse(jsonState));
+      var state = JSON.parse(jsonState);
+      this.set(state.hub);
+      this.set({relationshipToUser: state.relationship});
 
       // Register dispatchcallback
       this.dispatchToken = Dispatcher.register(this.dispatchCallback.bind(this));
@@ -40,6 +44,16 @@
       // Set the friendsCollection as nestedResource
       this.friends = new FriendsCollection();
       this.friends.on('sync', this.trigger.bind(this, 'friends:sync'));
+
+      // Set the user's sheets collection
+      this.usersSheets = new UsersSheetsCollection();
+      this.usersSheets.on('sync', this.trigger.bind(this, 'users-sheets:sync'));
+
+      // Set the hub's sheets collection
+      this.hubSheets = new HubSheetsCollection([], {hubID: this.id});
+      this.hubSheets.on('sync', this.trigger.bind(this, 'hub-sheets:sync'));
+      this.hubSheets.on('destroy', this.trigger.bind(this, 'hub-sheets:destroy'));
+      this.hubSheets.fetch();
     },
 
     dispatchCallback: function(payload) {
@@ -56,23 +70,35 @@
           break;
 
         case Constants.CANCEL_INVITATION:
-          var invitation = this.invitations.get(payload.cid)
-          invitation.destroy();
+          this.invitations.get(payload._id).destroy();
           break;
 
         case Constants.UPDATE_INVITED_USER_PERMISSIONS:
-          var invitation = this.invitations.get(payload.cid);
-          invitation.save({permissions: payload.value});
+          this.invitations.get(payload._id).save({permissions: payload.value});
           break;
 
         case Constants.REMOVE_PARTICIPANT:
-          var participant = this.participants.get(payload.cid);
-          participant.destroy();
+          this.participants.get(payload._id).destroy();
           break;
 
         case Constants.SHOW_CONFIRMATION_MODAL:
           delete payload.actionType;
           this.trigger('modal-confirm', payload);
+          break;
+
+        case Constants.FETCH_USERS_SHEETS:
+          if (!this.fetched) {
+            this.usersSheets.fetch();
+            this.fetched = true;
+          }
+          break;
+
+        case Constants.ADD_SHEET_TO_HUB:
+          this.hubSheets.create({sheet_id: payload.dbid});
+          break;
+
+        case Constants.REMOVE_SHEET_FROM_HUB:
+          this.hubSheets.get(payload._id).destroy();
           break;
 
         default:
@@ -81,45 +107,51 @@
       }
     },
 
-    // TODO: clean up filtering, I dislike the fact that I'm handling and
-    // sending live mutable data into the react tree. Find a way to get all
-    // model attributes in a collection as Immutable data, maybe use
-    // ImmutableJS?
     getState: function() {
-      // Invitations are all atributes on all models in the invitations collection
-      var invitations = this.invitations.models.map(function(invitation) {
-        var obj = invitation.toJSON();
-        obj.cid = invitation.cid;
-        return obj;
-      });
+      return this.toJSON();
+    },
 
-      // Filter friends suggestions list to friends no yet invited
-      var friends = this.friends.models.filter(function(friend) {
-        for (var i in invitations) {
-          if (invitations[i].invitee._id == friend.attributes._id) {
-            return false;
-          }
-        }
-        return true;
-      // Return all those friends's attributes
-      }).map(function(friend) {
-        return friend.attributes;
-      });
-
-      var participants = this.participants.models.map(function(p) {
-        var obj = p.attributes;
-        obj.cid = p.cid;
-        return obj;
-      });
+    getParticipantsState: function() {
+      var friends = this.friends.toJSON()
+                      .filter(this._isNotParticipant.bind(this))
+                      .filter(this._isNotInvited.bind(this));
 
       // Return the state
       return {
-        invitations: invitations,
+        invitations: this.invitations.toJSON(),
+        participants: this.participants.toJSON(),
         friends: friends,
-        participants: participants,
-        hub: this.attributes
       }
-    }
+    },
+
+    getSheetsState: function() {
+      return {
+        usersSheets: this.usersSheets.toJSON().filter(this._isNotInHub.bind(this)),
+        sheets: this.hubSheets.toJSON()
+      }
+    },
+
+    // Filter functions
+    _isInvited: function(user) {
+      return this.invitations.toJSON().some(function(invitation) {
+        return invitation.invitee._id == user._id;
+      });
+    },
+
+    _isParticipant: function(user) {
+      return this.participants.get(user._id) ? true : false;
+    },
+
+    _isInHub: function(sheet) {
+      return this.hubSheets.get(sheet._id);
+    },
+
+    // Pretty annoying JS doesn't offer the Array.prototype.pick() method. I found it
+    // unsemantic and hard to read to directly implement 'is not xxx'.
+    _isNotInvited: function(user) { return !this._isInvited(user); },
+    _isNotParticipant: function(user) { return !this._isParticipant(user); },
+    _isNotInHub: function(sheet) { return !this._isInHub(sheet); }
+
   });
 
   module.exports = new HubStore();

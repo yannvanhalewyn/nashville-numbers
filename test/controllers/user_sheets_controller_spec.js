@@ -27,18 +27,31 @@ describe('userSheetsController', function() {
   }); // End of describe 'index'
 
   describe('indexMe', function() {
-    beforeEach(function() {
-      Controller.indexMe(req, res);
-    });
-
-    it("renders the sheets template", function() {
-      expect(res.render).to.have.been.calledWith("sheets");
-    });
-
-    it("sends along sheets and sets the active_tab value", function() {
-      expect(res.render).to.have.been.calledWith("sheets", {
-        active_sheets: true, sheets: dummySheets
+    context("when the request is not via xhr", function() {
+      beforeEach(function() {
+        Controller.indexMe(req, res);
       });
-    });
+
+      it("renders the sheets template", function() {
+        expect(res.render).to.have.been.calledWith("sheets");
+      });
+
+      it("sends along sheets and sets the active_tab value", function() {
+        expect(res.render).to.have.been.calledWith("sheets", {
+          active_sheets: true, sheets: dummySheets
+        });
+      });
+    }); // End of context 'when the request is not via xhr'
+
+    context("when the request is xhr", function() {
+      beforeEach(function() {
+        req.xhr = true;
+        Controller.indexMe(req, res);
+      });
+
+      it("sends the target_user_sheets as JSON", function() {
+        expect(res.json).to.have.been.calledWith(dummySheets);
+      });
+    }); // End of context 'when the request is xhr'
   }); // End of describe 'indexMe'
 }); // End of describe 'userSheetsController'
