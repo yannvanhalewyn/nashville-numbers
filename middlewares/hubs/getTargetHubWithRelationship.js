@@ -15,7 +15,7 @@
   var getTargetHubWithRelationship = function(req, res, next) {
     req.user.getRelationshipToHub(req.params.hub_id).then(function(result) {
       req.target_hub = result.hub;
-      req.relationshipToTargetHub = result.relationship;
+      req.target_hub_relationship_to_user = result.relationship;
       next();
     }, function(err) {
       res.status(400);

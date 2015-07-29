@@ -40,14 +40,12 @@ describe('HUBS_CONTROLLER', function() {
   }); // End of describe 'GET/index'
 
   describe('GET/show', function() {
-    var HUB;
-    beforeEach(function(done) {
-      return Factory('hub', {creator_id: USER._id}).then(function(hub) {
-        HUB = hub;
-        req.target_hub = hub;
-        Controller.show(req, res);
-        res.on('end', done);
-      });
+    var HUB = {_id: 123, properties: {dummyHub: true}};
+    var RELATIONSHIP = {dummyRelationship: true};
+    beforeEach(function() {
+      req.target_hub = HUB;
+      req.target_hub_relationship_to_user = RELATIONSHIP;
+      Controller.show(req, res);
     });
 
     it("renders the hub template", function() {
@@ -55,7 +53,9 @@ describe('HUBS_CONTROLLER', function() {
     });
 
     it("sends along the correct data", function() {
-      expect(res.render).to.have.been.calledWith('hub', {hub: JSON.stringify(HUB)});
+      expect(res.render).to.have.been.calledWith('hub', {state: JSON.stringify({
+        hub: HUB, relationship: RELATIONSHIP
+      })});
     });
   }); // End of describe 'GET/show'
 

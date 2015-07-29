@@ -21,7 +21,9 @@
     },
 
     show: function(req, res) {
-      res.render('hub', {hub: JSON.stringify(req.target_hub)});
+      res.render('hub', {state: JSON.stringify({
+        hub: req.target_hub, relationship: req.target_hub_relationship_to_user
+      })});
     },
 
     create: function(req, res) {

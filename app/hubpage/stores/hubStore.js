@@ -22,7 +22,9 @@
     initialize: function() {
       // Get and set initial state from hidden script field
       var jsonState = document.getElementById('initial_state').innerHTML;
-      this.set(JSON.parse(jsonState));
+      var state = JSON.parse(jsonState);
+      this.set(state.hub);
+      this.set({relationshipToUser: state.relationship});
 
       // Register dispatchcallback
       this.dispatchToken = Dispatcher.register(this.dispatchCallback.bind(this));
@@ -144,7 +146,7 @@
       return this.hubSheets.get(sheet._id);
     },
 
-    // Pretty annoying JS doesn't offer the Array.p.pick() method. I found it
+    // Pretty annoying JS doesn't offer the Array.prototype.pick() method. I found it
     // unsemantic and hard to read to directly implement 'is not xxx'.
     _isNotInvited: function(user) { return !this._isInvited(user); },
     _isNotParticipant: function(user) { return !this._isParticipant(user); },

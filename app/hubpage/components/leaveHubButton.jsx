@@ -12,7 +12,7 @@
           <form action={"/hubs/" + this.props.hubID + "/participants/me"} method="post" ref="leaveForm">
             <input type="hidden" value="DELETE" name="_method"/>
           </form>
-          <button class="btn btn-red" onClick={this._onClick}>LEAVE</button>
+          <button className="btn btn-red" onClick={this._onClick}>LEAVE</button>
         </div>
       )
     },
