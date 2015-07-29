@@ -304,7 +304,7 @@
   User.prototype.acceptHubInvitation = function(invitationID) {
     return db.query(
       "MATCH (sender:Person)-[sent:SENT]->(invitation:HubInvitation)-[to:TO]->(receiver:Person), " +
-      "(hi)-[toJoin:TO_JOIN]->(hub:Hub) " +
+      "(invitation)-[toJoin:TO_JOIN]->(hub:Hub) " +
       // Annoying line just to keep permissions in memory before deleting the invitation node...
       "WITH invitation, receiver, hub, sent, to, toJoin, invitation.permissions AS permissions " +
       "WHERE id(invitation) = {invitationID} AND id(receiver) = {uid} " +
