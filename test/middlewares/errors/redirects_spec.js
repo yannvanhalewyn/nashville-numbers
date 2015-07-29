@@ -22,4 +22,13 @@ describe('MIDDLEWARE|Redirect', function() {
       expect(res.redirect).to.have.been.calledWith("/users/me/sheets");
     });
   }); // End of describe 'sheets'
+
+  describe('hub', function() {
+    it("redirects to the hub page", function() {
+      var error;
+      req.params = {hub_id: 1234};
+      redirect.hub(error, req, res);
+      expect(res.redirect).to.have.been.calledWith("/hubs/1234");
+    }); 
+  }); // End of describe 'hub'
 }); // End of describe 'MIDDLEWARE|Redirect'
