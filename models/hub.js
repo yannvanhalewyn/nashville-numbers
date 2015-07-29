@@ -63,12 +63,12 @@
    */
   Hub.prototype.addSheet = function(sheetID) {
     return db.query(
-      "MATCH (h:Hub), (s:Sheet) WHERE id(h) = {hid} AND id(s) = {sid} " +
-      "MERGE (h)-[contains:CONTAINS]->(s) RETURN contains",
+      "MATCH (h:Hub), (sheet:Sheet) WHERE id(h) = {hid} AND id(sheet) = {sid} " +
+      "MERGE (h)-[relationship:CONTAINS]->(sheet) RETURN relationship, sheet",
       {hid: this._id, sid: parseInt(sheetID)}
     ).then(function(result) {
       if (_.isEmpty(result)) throw "Could not find sheet with id " + sheetID;
-      return result[0].contains;
+      return result[0];
     });
   }
 

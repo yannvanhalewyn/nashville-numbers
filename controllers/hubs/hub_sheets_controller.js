@@ -26,8 +26,8 @@
     },
 
     create: function(req, res) {
-      req.target_hub.addSheet(req.body.sheet_id).then(function(relationship) {
-        res.json(relationship);
+      req.target_hub.addSheet(req.body.sheet_id).then(function(entities) {
+        res.json(entities.sheet);
       }, function(error) {
         res.status(400);
         res.send(error);

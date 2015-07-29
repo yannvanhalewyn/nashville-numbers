@@ -209,8 +209,8 @@ describe('HUB', function() {
           return HUB.addSheet(sheet._id.toString()).then(function(returned) {
             RETURNED = returned;
             return db.query(
-              "MATCH (hub:Hub)-[r:CONTAINS]->(sheet:Sheet)" +
-              "WHERE id(hub) = {hid} AND id(sheet) = {sid} RETURN r",
+              "MATCH (hub:Hub)-[relationship:CONTAINS]->(sheet:Sheet)" +
+              "WHERE id(hub) = {hid} AND id(sheet) = {sid} RETURN relationship, sheet",
               {hid: HUB._id, sid: SHEET._id}
             ).then(function(found) {
               FOUND = found;
@@ -223,8 +223,9 @@ describe('HUB', function() {
         expect(FOUND.length).to.eql(1);
       });
 
-      it("returns the created relationship", function() {
-        expect(FOUND[0].r).to.eql(RETURNED);
+      it("returns the created relationship and the target sheet", function() {
+        expect(FOUND[0].relationship).to.eql(RETURNED.relationship);
+        expect(FOUND[0].sheet).to.eql(RETURNED.sheet);
       });
 
       context("when the hub already CONTAINS the sheet", function() {
@@ -246,7 +247,7 @@ describe('HUB', function() {
         });
 
         it("returns the existing relationship", function() {
-          expect(RESULT).to.eql(FOUND[0].r);
+          expect(RESULT.relationship).to.eql(FOUND[0].r);
         });
       }); // End of context 'when the hub already CONTAINS the sheet'
     }); // End of context 'when the sheet exists'

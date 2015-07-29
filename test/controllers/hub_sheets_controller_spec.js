@@ -38,7 +38,7 @@ describe('HubSheetsController', function() {
     context("when addSheet is successful", function() {
       var addSheetStub;
       beforeEach(function(done) {
-        addSheetStub = sinon.stub().returns(Q({dummy: true}));
+        addSheetStub = sinon.stub().returns(Q({sheet: {dummySheet: true}}));
         req.target_hub = {addSheet: addSheetStub}
         req.body = {sheet_id: 123};
         Controller.create(req, res);
@@ -49,8 +49,8 @@ describe('HubSheetsController', function() {
         expect(addSheetStub).to.have.been.calledWith(123);
       });
 
-      it("returns the created relationship via JSON", function() {
-        expect(res.json).to.have.been.calledWith({dummy: true});
+      it("returns the results sheet property via json", function() {
+        expect(res.json).to.have.been.calledWith({dummySheet: true});
       });
     }); // End of context 'when addSheet is successful'
 
