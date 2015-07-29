@@ -106,25 +106,27 @@
     },
 
     getState: function() {
+      return this.toJSON();
+    },
 
-      var invitations = this.invitations.toJSON();
-      var participants = this.participants.toJSON();
-
-      // Filter friends suggestions list to friends no yet invited
-      var friends = this.friends.toJSON().filter(this._isNotParticipant.bind(this)).filter(this._isNotInvited.bind(this));
+    getParticipantsState: function() {
+      var friends = this.friends.toJSON()
+                      .filter(this._isNotParticipant.bind(this))
+                      .filter(this._isNotInvited.bind(this));
 
       // Return the state
       return {
-        invitations: invitations,
+        invitations: this.invitations.toJSON(),
+        participants: this.participants.toJSON(),
         friends: friends,
-        participants: participants,
-        hub: this.attributes,
-        sheets: this.hubSheets.toJSON()
       }
     },
 
-    getUsersSheets: function() {
-      return this.usersSheets.toJSON();
+    getSheetsState: function() {
+      return {
+        usersSheets: this.usersSheets.toJSON(),
+        sheets: this.hubSheets.toJSON()
+      }
     },
 
     // Filter functions
@@ -141,7 +143,7 @@
     // Pretty annoying JS doesn't offer the Array.p.pick() method. I found it
     // unsemantic and hard to read to directly implement 'is not xxx'.
     _isNotInvited: function(user) { return !this._isInvited(user); },
-    _isNotParticipant: function(user) { return !this._isParticipant(user); }
+    _isNotParticipant: function(user) { return !this._isParticipant(user); },
 
   });
 

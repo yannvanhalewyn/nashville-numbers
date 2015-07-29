@@ -12,11 +12,12 @@
   var HubPageComponent = React.createClass({
     componentDidMount: function() {
       this.props.store.on('participants:sync participants:destroy ' +
-                          'invitations:sync invitations:destroy friends:sync', this._update);
-      this.props.store.on('users-sheets:sync', this._usersSheetsSynced);
-      this.props.store.on('hub-sheets:sync', this._update);
-      this.props.store.on('hub-sheets:destroy', this._update);
+                          'invitations:sync invitations:destroy ' +
+                          'friends:sync', this._updateParticipants);
+      this.props.store.on('users-sheets:sync hub-sheets:sync ' +
+                          'hub-sheets:destroy', this._updateSheets);
       this.props.store.on('modal-confirm', this._showModal);
+      this.props.store.on('sync', this._update);
     },
 
     // TODO maybe make this stateless, and pass in props upon creation?
@@ -25,7 +26,7 @@
         participants: [],
         friends: [],
         invitations: [],
-        hub: {properties: { name: "Hub" }},
+        hub: this.props.store.getState(),
         usersSheets: [],
         sheets: []
       };
@@ -53,16 +54,17 @@
     },
 
     _update: function() {
-      this.setState(this.props.store.getState());
+      this.setState({hub: this.props.store.getState()});
     },
 
-    _usersSheetsSynced: function() {
-      this.setState({usersSheets: this.props.store.getUsersSheets()});
+    _updateParticipants: function() {
+      this.setState(this.props.store.getParticipantsState());
     },
 
-    _hubSheetsSynced: function() {
-      console.log(arguments);
+    _updateSheets: function() {
+      this.setState(this.props.store.getSheetsState());
     },
+
 
     _showModal: function(params) {
       this.refs.confirmationModal.setText({title: params.title, body: params.body});
