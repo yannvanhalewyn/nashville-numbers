@@ -4,7 +4,7 @@
   "description": "An online hub/universe for creating and sharing lead sheets with collegues and band-members.",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "node server.js"
   },
   "author": "Yann Vanhalewyn",
   "license": "ISC",
