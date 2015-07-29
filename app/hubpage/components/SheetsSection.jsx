@@ -40,9 +40,9 @@
             />
           </div>
 
-          <div className="sheets-viewer">
+          <ul className="list sheets-viewer">
             {this.props.sheets.map(this.renderSheetCard)}
-          </div>
+          </ul>
         </div>
       )
     }

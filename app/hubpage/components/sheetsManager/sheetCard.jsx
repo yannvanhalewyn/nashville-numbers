@@ -16,8 +16,10 @@
     render: function() {
       return (
         <li>
-          <h2>{this.props.title} <small>{this.props.artist}</small></h2>
-          <button onClick={this._onClick} className="btn btn-red">
+          <h2 className="title">
+            {this.props.title} <small className="artist">{this.props.artist}</small>
+          </h2>
+          <button onClick={this._onClick} className="btn btn-red remove-button">
             <span className="fa fa-times" /> Remove
           </button>
         </li>

@@ -21,8 +21,12 @@
     render: function() {
       return (
         <a className="sheet-card" href={"/hubs/" + this.props.hubID + "/sheets/" + this.props.dbid}>
-          <h2>{this.props.title} <small>{this.props.artist}</small></h2>
-          {this.renderPublicOrPrivateIcon(this.props.private)}
+          <li>
+            <h2 className="title">
+              {this.props.title} <small className="artist">{this.props.artist}</small>
+            </h2>
+            {this.renderPublicOrPrivateIcon(this.props.private)}
+          </li>
         </a>
       )
     }

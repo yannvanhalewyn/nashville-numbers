@@ -16,7 +16,7 @@
           <form action={"/hubs/" + this.props.hubID} method="POST" ref="destroyForm" >
             <input type="hidden" value="DELETE" name="_method"/>
           </form>
-          <button className="btn btn-red" onClick={this._onClick}>Destroy Hub!</button>
+          <button className="btn btn-red" onClick={this._onClick}><span className="fa fa-times" /> Destroy Hub!</button>
         </div>
       )
     },

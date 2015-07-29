@@ -15,10 +15,14 @@
 
     render: function() {
       return (
-        <div>
-          <h2>{this.props.title} <small>{this.props.artist}</small> </h2>
-          <button className="btn" onClick={this._onClick}><span className="fa fa-plus" /> Add</button>
-        </div>
+        <li className="sheet-suggestion">
+          <h2 className="title">
+            {this.props.title} <small className="artist">{this.props.artist}</small>
+          </h2>
+          <button className="btn add-button" onClick={this._onClick}>
+            <span className="fa fa-plus" /> Add
+          </button>
+        </li>
       )
     },
 

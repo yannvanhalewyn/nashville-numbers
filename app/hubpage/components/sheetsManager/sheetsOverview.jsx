@@ -22,7 +22,7 @@
 
     render: function() {
       return (
-        <ul className="sheets-overview-list">
+        <ul className="list sheets-overview-list">
           {this.props.sheets.map(this.renderSheetCard)}
         </ul>
       )
