@@ -124,7 +124,7 @@
 
     getSheetsState: function() {
       return {
-        usersSheets: this.usersSheets.toJSON(),
+        usersSheets: this.usersSheets.toJSON().filter(this._isNotInHub.bind(this)),
         sheets: this.hubSheets.toJSON()
       }
     },
@@ -140,10 +140,15 @@
       return this.participants.get(user._id) ? true : false;
     },
 
+    _isInHub: function(sheet) {
+      return this.hubSheets.get(sheet._id);
+    },
+
     // Pretty annoying JS doesn't offer the Array.p.pick() method. I found it
     // unsemantic and hard to read to directly implement 'is not xxx'.
     _isNotInvited: function(user) { return !this._isInvited(user); },
     _isNotParticipant: function(user) { return !this._isParticipant(user); },
+    _isNotInHub: function(sheet) { return !this._isInHub(sheet); }
 
   });
 
