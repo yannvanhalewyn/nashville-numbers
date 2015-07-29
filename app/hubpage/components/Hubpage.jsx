@@ -15,6 +15,7 @@
                           'invitations:sync invitations:destroy friends:sync', this._update);
       this.props.store.on('users-sheets:sync', this._usersSheetsSynced);
       this.props.store.on('hub-sheets:sync', this._update);
+      this.props.store.on('hub-sheets:destroy', this._update);
       this.props.store.on('modal-confirm', this._showModal);
     },
 

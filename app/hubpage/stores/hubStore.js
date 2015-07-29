@@ -50,6 +50,7 @@
       // Set the hub's sheets collection
       this.hubSheets = new HubSheetsCollection([], {hubID: this.id});
       this.hubSheets.on('sync', this.trigger.bind(this, 'hub-sheets:sync'));
+      this.hubSheets.on('destroy', this.trigger.bind(this, 'hub-sheets:destroy'));
       this.hubSheets.fetch();
     },
 
@@ -95,6 +96,10 @@
 
         case Constants.ADD_SHEET_TO_HUB:
           this.hubSheets.create({sheet_id: payload.dbid});
+          break;
+
+        case Constants.REMOVE_SHEET_FROM_HUB:
+          this.hubSheets.get(payload._id).destroy();
           break;
 
         default:

@@ -4,7 +4,9 @@
 
   var Backbone = require('backbone');
 
-  var HubSheetsModel = Backbone.Model.extend({});
+  var HubSheetsModel = Backbone.Model.extend({
+    idAttribute: "_id"
+  });
 
   var HubSheetsCollection = Backbone.Collection.extend({
     model: HubSheetsModel,

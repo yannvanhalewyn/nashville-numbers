@@ -12,7 +12,8 @@
     REMOVE_PARTICIPANT: null,
     SHOW_CONFIRMATION_MODAL: null,
     FETCH_USERS_SHEETS: null,
-    ADD_SHEET_TO_HUB: null
+    ADD_SHEET_TO_HUB: null,
+    REMOVE_SHEET_FROM_HUB: null
   });
 
   var HubpageActions = {
@@ -71,6 +72,13 @@
       Dispatcher.dispatch({
         actionType: HubpageConstants.ADD_SHEET_TO_HUB,
         dbid: dbid
+      });
+    },
+
+    removeSheetFromHub: function(_id) {
+      Dispatcher.dispatch({
+        actionType: HubpageConstants.REMOVE_SHEET_FROM_HUB,
+        _id: _id
       });
     }
   }

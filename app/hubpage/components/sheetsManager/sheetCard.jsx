@@ -10,7 +10,7 @@
       title: React.PropTypes.string,
       artist: React.PropTypes.string,
       author: React.PropTypes.object,
-      cid: React.PropTypes.string
+      _id: React.PropTypes.string
     },
 
     render: function() {
@@ -25,7 +25,7 @@
     },
 
     _onClick: function() {
-      console.log("CLICK");
+      Actions.removeSheetFromHub(this.props._id);
     }
   });
 

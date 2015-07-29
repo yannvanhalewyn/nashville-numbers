@@ -15,6 +15,7 @@
         <SheetCard
           title={sheet.properties.title}
           artist={sheet.properties.artist}
+          _id={sheet._id}
         />
       )
     },
