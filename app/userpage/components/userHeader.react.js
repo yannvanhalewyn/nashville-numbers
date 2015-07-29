@@ -9,7 +9,7 @@
   var UserHeaderComponent = React.createClass({
     render: function() {
       return (
-        <div className="user-header grid">
+        <div className="user-header">
           <UserWidget
             picture={this.props.picture}
             firstName={this.props.firstName}

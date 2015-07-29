@@ -1,0 +1,251 @@
+#hubpage-container {
+    padding-left: 20px;
+}
+
+.hub-header {
+    .hub-info {
+        h1 { margin-bottom: 10px; }
+    }
+}
+
+.participants-section {
+    h2 {
+        display: inline-block;
+        margin-right: 20px;
+    }
+
+    .manage-participants-button {
+        padding: 8px;
+    }
+
+    .participants-viewer {
+        display: block;
+        padding-top: 10px;
+
+        .participant-preview {
+            width: 10%;
+            min-width: 150px;
+            height: 60px;
+            display: inline-block;
+            border-radius: 5%;
+            img {
+                margin: 4px;
+                box-shadow: $THUMB-BOX-SHADOW;
+            }
+            .participant-info {
+                display: inline-block;
+                vertical-align: top;
+                padding: 10px 0 0 5px;
+                .participant-name {
+                    margin: 0;
+                    color: #111111;
+                }
+                .participant-status {
+                    margin: 0;
+                    color: #999;
+                }
+            }
+
+            &:hover {
+                background: #ddd;
+            }
+        }
+    }
+}
+
+// =============================
+// Participants management modal
+// =============================
+.participants-management {
+    display: inline-block; // For the 'manage' label to be next to 'participants' title.
+    @include modalWithTrigger("#participant-modal-trigger");
+}
+
+.manage-sheets-button {
+    padding: 8px;
+}
+
+.live-friends-searcher {
+    input {
+        // Else the top-right corner of the modal would have none!
+        border-radius: 5px;
+    }
+    .friend-suggestions {
+        width: 100%;
+
+        // User thumbnail
+        img {
+            border-radius: 5px;
+            box-shadow: $THUMB-BOX-SHADOW;
+            vertical-align: middle;
+        }
+
+        // Name
+        .name {
+            display: inline-block;
+            margin: 10px;
+            width: 25%;
+        }
+
+        button {
+            padding: 5px 10px;
+            &:hover {
+                box-shadow: none;
+            }
+        }
+    }
+}
+
+// The modal body
+.overview {
+    text-align: center;
+    padding-top: 7px;
+
+    img {
+        box-shadow: $THUMB-BOX-SHADOW;
+    }
+
+    .name {
+        color: $GREY-8;
+    }
+
+    .pending-invitations {
+        @include span-desktop(6);
+        @include desktop {
+            border-right: 1px solid $GREY-3;
+        }
+    }
+
+    .participants {
+        @include span-desktop(6);
+        background: $MAIN-BG;
+    }
+
+    .creator-card,
+    .invitation-card,
+    .participant-card {
+        @include grid;
+    }
+
+    .creator-card {
+        background: $DARK-RED;
+        color: $MAIN-BG;
+        .name {
+            @include span(8);
+            color: $MAIN-BG;
+            padding: 10px;
+        }
+        .thumb { @include span(2); }
+        label { @include span(2); }
+        &:hover {
+            background: #8C4646;
+        }
+    }
+
+    .btn {
+        padding: 7px 10px;
+        margin: 10% 0;
+    }
+
+    .permissions-selector {
+        border-radius: 3px;
+        margin-top: 10%;
+        background: $SELECT-BLUE;
+        position: relative;
+        &:after {
+            content: "\0f078";
+            color: white;
+            font-size: .8em;
+            position: absolute;
+            z-index: 0;
+            right: 20%;
+            top: 33%;
+            font-family: FontAwesome;
+            pointer-events: none;
+        }
+    }
+
+    select {
+        border: none;
+        cursor: pointer;
+        background: transparent;
+        color: white;
+        font-size: .9em;
+        appearance: none;
+        padding: 10px 20%;
+        width: 100%;
+    
+        .rank-option {
+            color: red;
+            font-size: 1.5em;
+        }
+
+        &:focus {
+            outline: none;
+        }
+    }
+}
+
+.sheets-section {
+    h2 {
+        display: inline-block;
+        margin-right: 20px;
+    } 
+
+    .title { 
+        margin-left: 5%;
+        width: 65%;
+        text-align: left;
+        color: darken($GREY-8, 10);
+    }
+    .artist { color: $GREY-4; }
+}
+
+// =======================
+// SHEETS MANAGEMENT MODAL
+// =======================
+.sheets-management {
+    display: inline-block;
+    @include modalWithTrigger("#sheets-modal-trigger");
+}
+
+.live-sheets-searcher {
+    .sheet-suggestions {
+        width: 100%;
+        z-index: 300;
+    }
+    .sheet-suggestion {
+        .title { 
+            margin-left: 5%;
+            width: 65%;
+            text-align: left;
+            color: darken($GREY-8, 10);
+        }
+        .artist { color: $GREY-4; }
+        .add-button { 
+            width: 30%;
+            display: inline-block;
+        }
+        &:hover { .title { color: white; } }
+    }
+}
+
+.sheets-overview-list {
+    .title {
+        display: inline-block;
+        margin-left: 5%;
+        width: 65%;
+        text-align: left;
+        color: darken($GREY-8, 10);
+    }
+    .artist { color: $GREY-4; }
+}
+
+// Gridding
+.invitation-card,
+.participant-card {
+    .name { @include span(4); }
+    .thumb { @include span(2); }
+    .permissions { @include span(3); }
+    .button { @include span(3); }
+}

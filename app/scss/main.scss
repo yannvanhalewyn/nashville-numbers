@@ -1,4 +1,6 @@
-$MAIN_BG: #f6f6f6;
+* {
+    box-sizing: border-box;
+}
 
 body {
     margin: 0px;
@@ -8,17 +10,26 @@ body {
 
 h1 {
     font-weight: 300;
-    color: rgb(70, 70, 70);
+    color: $HEADER;
 }
 
 a {
   text-decoration: none;
+  color: inherit;
 }
 
+ul {
+    // TODO is this expensive?
+    padding: 0;
+}
+
+// Move away from dock when on left side
 .main-content {
-    position: fixed;
-    left: 90px;
-    width: calc(100% - 90px);
+    @include desktop {
+        position: fixed;
+        left: $dock-left-width;
+        width: calc(100% - #{$dock-left-width});
+    }
 }
 
 
@@ -27,86 +38,4 @@ a {
 
 .clearFloats {
     clear: both;
-}
-
-.btn {
-    display: inline-block;
-    padding: 8px 30px;
-    border-radius: 2px;
-    background: #247794;
-    color: rgba(255,255,255,.84);
-    border: none;
-    font-size: 12px;
-    transition: box-shadow .2s;
-
-    &:hover {
-        box-shadow: -4px 4px 10px #c4c4c4;
-        background: #2780a0;
-        cursor: pointer;
-    }
-
-    &:active,
-    &:focus {
-        background: #3286a7;
-        outline: none;
-        box-shadow: inset 0px 1px 0px #2ab7ec, 0px 3px 0px 0px #156785, 0px 5px 5px #999;
-    }
-
-    &.btn-orange {
-        background: rgba(255,152,0,.75);
-        color: white;
-    }
-
-    &.btn-red {
-        background: #A55;
-        &:active,
-        &:focus {
-            background: #A25252;
-            outline: none;
-            box-shadow: inset 0px 1px 0px #944, 0px 3px 0px 0px #944, 0px 5px 5px #999;
-        }
-    }
-}
-
-.outer-modal {
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 0%;
-    width: 100%;
-
-    .modal {
-        text-align: center;
-        padding-bottom: 20px;
-        background: #efefef;
-        border-radius: 0 0 10px 5px;
-
-        h1 { margin-bottom: 10px; }
-        .btn { margin: 0 10px; }
-
-        &.modal-inverted {
-            color: white;
-            background: #103542;
-            box-shadow: inset -10px 0 5px -5px rgba(0,0,0,.12);
-
-            h1 { color: white; }
-            .btn:hover { box-shadow: none; }
-        }
-
-        // SLIDING OUT
-        transition-duration: .4s;
-        transform: translate(0, -100%);
-        &.modal-active {
-            transform: translate(0, 0);
-            box-shadow: 0px 2px 10px #999;
-        }
-    }
-}
-
-.pointer-up {
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-bottom: 10px solid white;
-    position: absolute;
-    top: -10px;
 }

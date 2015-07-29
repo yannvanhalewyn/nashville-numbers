@@ -1,0 +1,137 @@
+// =============
+// OVERLAY modal
+// =============
+.modal-overlay {
+    background: rgba(0, 0, 0, .75);
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+
+    // Default it to hidden
+    opacity: 0;
+    z-index: -100;
+    transform: scale(.5);
+    transition: all .6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    @include tablet { padding: 5% 5%; }
+    @include desktop { padding: 5% 10%; }
+}
+
+.modal-wrap {
+    background: white;
+    height: 100%;
+    overflow: auto;
+    position: relative;
+    @include desktop { border-radius: 7px; }
+    h2 { text-align: center; }
+}
+
+.modal-close-trigger {
+    display: block;
+    cursor: pointer;
+    color: white;
+    padding: 5px 0;
+    text-align: center;
+    background: black;
+    border-radius: 10px 10px 0 0;
+
+    &:after {
+        content: '\0f077';
+        font-family: FontAwesome;
+        padding: 10px;   
+    }
+
+    @include desktop {
+        position: relative;
+        background: black;
+        float: right;
+        border-radius: 50%;
+        top: -.8em;
+        right: 1em;
+        z-index: 800;
+        &:after { content: '\0f00d'; }
+        &:hover { transform: scale(1.1); }
+    }
+}
+
+@mixin modalWithTrigger($trigger) {
+    #{$trigger} { display: none; }
+    #{$trigger}:checked ~ .modal-overlay {
+        opacity: 1;
+        z-index: 600;
+        transform: scale(1);
+    }
+}
+
+
+
+// ==============
+// DROPDOWN modal
+// ==============
+.dropdown-modal {
+    @include span(12);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    background: $GREY-1;
+    padding: 0px 10px 20px;
+    text-align: center;
+    border-radius: 0 0 10px 5px;
+    
+    h1 { margin-bottom: 10px; }
+    .btn { margin: 0 10px; }
+
+    // Transition
+    transform: translate(0, -100%);
+    transition-duration: .4s;
+    &.active {
+        transform: translate(0, 0);
+        box-shadow: 0px 2px 10px $GREY-6;
+    }
+    
+    // Extra theme might be necessary
+    &.modal-inverted {
+        color: white;
+        background: #103542;
+        box-shadow: inset -10px 0 5px -5px rgba(0,0,0,.12);
+        h1 { color: white; }
+        .btn:hover { box-shadow: none; }
+    }    
+    @include tablet { @include skipAndSpan(3, 7); }
+    @include desktop { @include skipAndSpan(4, 4); }
+}
+
+
+
+// ==========
+// MODAL FORM
+// ==========
+.form-modal {
+    @include span(12);
+    position: fixed;
+    background: $MAIN-BG;
+    border-radius: 0 0 10px 5px;
+    z-index: -100;
+    top: 0;
+    left: 0;
+    // Slide out as default
+    transform: translate(0, -100%);
+    transition: all linear .2s;
+    h2 { text-align: center; }
+    @include tablet { @include skipAndSpan(3, 6); }
+}
+
+@mixin formModalWithTrigger($trigger) {
+    #{$trigger} { display: none; }
+    #{$trigger}:checked ~ .form-modal {
+        transform: translate(0, 0);
+        box-shadow: 0px 2px 10px $GREY-6;
+        z-index: 600;
+    }
+}
+// .form-overlay {
+//     @include desktop { padding: 10% 30%; } 
+// }

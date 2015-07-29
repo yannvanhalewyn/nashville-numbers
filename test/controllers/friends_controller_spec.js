@@ -3,7 +3,7 @@ var include    = require('include')
   , sinonChai  = require('sinon-chai')
   , sinon      = require('sinon')
   , expect     = chai.expect
-  , Controller = include('/controllers/friends_controller')
+  , Controller = include('/controllers/friends/friends_controller')
   , reqres     = require('reqres')
   , Factory    = include('/test/util/factory')
   , db         = include('/config/db')
@@ -35,14 +35,34 @@ describe('FRIENDSROUTES', function() {
 
   // INDEX
   describe('GET#index', function() {
-    beforeEach(function(done) {
-      Controller.index(req, res);
-      res.on('end', done);
-    });
+    context("when no search query is given", function() {
+      beforeEach(function(done) {
+        Controller.index(req, res);
+        res.on('end', done);
+      });
 
-    it("renders the friends page", function() {
-      expect(res.render).to.have.been.calledWith('friends');
-    });
+      it("renders the friends page", function() {
+        expect(res.render).to.have.been.calledWith('friends');
+      });
+    }); // End of context 'when no search query is given'
+
+    context("when a search query is given", function() {
+      beforeEach(function(done) {
+        sinon.stub(USER_A, 'findFriends').returns(Q([USER_B]));
+        req.query = {search: "theSearchQuery"};
+        req.user = USER_A;
+        Controller.index(req, res);
+        res.on('end', done)
+      });
+
+      it("calls findFriends on user with the searchQuery", function() {
+        expect(USER_A.findFriends).to.have.been.calledWith("theSearchQuery");
+      });
+
+      it("sends the result as JSON", function() {
+        expect(res.json).to.have.been.calledWith([USER_B]);
+      });
+    }); // End of context 'when a search query is given'
   }); // End of describe 'GET#index'
 
   describe('GET#show', function() {

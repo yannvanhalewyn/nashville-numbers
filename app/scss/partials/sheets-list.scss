@@ -1,0 +1,62 @@
+/* SHEETLIST
+ ----------------- */
+
+$spacing-y: 15px;
+
+.new-sheet-modal {
+    @include formModalWithTrigger("#new-sheet-form-trigger");
+}
+
+// Iphone/Main
+.sheet-list-entry {
+    @include grid;
+    padding: $spacing-y 0;
+    .block-thumb {
+        @include span(3);
+        text-align: center;
+        font-size: 2em;
+        padding:.5em 0;
+    }
+    .block-info {
+        @include span(8);
+        .title { margin: .3em 0; }
+        .artist {
+            margin: .3em 0;
+            color: $GREY-8;
+        }
+        .info {
+            color: $GREY-3;
+        }
+    }
+    .block-actions {
+        @include span(1);
+        color: $GREY-7;
+        margin-top: 15px;
+    }
+}
+
+@include desktop {
+    .sheets-list {
+        @include grid;
+        margin-top: 40px;
+        padding: 0 10px;
+    }
+    .sheet-list-entry {
+        border: none;
+        padding: 20px;
+        box-shadow: 0 0 4px $GREY-3;
+        @include span(6);
+        .block-thumb { @include span(2); }
+        .block-info { @include span(9); }
+        .block-actions { 
+            @include span(1);
+            span:hover { color: black; }
+        }
+    }
+}
+
+@include XL {
+    .sheet-list-entry {
+        @include span(4);
+    }
+}

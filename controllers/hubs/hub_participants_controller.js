@@ -1,0 +1,47 @@
+(function() {
+
+  var include                      = require('include')
+    , ensureAuth                   = include('/middlewares/auth')
+    , getTargetHub                 = include('/middlewares/hubs/getTargetHub')
+    , getTargetHubWithRelationship = include('/middlewares/hubs/getTargetHubWithRelationship');
+
+  module.exports = {
+
+    middlewares: {
+      index:   [ensureAuth, getTargetHub],
+      show:    [],
+      update:  [],
+      destroy: [ensureAuth, getTargetHubWithRelationship],
+      leave: [ensureAuth, getTargetHubWithRelationship]
+    },
+
+    index: function(req, res) {
+      req.target_hub.getParticipants().then(function(participants) {
+        res.json(participants);
+      });
+    },
+
+    update: function(req, res) {
+      res.send("P UPDATE " + req.params.hub_id + "-" + req.params.participant_id);
+    },
+
+    destroy: function(req, res) {
+      req.target_hub.removeParticipant(req.params.participant_id).then(function(foo) {
+        res.json({destroyed: true});
+      }, function(error) {
+        res.status(400);
+        res.send(error);
+      });
+    },
+
+    leave: function(req, res) {
+      req.target_hub.removeParticipant(req.user._id).then(function() {
+        res.redirect('/hubs');
+      }, function(error) {
+        res.status(400);
+        res.send(error);
+      });
+    }
+  };
+
+}())

@@ -40,9 +40,11 @@ gulp.task('watchify', function() {
 
   // The starting files = feature in-points
   var files = [
-    './app/sheet/editor.js',
+    './app/sheetEditor/editor.js',
     './app/friendslist/friendslist.js',
-    './app/userpage/userpage.js'
+    './app/userpage/userpage.js',
+    './app/hubs/hubs.js',
+    './app/hubpage/hubpage.js'
   ];
 
   // Map a task for each file
@@ -96,10 +98,10 @@ gulp.task('css:livereload', function() {
  * Converts compiles files into css
  */
 gulp.task('sass', function() {
-  gulp.src('app/scss/**/*.scss')
+  gulp.src('app/scss/index.scss')
     .pipe(sass())
     .on('error', console.error)
-    .pipe(postcss([ autoprefixer({ browsers: ['last 2 version'] }) ]))
+    .pipe(postcss([ autoprefixer({ browsers: ['last 4 version'] }) ]))
     .pipe(gulp.dest('public/css/'));
 });
 
@@ -124,6 +126,18 @@ gulp.task('sass:watch', function() {
  */
 gulp.task('seed', function() {
   require('./test/util/seed_db').bind(this)();
+});
+
+/*
+ * ===========
+ * TASK routes
+ * ===========
+ *
+ * Prints out beautiful tables of all the routes :)
+ */
+gulp.task('routes', function() {
+  var printRoutes = require('./bin/printRoutes');
+  printRoutes('/config/routes');
 });
 
 

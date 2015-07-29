@@ -1,0 +1,51 @@
+.btn {
+    display: inline-block;
+    padding: 8px 30px;
+    border-radius: 2px;
+    background: $BUTTON_BLUE;
+    color: $MAIN-BG;
+    border: none;
+    font-size: 12px;
+    transition: box-shadow .2s;
+
+    &:hover {
+        box-shadow: -4px 4px 10px #c4c4c4;
+        background: $BUTTON_BLUE_HOVER;
+        cursor: pointer;
+    }
+
+    &:active {
+        background: $BUTTON_BLUE_ACTIVE;
+        box-shadow: inset 0px 1px 0px #2ab7ec, 0px 3px 0px 0px #156785, 0px 5px 5px #999;
+    }
+    &:focus { outline: none; }
+
+    &.btn-orange {
+        background: $BUTTON_ORANGE;
+        color: white;
+    }
+
+    &.btn-red {
+        background: #A55;
+        &:active {
+            background: #A25252;
+            box-shadow: inset 0px 1px 0px #944, 0px 3px 0px 0px #944, 0px 5px 5px #999;
+        }
+    }
+}
+
+@mixin magneticButton($color:$BLUE) {
+    background: $color;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    text-align: center;
+    cursor: pointer;
+    transition: all linear .1s;
+    &:active,
+    &:hover {
+        background: lighten($color, 5);
+        box-shadow: 0px 4px 3px darken($color, 10);
+    }
+    &:active, &:focus { outline: none; }
+}

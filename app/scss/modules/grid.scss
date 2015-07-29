@@ -1,0 +1,67 @@
+/* GRID-SYSTEM
+ ----------------- */
+
+$pad: 10px;
+
+@mixin grid {
+    margin: 0 0 $pad 0;
+    &:after {
+        display: table;
+        clear: both;
+        content: "";
+    } 
+}
+
+@mixin span($col, $gridsize:12) {
+    padding-right: $pad;
+    float: left;
+    &:last-of-type {
+        padding-right: 0;
+    }
+    width: ($col/$gridsize) * 100%;
+}
+
+@mixin span-tablet($col) {
+    @include tablet {
+        @include span($col);
+    }
+}
+
+@mixin span-desktop($col) {
+    @include desktop {
+        @include span($col);
+    }
+}
+
+@mixin skip($col, $gridsize:12) {
+    margin-left: ($col/$gridsize) * 100%;
+}
+
+@mixin skipAndSpan($skip, $col, $gridsize:12) {
+    @include skip($skip, $gridsize);
+    @include span($col, $gridsize);
+}
+
+@mixin resetCol {
+    display: inherit;
+    float: none;
+    padding: inherit;
+    width: inherit;
+    margin: inherit;
+}
+
+// .grid {
+//     background: orange;
+//     @include grid;
+// }
+
+// $baseline: 40px;
+
+// .col {
+//     @include col(1);
+//     background: red;
+//     font-size: $baseline;
+//     line-height: $baseline*3;
+//     margin-bottom: $baseline;
+//     margin-top: $baseline;
+// }

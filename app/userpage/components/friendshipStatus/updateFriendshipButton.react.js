@@ -29,16 +29,11 @@
     },
 
     _friendshipLabelClicked: function() {
-      console.log("CLICK");
       this.refs.deleteConfirmationModal.slideOut();
     },
 
     _deleteFriend: function() {
       Actions.deleteFriend();
-    },
-
-    _onHover: function() {
-      console.log("HOVER");
     }
   });
 

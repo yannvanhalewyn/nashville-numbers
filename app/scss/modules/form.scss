@@ -1,0 +1,67 @@
+$pad: 10px;
+
+form {
+	padding: 10px 5px;
+	&.hidden-form { padding: 0; }
+
+	input {
+		font-size: 1.3em;
+		border: none;
+		padding: $pad;
+	}
+
+	$border-color: $GREY-3;
+	.input-group {
+		margin-bottom: 10px;
+		display: table;
+		width: 100%;
+		border-radius: 5px;
+		&:hover { box-shadow: 0 0 20px $GREY-5; }
+	}
+
+	.input-label {
+		display: table-cell;
+		background: lighten($BLUE, 20);
+		color: white;
+		font-size: 1.3em;
+		text-align: center;
+		width: 50px;	
+		border-radius: 5px 0 0 5px;
+		border-right: 0;
+		cursor: pointer;
+	}
+
+	input[type="text"] {
+		// display: table-cell;
+		width: 100%;
+		margin: 0;
+		border-radius: 0 5px 5px 0;
+		border: 1px solid $border-color;
+		transition: background linear .1s, color linear .1s;
+		&:focus {
+			background: lighten($BLUE, 20);
+			color: white;
+			outline: none;
+			border-width: 0 0 0 1px;
+			&::placeholder { color: white; }
+		}
+	}
+
+	.cancel-button {
+		display: block;
+		@include magneticButton($DARK-RED);
+		padding: $pad;
+		font-size: 1.3em;
+		margin-bottom: 10px;
+	}
+
+	input[type="submit"] {
+		width: 100%;
+		@include magneticButton($FOCUSED);
+	}
+}
+
+@include tablet {
+	.cancel-button { @include span(8, 17); }
+	form input[type="submit"] { @include skipAndSpan(1, 8, 17); }
+}

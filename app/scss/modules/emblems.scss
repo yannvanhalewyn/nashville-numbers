@@ -1,0 +1,68 @@
+@font-face {
+  font-family: army;
+  src: url(../fonts/StencilArmyWWI.ttf)
+}
+
+@font-face {
+  font-family: militaria;
+  src: url(../fonts/Militaria-custom.ttf)
+}
+
+.emblem {
+	display: inline-block;
+	text-align: center;
+	&:before {
+		font-family: militaria;
+        margin: -10px 0 10px;
+        color: $EMBLEM-LOGO;
+        font-size: 70px;
+        display: block;
+	}
+
+	&:after {
+		font-family: army;
+		font-size: 1.4em;
+        color: $GREY-4;
+        margin-top: 10px;
+	}
+}
+
+.beginner-sheeter {
+	&:before { content: "\00049"; }
+	&:after  { content: "Beginner Sheeter"; }
+}
+
+.sheet-ninja {
+	&:before { content: "\00042"; }
+	&:after  { content: "Sheet Ninja"; }
+}
+
+.corporal-mcsheeter {
+	&:before { content: "\00041"; }
+	&:after  { content: "Corporal McSheeter"; }
+}
+
+.eagle-eyed-sheeter {
+	&:before { content: "\00050"; }
+	&:after  { content: "Eagle Eyed Cheeter"; }
+}
+
+.president-jimmy-charter {
+	&:before { content: "\00053"; }
+	&:after  { content: "President Jimmy Charter"; }
+}
+
+.sheeter-by-the-boatload {
+	&:before { content: "\00054"; }
+	&:after  { content: "Sheeter by the Boatload"; }
+}
+
+.score-specialist {
+	&:before { content: "\00048"; }
+	&:after  { content: "Score Specialist"; }
+}
+
+.casual-cheetah {
+	&:before { content: "\00056"; }
+	&:after  { content: "Casual Cheetah"; }
+}

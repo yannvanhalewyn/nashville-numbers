@@ -1,7 +1,7 @@
 {
-  "name": "react-chordboxes",
+  "name": "SheetSomething",
   "version": "1.0.0",
-  "description": "",
+  "description": "An online hub/universe for creating and sharing lead sheets with collegues and band-members.",
   "main": "server.js",
   "scripts": {
     "start": "nodemon server.js"
@@ -25,6 +25,7 @@
     "method-override": "^2.3.3",
     "moment": "^2.10.3",
     "neo4j": "^2.0.0-RC2",
+    "node-jsx": "^0.13.3",
     "passport": "^0.2.2",
     "passport-facebook": "^2.0.0",
     "q": "^1.4.1",
@@ -37,6 +38,7 @@
     "chai": "^3.0.0",
     "chai-things": "^0.2.0",
     "chance": "^0.7.6",
+    "cli-table": "^0.3.1",
     "gulp": "^3.9.0",
     "gulp-livereload": "^3.8.0",
     "gulp-nodemon": "^2.0.3",
@@ -56,5 +58,8 @@
   "browserify-shim": {
     "react": "global:React",
     "lodash": "global:_"
+  },
+  "engines": {
+    "node": "0.12.6"
   }
 }

@@ -5,7 +5,7 @@ var include    = require('include')
   , sinonChai  = require('sinon-chai')
   , expect     = chai.expect
   , reqres     = require('reqres')
-  , Controller = include('/controllers/users_controller')
+  , Controller = include('/controllers/users/users_controller')
   , User       = include('/models/user')
   , Factory    = include('/test/util/factory')
   , Q          = require('q')
@@ -90,4 +90,24 @@ function dummyUsers() {
       }
     }
   ]
+}
+
+function dummyInvitations() {
+  return [
+    {
+      sender: {_id: 1},
+      hub: {_id: 2},
+      invitation: { _id: 3 }
+    },
+    {
+      sender: {_id: 4},
+      hub: {_id: 5},
+      invitation: { _id: 6 }
+    },
+    {
+      sender: {_id: 7},
+      hub: {_id: 8},
+      invitation: { _id: 9 }
+    }
+  ];
 }

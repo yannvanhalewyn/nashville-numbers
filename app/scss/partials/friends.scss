@@ -1,0 +1,74 @@
+.live-user-search {
+	padding: 10px;
+
+	.user-search-field {
+		font-size: 1.5em;
+		border: none;
+		height: 70px;
+		width: 100%;
+		padding-left: 10px;
+		color: $GREY-8;
+		background: inherit;
+
+		&::placeholder {
+			color: $GREY-2;
+			letter-spacing: 2px;
+		}
+
+		&:focus {
+			outline: none;
+			box-shadow: 3px 0px 20px $GREY-2;
+		}
+	}
+	
+	.outer-dropdown {
+		position: relative;
+		width: 100%;
+		height: 10px;
+		.dropdown {
+			box-sizing: border-box;
+			border: 3px solid $GREY-2;
+			width: 100%;
+			background: white;
+		}
+	}
+	
+	.friend-suggestion {
+		display: block;
+		height: 70px;
+		color: $GREY-8;
+		font-size: 1.4em;
+		$ttime: .2s;
+		transition: background-color $ttime, color $ttime;
+		border-bottom: 2px solid $GREY-2;
+
+		&:last-child {
+			border: 0;
+		}
+
+		.suggestion-container {
+			height: 100%;
+
+			.name {
+				height: 100%;
+				padding: 20px 0 0 10px;
+				display: inline-block;
+				vertical-align: top;
+			}
+		}
+
+		.picture {
+			height: 100%;
+		}
+
+		&:hover, &:focus {
+			background: $BLUE;
+			color: $GREY-1;
+		}
+
+		&:focus {
+			background: $BLUE;
+			outline: none;
+		}
+	}
+}

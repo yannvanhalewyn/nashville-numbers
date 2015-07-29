@@ -1,0 +1,50 @@
+// TODO span and input are to global, especially with react spans all over the
+// place. The browser reads selectors from right to left!
+.search-field {
+
+    // The search icon
+    span {
+        width: 5%;
+        text-align: center;
+        font-size: 1.3em;
+    }
+    // The search field
+    input {
+        width: 95%;
+        height: 50px;
+        padding-left: 5px;
+        font-size: 1.2em;
+        border: none;
+        &:focus {
+            outline: none;
+        }
+    }
+}
+
+.search-dropdown {
+    background: $MAIN-BG;
+    position: absolute;
+
+    ul {
+        padding: 0;
+        margin: 0;
+    }
+
+    li {
+        list-style: none;
+        border-bottom: 1px solid $GREY-2;
+        color: $GREY-8;
+        padding: 5px;
+        z-index: 100;
+
+        &:hover,
+        &:focus {
+            background: $BLUE;
+            color: $MAIN-BG;
+        }
+
+        &:first-child {
+            border-top: 2px solid $GREY-2;
+        }
+    }
+}

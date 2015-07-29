@@ -2,16 +2,21 @@
 
   "use strict";
 
-  var UsersController = require('../controllers/users_controller')
-    , ensureAuth      = require('../middlewares/auth')
-    , getTargetUser   = require('../middlewares/getTargetUser')
-    , getMeAsUser   = require('../middlewares/getMeAsUser')
+  var UsersRouter     = require('express').Router()
+    , UsersController = require('../controllers/users/users_controller')
+    , middlewares     = UsersController.middlewares
 
-  var UsersRouter = require('express').Router();
+  UsersRouter.get('/', middlewares.index, UsersController.index);
+  UsersRouter.get('/me', middlewares.showMe, UsersController.show);
+  UsersRouter.get('/:user_id', middlewares.showUser, UsersController.show);
 
-  UsersRouter.get('/', UsersController.index);
-  UsersRouter.get('/me', getMeAsUser, UsersController.show);
-  UsersRouter.get('/:user_id', getTargetUser, UsersController.show);
+
+  // Nested sheets
+  var UserSheetsController = require('../controllers/user_sheets_controller')
+    , userSheetsMiddlewares = UserSheetsController.middlewares;
+
+  UsersRouter.get('/me/sheets', userSheetsMiddlewares.indexMe, UserSheetsController.indexMe);
+  UsersRouter.get('/:user_id/sheets', userSheetsMiddlewares.index, UserSheetsController.index);
 
   module.exports = UsersRouter;
 
