@@ -69,4 +69,41 @@ describe('HubSheetsController', function() {
       });
     }); // End of context 'when addSheet throws'
   }); // End of describe 'POST/create'
+
+  describe('DELETE/destroy', function() {
+    context("when hub.removeSheet is successful", function() {
+      var removeSheetStub
+      beforeEach(function(done) {
+        removeSheetStub = sinon.stub().returns(Q());
+        req.target_hub = {removeSheet: removeSheetStub}
+        req.params = {sheet_id: 123};
+        Controller.destroy(req, res);
+        res.on('end', done)
+      });
+
+      it("calls removeSheet on the target_hub with the sheet_id params", function() {
+        expect(req.target_hub.removeSheet).to.have.been.calledWith(123);
+      });
+
+      it("responds with a destroyed: true flag as json", function() {
+        expect(res.json).to.have.been.calledWith({destroyed: true});
+      });
+    }); // End of context 'when hub.removeSheet is successful'
+
+    context("when hub.removesheet fails", function() {
+      var removeSheetStub
+      beforeEach(function(done) {
+        removeSheetStub = sinon.stub().returns(rejectionPromise("Some Error"));
+        req.target_hub = {removeSheet: removeSheetStub}
+        req.params = {sheet_id: 123};
+        Controller.destroy(req, res);
+        res.on('end', done)
+      });
+
+      it("sends a status of 400 with the error message", function() {
+        expect(res.status).to.have.been.calledWith(400);
+        expect(res.send).to.have.been.calledWith("Some Error");
+      });
+    }); // End of context 'when hub.removesheet fails'
+  }); // End of describe 'DELETE/destroy'
 }); // End of describe 'HubSheetsController'

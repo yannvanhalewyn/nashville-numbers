@@ -12,7 +12,7 @@
       index:   [ensureAuth, getTargetHub, errorStatus(400)],
       show:    [],
       create:  [ensureAuth, getTargetHub, errorStatus(400)],
-      destroy: []
+      destroy: [ensureAuth, getTargetHub, errorStatus(400)]
     },
 
     index: function(req, res) {
@@ -35,7 +35,12 @@
     },
 
     destroy: function(req, res) {
-      res.send("HS DESTROY" + req.params.hub_id + "-" + req.params.participant_id);
+      req.target_hub.removeSheet(req.params.sheet_id).then(function() {
+        res.json({destroyed: true});
+      }, function(error) {
+        res.status(400);
+        res.send(error);
+      });
     }
   };
 
