@@ -105,29 +105,13 @@
       }
     },
 
-    // TODO: clean up filtering, I dislike the fact that I'm handling and
-    // sending live mutable data into the react tree. Find a way to get all
-    // model attributes in a collection as Immutable data, maybe use
-    // ImmutableJS?
     getState: function() {
 
-      // Invitations are all atributes on all models in the invitations collection
       var invitations = this.invitations.toJSON();
+      var participants = this.participants.toJSON();
 
       // Filter friends suggestions list to friends no yet invited
-      var friends = this.friends.models.filter(function(friend) {
-        for (var i in invitations) {
-          if (invitations[i].invitee._id == friend.attributes._id) {
-            return false;
-          }
-        }
-        return true;
-      // Return all those friends's attributes
-      }).map(function(friend) {
-        return friend.attributes;
-      });
-
-      var participants = this.participants.toJSON();
+      var friends = this.friends.toJSON().filter(this._isNotParticipant.bind(this)).filter(this._isNotInvited.bind(this));
 
       // Return the state
       return {
@@ -141,7 +125,24 @@
 
     getUsersSheets: function() {
       return this.usersSheets.toJSON();
-    }
+    },
+
+    // Filter functions
+    _isInvited: function(user) {
+      return this.invitations.toJSON().some(function(invitation) {
+        return invitation.invitee._id == user._id;
+      });
+    },
+
+    _isParticipant: function(user) {
+      return this.participants.get(user._id) ? true : false;
+    },
+
+    // Pretty annoying JS doesn't offer the Array.p.pick() method. I found it
+    // unsemantic and hard to read to directly implement 'is not xxx'.
+    _isNotInvited: function(user) { return !this._isInvited(user); },
+    _isNotParticipant: function(user) { return !this._isParticipant(user); }
+
   });
 
   module.exports = new HubStore();
