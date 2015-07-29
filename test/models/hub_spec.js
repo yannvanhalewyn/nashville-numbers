@@ -51,6 +51,23 @@ describe('HUB', function() {
     });
   }); // End of describe 'Hub.create()'
 
+  describe('#destroy()', function() {
+    var HUB;
+    beforeEach(function() {
+      return Factory('hub').then(function(entities) {
+        HUB = entities.hub;
+        return HUB.destroy();
+      });
+    });
+
+    it("destroys the hub", function() {
+      return db.query("MATCH (h:Hub) WHERE id(h) = {hid} RETURN h", {hid: HUB._id})
+      .then(function(result) {
+        expect(result).to.be.empty;
+      });
+    });
+  }); // End of describe '#destroy()'
+
 /*
  * ==========
  * findById()

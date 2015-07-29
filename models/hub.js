@@ -12,6 +12,17 @@
 
 
   /**
+   * Destroys the hub.
+   *
+   */
+  Hub.prototype.destroy = function() {
+    return db.query(
+      "MATCH (hub:Hub) OPTIONAL MATCH (hub)-[r]-() WHERE id(hub) = {hid} DELETE hub, r",
+      {hid: this._id}
+    );
+  };
+
+  /**
    * Returns all the participants that have a relationship to the hub.
    *
    * @return {array} The list of participants in the hub (including the
