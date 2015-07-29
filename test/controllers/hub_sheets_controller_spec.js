@@ -1,12 +1,13 @@
-var include    = require('include')
-  , chai       = require('chai')
-  , sinonChai  = require('sinon-chai')
-  , sinon      = require('sinon')
-  , expect     = chai.expect
-  , reqres     = require('reqres')
-  , Q          = require('q')
-  , Controller = include('/controllers/hubs/hub_sheets_controller')
+var include          = require('include')
+  , chai             = require('chai')
+  , sinonChai        = require('sinon-chai')
+  , sinon            = require('sinon')
+  , expect           = chai.expect
+  , reqres           = require('reqres')
+  , Q                = require('q')
+  , Controller       = include('/controllers/hubs/hub_sheets_controller')
   , rejectionPromise = include('/test/util/rejectionPromise')
+  , reactRender      = include('/helpers/reactRender')
 chai.use(sinonChai);
 
 describe('HubSheetsController', function() {
@@ -33,6 +34,26 @@ describe('HubSheetsController', function() {
       expect(res.json).to.have.been.calledWith(["a", "dummy", "array"]);
     });
   }); // End of describe 'GET/index'
+
+  describe('GET/show', function() {
+    beforeEach(function() {
+      sinon.stub(reactRender, 'sheet').returns("Markup");
+      req.target_sheet_in_hub = {dummySheet: true};
+      Controller.show(req, res);
+    });
+
+    afterEach(function() {
+      reactRender.sheet.restore();
+    });
+
+    it("lets reactRender render the target sheet", function() {
+      expect(reactRender.sheet).to.have.been.calledWith({dummySheet: true});
+    });
+
+    it("renders the sheet view template with rendered markup", function() {
+      expect(res.render).to.have.been.calledWith("sheet", {markup: "Markup"});
+    });
+  }); // End of describe 'GET/show'
 
   describe('POST/create', function() {
     context("when addSheet is successful", function() {

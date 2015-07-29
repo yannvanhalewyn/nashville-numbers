@@ -4,13 +4,16 @@
     , ensureAuth                   = include('/middlewares/auth')
     , getTargetHub                 = include('/middlewares/hubs/getTargetHub')
     , getTargetHubWithRelationship = include('/middlewares/hubs/getTargetHubWithRelationship')
+    , getTargetSheetInHub          = include('/middlewares/hubs/getTargetSheetInHub')
     , errorStatus                  = include('/middlewares/errors/errorStatus')
+    , redirect                     = include('/middlewares/errors/redirect')
+    , reactRender                  = include('/helpers/reactRender')
 
   module.exports = {
 
     middlewares: {
       index:   [ensureAuth, getTargetHub, errorStatus(400)],
-      show:    [],
+      show:    [ensureAuth, getTargetHubWithRelationship, getTargetSheetInHub, redirect.hub],
       create:  [ensureAuth, getTargetHub, errorStatus(400)],
       destroy: [ensureAuth, getTargetHub, errorStatus(400)]
     },
@@ -22,7 +25,8 @@
     },
 
     show: function(req, res) {
-      res.send("SHOW HUB " + req.params.hub_id + " SHEET " + req.params.sheet_id);
+      var markup = reactRender.sheet(req.target_sheet_in_hub);
+      res.render("sheet", {markup: markup});
     },
 
     create: function(req, res) {
