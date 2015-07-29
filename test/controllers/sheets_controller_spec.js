@@ -8,33 +8,9 @@ var include     = require('include')
   , React       = require('react')
   , Factory     = include('/test/util/factory')
   , denormalize = include('/app/helpers/denormalize')
+  , Controller  = include('/controllers/sheets_controller')
+  , reactRender = include('/helpers/reactRender')
 chai.use(sinonChai);
-
-/*
- * Stub out some react methods for testing. This is some complicated stub
- * nesting, I'm looking for a better solution. This is what's going on:
- *
- * - When the controller LOADS, it calls React.createFactory on the
- *   sheetComponent (ReactClass). I stub this call out to return a stubbed react
- *   factory.
- *
- * - On render time, this factory will be called with the data for the props to
- *   return a reactElement with the props in place, ready to be rendered.
- *   Calling the stubbed factory will just return a string for testing
- *   purpouses, and thanks to sinon I can check if the stubbed factory was
- *   called with the correct prop data.
- *
- * - Lastly React.renderToString is called with that element as argument. This
- *   gets stubbed out during the test to return some dummy markup.
- *
- * We need to stub all this out before require the controller, because
- * React.createFactory is called at 'require' time. I would love to stub this in
- * the test itself.
- */
-
-var stubbedReactFactory = sinon.stub().returns("Stubbed React Element");
-sinon.stub(React, 'createFactory').returns(stubbedReactFactory);
-var Controller  = include('/controllers/sheets_controller')
 
 describe('SheetsController', function() {
   var req, res;
@@ -45,25 +21,20 @@ describe('SheetsController', function() {
 
   describe('GET/show', function() {
     beforeEach(function() {
-      sinon.stub(React, "renderToString").returns("The Markup");
-      req.target_sheet = {properties: {data: JSON.stringify(dummySheetData())}};
+      sinon.stub(reactRender, "sheet").returns("The Markup");
+      req.target_sheet = {dummySheet: true};
       Controller.show(req, res);
     });
 
     afterEach(function() {
-      React.renderToString.restore();
+      reactRender.sheet.restore();
     });
 
-    it("generates a Sheet component with the denormalized data", function() {
-      var denormalizedData = denormalize(dummySheetData());
-      expect(stubbedReactFactory).to.have.been.calledWith({sheetData: denormalizedData});
+    it("calls upon the reactRender helper to render the targetSheet to string", function() {
+      expect(reactRender.sheet).to.have.been.calledWith({dummySheet: true});
     });
 
-    it("renders the sheet component to string", function() {
-      expect(React.renderToString).to.have.been.calledWith("Stubbed React Element");
-    });
-
-    it("renders the sheet template with the outputed markup", function() {
+    it("renders the sheet template with resulting markup", function() {
       expect(res.render).to.have.been.calledWith("sheet", {markup: "The Markup"});
     });
   }); // End of describe 'GET/show'

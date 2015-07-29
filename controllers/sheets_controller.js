@@ -8,14 +8,7 @@
     , ensureAuthored           = include('/middlewares/sheets/ensureAuthored')
     , redirect                 = include('/middlewares/errors/redirect')
     , errorStatus              = include('/middlewares/errors/errorStatus')
-
-  // Server side react rendering
-  require('node-jsx').install({extension: '.jsx'});
-  var React = require('react')
-    , Sheet = React.createFactory(include('/app/sheet/sheet.jsx'))
-    , denormalize = include('app/helpers/deNormalize')
-    , Immutable = require('immutable')
-
+    , reactRender              = include('/helpers/reactRender')
 
   module.exports = {
 
@@ -34,10 +27,8 @@
     },
 
     show: function(req, res) {
-      var jsonData = req.target_sheet.properties.data;
-      var data = JSON.parse(jsonData);
-      var html = React.renderToString(Sheet({sheetData: denormalize(data)}));
-      res.render("sheet", {markup: html});
+      var markup = reactRender.sheet(req.target_sheet);
+      res.render("sheet", {markup: markup});
     },
 
     edit: function(req, res) {
