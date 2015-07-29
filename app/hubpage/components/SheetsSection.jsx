@@ -3,8 +3,8 @@
   "use strict";
 
   var React = require('react')
-    , LiveSheetsSearcher = require('./sheetsManager/liveSheetsSearcher.jsx')
     , SheetCard = require('./sheetCard.jsx')
+    , SheetManagementModal = require('./sheetsManager/sheetManagementModal.jsx')
 
   var SheetsSectionComponent = React.createClass({
     propTypes: {
@@ -30,8 +30,17 @@
       return (
         <div className="sheets-section">
           <h2>Sheets</h2>
-          <LiveSheetsSearcher sheets={this.props.usersSheets} />
-          <div className="sheets-section">
+
+          <div className="sheets-management">
+            <input type="checkbox" id="sheets-modal-trigger" />
+            <label className="btn" htmlFor="sheets-modal-trigger"><span className="fa fa-pencil" />Manage</label>
+            <SheetManagementModal
+              usersSheets={this.props.usersSheets}
+              sheets={this.props.sheets}
+            />
+          </div>
+
+          <div className="sheets-viewer">
             {this.props.sheets.map(this.renderSheetCard)}
           </div>
         </div>

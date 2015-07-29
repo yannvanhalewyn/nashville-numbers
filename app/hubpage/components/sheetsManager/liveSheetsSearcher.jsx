@@ -18,9 +18,11 @@
 
     render: function() {
       return (
-        <div>
-          <span className="fa fa-search"></span>
-          <input type="text" onChange={this._onChange} onFocus={this._onFocus} />
+        <div className="live-sheets-searcher">
+          <div className="search-field">
+            <span className="fa fa-search"></span>
+            <input type="text" onChange={this._onChange} onFocus={this._onFocus} />
+          </div>
           <SheetsSuggestionsDropdown query={this.state.searchVal} sheets={this.props.sheets} />
         </div>
       )

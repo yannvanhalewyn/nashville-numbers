@@ -29,7 +29,7 @@
 
     render: function() {
       return (
-        <div>
+        <div className="search-dropdown">
           {this.props.sheets.filter(this.matchesQuery).map(this.renderSheetSuggestion)}
         </div>
       )

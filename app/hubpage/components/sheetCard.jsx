@@ -10,7 +10,7 @@
       artist: React.PropTypes.string,
       author: React.PropTypes.object,
       private: React.PropTypes.bool,
-      dbid: React.PropTypes.dbid
+      dbid: React.PropTypes.number
     },
 
     renderPublicOrPrivateIcon: function(isPrivate) {

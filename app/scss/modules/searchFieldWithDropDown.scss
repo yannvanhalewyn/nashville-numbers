@@ -1,3 +1,5 @@
+// TODO span and input are to global, especially with react spans all over the
+// place. The browser reads selectors from right to left!
 .search-field {
 
     // The search icon

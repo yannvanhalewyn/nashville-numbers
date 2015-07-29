@@ -182,6 +182,13 @@
     }
 }
 
+// =======================
+// SHEETS MANAGEMENT MODAL
+// =======================
+.sheets-management {
+  @include modalWithTrigger("#sheets-modal-trigger");
+}
+
 // Gridding
 .invitation-card,
 .participant-card {
