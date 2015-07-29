@@ -31,25 +31,25 @@
       });
     },
 
-    cancelInvitation: function(cid) {
+    cancelInvitation: function(_id) {
       Dispatcher.dispatch({
         actionType: HubpageConstants.CANCEL_INVITATION,
-        cid: cid
+        _id: _id
       });
     },
 
-    updateInvitedUserPermissions: function(cid, newPermission) {
+    updateInvitedUserPermissions: function(_id, newPermission) {
       Dispatcher.dispatch({
         actionType: HubpageConstants.UPDATE_INVITED_USER_PERMISSIONS,
-        cid: cid,
+        _id: _id,
         value: newPermission
       });
     },
 
-    removeParticipant: function(cid) {
+    removeParticipant: function(_id) {
       Dispatcher.dispatch({
         actionType: HubpageConstants.REMOVE_PARTICIPANT,
-        cid: cid
+        _id: _id
       });
     },
 

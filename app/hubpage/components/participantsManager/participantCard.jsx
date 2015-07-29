@@ -11,7 +11,9 @@
       firstName: React.PropTypes.string,
       lastName: React.PropTypes.string,
       permissions: React.PropTypes.number,
-      thumb: React.PropTypes.thumb
+      thumb: React.PropTypes.thumb,
+      relationship: React.PropTypes.objec,
+      _id: React.PropTypes.number
     },
 
     renderCreator: function() {
@@ -49,13 +51,14 @@
     },
 
     _onSelect: function(permissionValue) {
-      Actions.updateParticipantPermissions(this.props.cid, permissionValue);
+      Actions.updateParticipantPermissions(this.props._id, permissionValue);
     },
 
     _onRemoveClicked: function() {
+      console.log(this.props._id);
       var title = "You're about to remove a participant.";
       var body = "Are you sure you want to remove " + this.props.firstName + " from this hub?";
-      Actions.showConfirmationModal(title, body, Actions.removeParticipant.bind(null, this.props.cid));
+      Actions.showConfirmationModal(title, body, Actions.removeParticipant.bind(null, this.props._id));
     }
   });
 

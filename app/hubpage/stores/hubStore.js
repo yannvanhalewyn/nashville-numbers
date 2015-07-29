@@ -68,18 +68,15 @@
           break;
 
         case Constants.CANCEL_INVITATION:
-          var invitation = this.invitations.get(payload.cid)
-          invitation.destroy();
+          this.invitations.get(payload._id).destroy();
           break;
 
         case Constants.UPDATE_INVITED_USER_PERMISSIONS:
-          var invitation = this.invitations.get(payload.cid);
-          invitation.save({permissions: payload.value});
+          this.invitations.get(payload._id).save({permissions: payload.value});
           break;
 
         case Constants.REMOVE_PARTICIPANT:
-          var participant = this.participants.get(payload.cid);
-          participant.destroy();
+          this.participants.get(payload._id).destroy();
           break;
 
         case Constants.SHOW_CONFIRMATION_MODAL:
@@ -115,11 +112,7 @@
     getState: function() {
 
       // Invitations are all atributes on all models in the invitations collection
-      var invitations = this.invitations.models.map(function(invitation) {
-        var obj = invitation.toJSON();
-        obj.cid = invitation.cid;
-        return obj;
-      });
+      var invitations = this.invitations.toJSON();
 
       // Filter friends suggestions list to friends no yet invited
       var friends = this.friends.models.filter(function(friend) {
@@ -134,11 +127,7 @@
         return friend.attributes;
       });
 
-      var participants = this.participants.models.map(function(p) {
-        var obj = p.attributes;
-        obj.cid = p.cid;
-        return obj;
-      });
+      var participants = this.participants.toJSON();
 
       // Return the state
       return {

@@ -13,7 +13,7 @@
           lastName={participant.properties.lastName}
           relationship={participant.relationship}
           thumb={participant.properties.thumb}
-          cid={participant.cid}
+          _id={participant._id}
         />
       )
     },

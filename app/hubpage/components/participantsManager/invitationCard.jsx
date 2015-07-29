@@ -7,6 +7,13 @@
     , PermissionsSelector = require('./permissionsSelector.jsx')
 
   var InvitationCard = React.createClass({
+    propTypes: {
+      firstName: React.PropTypes.string,
+      lastName: React.PropTypes.string,
+      thub: React.PropTypes.string,
+      _id: React.PropTypes.number
+    },
+
     render: function() {
       return (
         <li className="invitation-card">
@@ -25,11 +32,11 @@
     },
 
     _onCancelInvitation: function() {
-      Actions.cancelInvitation(this.props.cid);
+      Actions.cancelInvitation(this.props._id);
     },
 
     _onSelect: function(permissionValue) {
-      Actions.updateInvitedUserPermissions(this.props.cid, permissionValue);
+      Actions.updateInvitedUserPermissions(this.props._id, permissionValue);
     }
   });
 
