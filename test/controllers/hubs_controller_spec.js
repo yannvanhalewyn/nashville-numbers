@@ -76,6 +76,42 @@ describe('HUBS_CONTROLLER', function() {
       expect(res.redirect).to.have.been.calledWith("/hubs/" + dummyHub()._id);
     });
   }); // End of describe 'POST/create'
+
+  describe('DELETE/destroy', function() {
+    var destroyStub;
+    beforeEach(function() {
+      destroyStub = sinon.stub().returns(Q());
+      req.target_hub = {destroy: destroyStub}
+    });
+
+    context("when request is xhr", function() {
+      beforeEach(function(done) {
+        req.xhr = true;
+        Controller.destroy(req, res);
+        res.on('end', done)
+      });
+
+      it("destroys the target hub", function() {
+        expect(destroyStub).to.have.been.called;
+      });
+
+      it("sends a JSON destroyed flag", function() {
+        expect(res.json).to.have.been.calledWith({destroyed: true});
+      });
+    }); // End of context 'when request is xhr'
+
+    context("when request is not xhr", function() {
+      beforeEach(function(done) {
+        req.xhr = false;
+        Controller.destroy(req, res);
+        res.on('end', done)
+      });
+
+      it("redirects to the hubs page", function() {
+        expect(res.redirect).to.have.been.calledWith("/hubs");
+      });
+    }); // End of context 'when request is not xhr'
+  }); // End of describe 'DELETE/destroy'
 }); // End of describe 'HUBS_CONTROLLER'
 
 function dummyHub() {

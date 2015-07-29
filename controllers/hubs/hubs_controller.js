@@ -1,8 +1,10 @@
 (function() {
 
-  var include      = require('include')
-    , ensureAuth   = include('/middlewares/auth')
+  var include                      = require('include')
+    , ensureAuth                   = include('/middlewares/auth')
     , getTargetHubWithRelationship = include('/middlewares/hubs/getTargetHubWithRelationship')
+    , ensureCreated                = include('/middlewares/hubs/ensureCreated')
+    , errorStatus                  = include('/middlewares/errors/errorStatus')
 
   module.exports = {
 
@@ -11,7 +13,7 @@
       show:    [ensureAuth, getTargetHubWithRelationship],
       create:  [ensureAuth],
       update:  [],
-      destroy: []
+      destroy: [ensureAuth, getTargetHubWithRelationship, ensureCreated]
     },
 
     index: function(req, res) {
@@ -37,7 +39,12 @@
     },
 
     destroy: function(req, res) {
-      res.send("DESTROY " + req.params.hub_id);
+      req.target_hub.destroy().then(function() {
+        if (req.xhr) {
+          return res.json({destroyed: true});
+        }
+        return res.redirect("/hubs");
+      });
     }
   };
 
