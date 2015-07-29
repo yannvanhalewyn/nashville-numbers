@@ -4,7 +4,8 @@
   "description": "An online hub/universe for creating and sharing lead sheets with collegues and band-members.",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "build": "gulp production"
   },
   "author": "Yann Vanhalewyn",
   "license": "ISC",
@@ -29,31 +30,29 @@
     "passport": "^0.2.2",
     "passport-facebook": "^2.0.0",
     "q": "^1.4.1",
-    "react": "^0.13.3"
-  },
-  "devDependencies": {
-    "autoprefixer-core": "^5.2.1",
-    "browserify": "^10.2.4",
-    "browserify-shim": "^3.8.9",
-    "chai": "^3.0.0",
-    "chai-things": "^0.2.0",
-    "chance": "^0.7.6",
-    "cli-table": "^0.3.1",
+    "react": "^0.13.3",
     "gulp": "^3.9.0",
     "gulp-livereload": "^3.8.0",
     "gulp-nodemon": "^2.0.3",
     "gulp-postcss": "^5.1.9",
     "gulp-sass": "^2.0.3",
     "gulp-util": "^3.0.6",
+    "autoprefixer-core": "^5.2.1",
+    "browserify": "^10.2.4",
+    "browserify-shim": "^3.8.9",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.2.3",
+    "reactify": "^1.1.1"
+  },
+  "devDependencies": {
+    "chai": "^3.0.0",
+    "chai-things": "^0.2.0",
+    "chance": "^0.7.6",
+    "cli-table": "^0.3.1",
     "mocha": "^2.2.5",
-    "monky": "^0.6.7",
-    "reactify": "^1.1.1",
     "reqres": "^1.2.1",
     "sinon": "^1.15.3",
-    "sinon-chai": "^2.8.0",
-    "supertest": "^1.0.1",
-    "vinyl-source-stream": "^1.1.0",
-    "watchify": "^3.2.3"
+    "sinon-chai": "^2.8.0"
   },
   "browserify-shim": {
     "react": "global:React",

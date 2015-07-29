@@ -2,6 +2,8 @@
 
   "use strict";
 
+  console.log("Using development config.");
+
   var _port = 3000;
   var _base_url = 'http://localhost';
   var _root_path = _base_url + ':' + _port;
