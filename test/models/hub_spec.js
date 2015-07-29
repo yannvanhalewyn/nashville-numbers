@@ -313,18 +313,16 @@ describe('HUB', function() {
   }); // End of describe '#removeSheet()'
 
   describe('#getSheets()', function() {
-    var HUB, SHEET_A, SHEET_B, RELATIONSHIP_A, RELATIONSHIP_B, RESULT;
+    var HUB, SHEET_A, SHEET_B, RESULT;
     before(function() {
       return Factory('hub').then(function(entities) {
         return Factory('sheet', {uid: entities.user._id}).then(function(sheetA) {
           return Factory('sheet', {uid: entities.user._id}).then(function(sheetB) {
             HUB = entities.hub;
-            return HUB.addSheet(sheetA._id).then(function(relationshipA) {
-              return HUB.addSheet(sheetB._id).then(function(relationshipB) {
+            return HUB.addSheet(sheetA._id).then(function() {
+              return HUB.addSheet(sheetB._id).then(function() {
                 SHEET_A = sheetA;
                 SHEET_B = sheetB;
-                RELATIONSHIP_A = relationshipA;
-                RELATIONSHIP_B = relationshipB;
                 return HUB.getSheets().then(function(result) {
                   RESULT = result;
                 });
@@ -341,4 +339,44 @@ describe('HUB', function() {
       expect(RESULT).to.contain.an.item.with.property('_id', SHEET_B._id);
     });
   }); // End of describe '#getSheets()'
+
+  describe('#getSheet()', function() {
+    var HUB;
+    beforeEach(function() {
+      return Factory('hub').then(function(entities) {
+        HUB = entities.hub;
+      });
+    });
+
+    context("when the sheet is in the hub", function() {
+      var SHEET, RESULT;
+      beforeEach(function() {
+        return Factory('sheet').then(function(entities) {
+          SHEET = entities.sheet;
+          return HUB.addSheet(SHEET._id).then(function() {
+            return HUB.getSheet(SHEET._id.toString()).then(function(result) {
+              RESULT = result;
+            });
+          });
+        });
+      });
+
+      it("finds the sheet", function() {
+        expect(RESULT._id).to.eql(SHEET._id)
+      });
+    }); // End of context 'when the sheet is in the hub'
+
+    context("when the sheet is not in the hub", function() {
+      var ERROR;
+      beforeEach(function() {
+        return HUB.getSheet(999).catch(function(error) {
+          ERROR = error;
+        });
+      });
+
+      it("throws a not found error", function() {
+        expect(ERROR).to.eql("Could not find sheet " + 999 + " in hub " + HUB._id);
+      });
+    }); // End of context 'when the sheet is not in the hub'
+  }); // End of describe '#getSheet()'
 }); // End of describe 'HUB'

@@ -109,6 +109,25 @@
   }
 
   /**
+   * Finds a specific sheet in the hub.
+   *
+   * @param {string/number} sheetID The ID of the sheet we're looking for.
+   * @return {object} An object representing the searched for sheet data.
+   * @throws {NotFound} When no hub-sheet relationship was found.
+   */
+  Hub.prototype.getSheet = function(sheetID) {
+    return db.query(
+      "MATCH (hub:Hub)-[:CONTAINS]->(sheet:Sheet) " +
+      "WHERE id(hub) = {hid} AND id(sheet) = {sid}" +
+      "RETURN sheet",
+      {hid: this._id, sid: parseInt(sheetID)}
+    ).then(function(result) {
+      if (_.isEmpty(result)) throw "Could not find sheet " + sheetID + " in hub " + this._id;
+      return result[0].sheet;
+    }.bind(this));
+  }
+
+  /**
    * Creates a new hub
    *
    * @param {object} params The params to create the hub. It needs a 'creator_id' property to create the CREATED relationship to the hub.
