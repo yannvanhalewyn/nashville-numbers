@@ -13,8 +13,8 @@
     ROOT_PATH: _root_path,
     db_url: 'http://neo4j:Diabolo1n@localhost:7474',
     facebook: {
-      clientID: "854040621311184",
-      clientSecret: "931475fc8ca3b75f7472d3ed544f69d3",
+      clientID: "865909986790914",
+      clientSecret: "3233c5b956a5fccbecdc1f1e7a9652d8",
       callbackURL: _root_path + '/auth/facebook/callback',
       profileFields: ['id', 'name', 'displayName', 'photos', 'hometown', 'friends'],
       enableProof: false
