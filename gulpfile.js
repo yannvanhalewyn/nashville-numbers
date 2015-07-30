@@ -76,6 +76,7 @@ gulp.task('watchify', function() {
 });
 
 gulp.task('bundle', function() {
+  console.log("Running gulp bundle");
   // The starting files = feature in-points
   var files = [
     './app/sheetEditor/editor.js',
@@ -116,6 +117,7 @@ gulp.task('css:livereload', function() {
  * Converts compiles files into css
  */
 gulp.task('sass', function() {
+  console.log("Running gulp sass");
   gulp.src('app/scss/index.scss')
     .pipe(sass())
     .on('error', console.error)
@@ -166,5 +168,5 @@ gulp.task('routes', function() {
  */
 gulp.task('code', ['watchify', 'server']);
 gulp.task('design', ['sass:watch', 'css:livereload']);
-gulp.task('production', ['sass', 'bundle'])
+gulp.task('heroku:production', ['sass', 'bundle'])
 gulp.task('default', ['design', 'code']);

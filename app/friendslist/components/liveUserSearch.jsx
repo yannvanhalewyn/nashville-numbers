@@ -10,9 +10,9 @@
   var TABINDEX = -1;
 
   var React     = require('react')
-    , SearchBar = require('./searchBar.react')
+    , SearchBar = require('./searchBar.jsx')
     , FriendActions = require('../actions/friendActions')
-    , FriendSuggestions = require('./friendSuggestions.react')
+    , FriendSuggestions = require('./friendSuggestions.jsx')
 
   var LiveUserSearchComponent = React.createClass({
     getInitialState: function() {

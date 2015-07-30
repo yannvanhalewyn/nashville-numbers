@@ -3,10 +3,10 @@
   "use strict";
 
   var React                     = require('react')
-    , AddFriendButton           = require('./friendshipStatus/addFriendButton.react')
-    , RequestPendingLabel       = require('./friendshipStatus/requestPendingLabel.react')
-    , RespondToFriendshipButton = require('./friendshipStatus/respondToFriendshipButton.react')
-    , UpdateFriendshipButton    = require('./friendshipStatus/UpdateFriendshipButton.react')
+    , AddFriendButton           = require('./friendshipStatus/addFriendButton.jsx')
+    , RequestPendingLabel       = require('./friendshipStatus/requestPendingLabel.jsx')
+    , RespondToFriendshipButton = require('./friendshipStatus/respondToFriendshipButton.jsx')
+    , UpdateFriendshipButton    = require('./friendshipStatus/updateFriendshipButton.jsx')
 
   var FriendshipStatusComponent = React.createClass({
 

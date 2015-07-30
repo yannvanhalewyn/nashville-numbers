@@ -6,7 +6,7 @@
     , Header = require('./Header.jsx')
     , SheetsSection = require('./SheetsSection.jsx')
     , ParticipantsSection = require('./ParticipantsSection.jsx')
-    , Modal = require('../../utility_react_components/modal.react')
+    , Modal = require('../../utility_react_components/modal.jsx')
 
   // TODO maybe split the update functions up in GetStateParticipants and GetStateSheets?
   var HubPageComponent = React.createClass({

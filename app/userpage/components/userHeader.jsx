@@ -3,8 +3,8 @@
   "use strict";
 
   var React = require('react')
-    , UserWidget = require('./userWidget.react')
-    , UserStats = require('./userStats.react');
+    , UserWidget = require('./userWidget.jsx')
+    , UserStats = require('./userStats.jsx');
 
   var UserHeaderComponent = React.createClass({
     render: function() {

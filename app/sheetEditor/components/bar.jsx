@@ -1,3 +1,4 @@
+
 /** @jsx React.DOM */
 
 (function() {
@@ -6,7 +7,7 @@
   var TAB_KEYCODE = 9
 
   var React = require('react');
-  var Chord = require('./chord.react');
+  var Chord = require('./chord.jsx');
   var ChordModel = require('../chord.js');
   var SheetActions = require('../actions/sheetActions');
   var classNames = require('classnames');

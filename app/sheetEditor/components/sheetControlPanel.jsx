@@ -5,8 +5,8 @@
 
   var React = require('react');
   var NetworkActions = require('../actions/networkActions');
-  var SheetControlEditActions = require('./sheetControlEditActions.react');
-  var Modal = require('../../utility_react_components/modal.react');
+  var SheetControlEditActions = require('./sheetControlEditActions.jsx');
+  var Modal = require('../../utility_react_components/modal.jsx');
 
   var $ = require('jquery');
 

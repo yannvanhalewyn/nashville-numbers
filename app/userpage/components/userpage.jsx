@@ -3,7 +3,7 @@
   "use strict";
 
   var React      = require('react')
-    , UserHeader = require('./userHeader.react')
+    , UserHeader = require('./userHeader.jsx')
     , Backbone = require('backbone')
 
   var UserPageComponent = React.createClass({

@@ -3,7 +3,7 @@
   "use strict";
 
   var React = require('react')
-  , FriendSuggestion = require('./friendSuggestion.react')
+  , FriendSuggestion = require('./friendSuggestion.jsx')
 
   var FriendSuggestionsComponent = React.createClass({
 

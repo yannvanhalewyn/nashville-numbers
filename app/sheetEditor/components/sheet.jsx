@@ -4,7 +4,7 @@
   /** @jsx React.DOM */
 
   var React = require('react');
-  var Section = require('./section.react')
+  var Section = require('./section.jsx')
 
   var Sheet = React.createClass({
 

@@ -3,7 +3,7 @@
   /** @jsx React.DOM */
 
   var React = require('react');
-  var Row = require('./row.react')
+  var Row = require('./row.jsx')
   var Immutable = require('immutable');
 
   var Section = React.createClass({

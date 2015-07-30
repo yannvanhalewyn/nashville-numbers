@@ -4,8 +4,8 @@
   "description": "An online hub/universe for creating and sharing lead sheets with collegues and band-members.",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "build": "gulp production"
+    "install": "node node_modules/gulp/bin/gulp heroku:production",
+    "start": "node server.js"
   },
   "author": "Yann Vanhalewyn",
   "license": "ISC",

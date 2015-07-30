@@ -1,7 +1,7 @@
 /** @jsx React.DOM */
 
 var React = require('react');
-var SheetEditor = require('./components/sheetEditor.react');
+var SheetEditor = require('./components/sheetEditor.jsx');
 var SheetStore = require('./stores/sheetStore');
 
 var data;

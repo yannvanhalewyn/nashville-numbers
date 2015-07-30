@@ -4,8 +4,8 @@
   /** @jsx React.DOM */
 
   var React = require('react');
-  var SheetControlPanel = require('./sheetControlPanel.react');
-  var Sheet = require('./sheet.react');
+  var SheetControlPanel = require('./sheetControlPanel.jsx');
+  var Sheet = require('./sheet.jsx');
   var SheetStore = require('../stores/sheetStore');
 
   var SheetEditor = React.createClass({

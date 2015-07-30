@@ -3,7 +3,7 @@
   "use strict";
 
   var React              = require('react')
-    , FriendsList        = require('./components/friendsList.react')
+    , FriendsList        = require('./components/friendsList.jsx')
     , UserStore          = require('./stores/userStore')
     , FriendRequestStore = require('./stores/friendsRequestStore')
 

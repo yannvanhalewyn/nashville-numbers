@@ -3,7 +3,7 @@
   "use strict";
 
   var React = require('react')
-    , FriendshipStatus = require('./friendshipStatus.react')
+    , FriendshipStatus = require('./friendshipStatus.jsx')
 
   var UserWidgetComponent = React.createClass({
     render: function() {

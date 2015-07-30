@@ -3,8 +3,8 @@
   "use strict";
 
   var React = require('react')
-    , LiveUserSearch = require('./liveUserSearch.react')
-    , PendingFriendRequests = require('./pendingFriendRequests.react')
+    , LiveUserSearch = require('./liveUserSearch.jsx')
+    , PendingFriendRequests = require('./pendingFriendRequests.jsx')
 
   var FriendsListComponent = React.createClass({
     render: function() {

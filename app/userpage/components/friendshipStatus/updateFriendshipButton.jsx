@@ -4,7 +4,7 @@
 
   var React = require('react')
     , Actions = require('../../actions/userpageActions')
-    , Modal = require('../../../utility_react_components/modal.react');
+    , Modal = require('../../../utility_react_components/modal.jsx');
 
   var UpdateFriendshipButton = React.createClass({
     renderFriendshipLabel: function() {

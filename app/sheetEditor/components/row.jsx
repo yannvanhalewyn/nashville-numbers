@@ -1,7 +1,7 @@
 (function() {
 
   var React = require('react');
-  var Bar = require('./bar.react');
+  var Bar = require('./bar.jsx');
 
   var Row = React.createClass({
 
