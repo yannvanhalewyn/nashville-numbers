@@ -13,7 +13,7 @@ try {
 }
 
 React.render(
-  <SheetEditor store={store}/>,
+  <SheetEditor store={store} dbid={data._id}/>,
   document.getElementById('sheet-container')
 );
 

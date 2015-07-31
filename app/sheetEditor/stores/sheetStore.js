@@ -20,7 +20,12 @@
     },
 
     getState: function() {
-      return deNormalize(SheetStoreDataManager.getData());
+      var json = this.toJSON();
+      return {
+        artist: json.properties.artist,
+        title: json.properties.title,
+        sheetData: deNormalize(SheetStoreDataManager.getData())
+      }
     },
 
     storeRefToSelectedChord: function(chordID, parentIDs) {
@@ -95,6 +100,7 @@
           var properties = this.get("properties");
           properties.data = JSON.stringify(SheetStoreDataManager.getData());
           this.set("properties", properties);
+          console.log(this);
           this.save();
           break;
 

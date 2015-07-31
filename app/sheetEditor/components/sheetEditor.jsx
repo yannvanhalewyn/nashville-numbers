@@ -10,7 +10,8 @@
   var SheetEditor = React.createClass({
 
     propTypes: {
-      store: React.PropTypes.object.isRequired
+      store: React.PropTypes.object.isRequired,
+      dbid: React.PropTypes.number.isRequired
     },
 
     getInitialState: function() {
@@ -32,7 +33,7 @@
           <h1 className="sheet-title">
             {this.state.title} <small className="artist">{this.state.artist}</small>
           </h1>
-          <Sheet sections={this.state.sections}/>
+          <Sheet sections={this.state.sheetData.sections}/>
         </div>
       )
     },
