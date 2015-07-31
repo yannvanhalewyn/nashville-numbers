@@ -17,7 +17,7 @@
     },
 
     getData: function() {
-      return SHEET_DATA;
+      return SHEET_DATA.toJS();
     },
 
     updateChordText: function(id, text) {

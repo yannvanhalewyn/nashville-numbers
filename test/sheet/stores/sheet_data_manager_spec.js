@@ -9,7 +9,7 @@ describe('SheetStoreDataManager', function() {
 
   describe('#set/getData()', function() {
     it('is empty on start', function() {
-      expect(DataManager.getData().size).to.eql(0);
+      expect(DataManager.getData()).to.be.empty;
     });
 
     it('stores the data', function() {
@@ -535,7 +535,7 @@ describe('SheetStoreDataManager', function() {
 }); // End of specs in this file
 
 function data() {
-  return DataManager.getData().toJS();
+  return DataManager.getData();
 }
 
 function originalData() {
