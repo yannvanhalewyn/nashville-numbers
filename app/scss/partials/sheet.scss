@@ -99,7 +99,7 @@
     text-align: center;
     text-transform: uppercase;
     .artist {
-        color: #bbb;
+        color: darken(white, 30);
         font-size: 0.7em;
         text-transform: none;
     }
@@ -113,57 +113,55 @@
     margin-bottom: 5px;
 }
 
-.row {
-    @include grid;
+.symbols {
+    display: flex;
+    // Dirty way to provide spacing between rows when there are no symbols
+    // Not good.. ?
+    min-height: 10px;
+    .symbol-container {
+        flex: 1;
+    }
+}
+
+.bars {
+    display: flex;
 }
 
 // * BAR
 // ------------------*/
 .bar {
-    @include span(1,4);
+    flex: 1;
+    display: flex;
     &.multi-chords {
         border-bottom: 3px solid black;
     }
-    position: relative; // For the absolute symbols
 }
 
-.segno,
-.coda {
-  &:after {
+// Coda and segno
+.coda,
+.segno {
     font-family: Norfolk;
-    position: absolute;
-    top: -1.5em;
-    right: -0.5em;
-    height: 100px;
     font-size: 2.5em;
-    color: lighten(black, 15);
-  }
 }
 
-.coda:after { content: "Ø"; }
-.segno:after { content: "@"; }
+.coda { 
+    margin-left: auto; 
+    float: right;
+} // Come back from the right border 
 
 // /* CHORD
 // ------------------*/
 .chord {
-    @include span(1, 2);
-    height: 60px;
-    border: none;
+    flex: 1;
+    height: 50px;
+    margin: auto;
+    text-align: center;
     border-radius: 5px;
     font-family: NashvillechordSymbols;
     font-size: 2em;
-    cursor: pointer;
-    background: inherit;
-    text-align: center;
 
-    &:focus {
-        outline: none;
-    }
-
-    &.chord-empty {
-        box-shadow: 0px 0px 7px #999;
-    }
-
+    &:focus {outline: none; }
+    &.chord-empty {box-shadow: 0px 0px 7px #999; }
     &.chord-editing {
         background: $CHORD-EDITING;
         font-family: inherit;
@@ -172,9 +170,9 @@
     }
 }
 
-// ======
-// TABLET
-// ======
+// // ======
+// // TABLET
+// // ======
 @include tablet {
     .sheet-control-panel {
         padding: 5px;
@@ -182,11 +180,12 @@
         #save-button { @include skipAndSpan(3, 2); }
         #play-mode-toggle { @include skip(4); }
     }
+    .chord { max-width: 50%; }
 }
 
-// =======
-// DESKTOP
-// =======
+// // =======
+// // DESKTOP
+// // =======
 @include desktop {
     .sheet-control-panel {
         padding-left: 20px;
@@ -195,6 +194,6 @@
         #play-mode-toggle { @include skip(1); }
     }
     .chord {
-        @include span(3);
+        // @include span(3);
     }
 }

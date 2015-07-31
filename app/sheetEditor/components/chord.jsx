@@ -45,26 +45,24 @@
         'chord-editing': this.state.editing,
         'chord-empty': !this.state.value
       };
+      // TODO before production: check security of innerHTML. Maybe I don't need
+      // any superscript, I could just have the font do the work and go back to
+      // simple input boxes.
       return (
-        <input
-          type="text"
+        <div
+          contentEditable="true"
           className={classNames(classes)}
-          onChange={this._onChange}
           onFocus={this._gainedFocus}
           onBlur={this._lostFocus}
           onKeyDown={this._onKeyDown}
-          value={this.state.editing ? this.state.value :
-            this._musicNotationString()}
+          dangerouslySetInnerHTML={{__html: this.state.editing ? this.state.value :
+            this._musicNotationString()}}
         />
       )
     },
 
     _musicNotationString: function() {
       return new Chord(this.state.value).musicNotationString();
-    },
-
-    _onChange: function(e) {
-      this.setState({value: e.target.value});
     },
 
     _onKeyDown: function(e) {
@@ -108,18 +106,15 @@
       }
     },
 
-    _onDoubleClick: function(e) {
-      alert("Double Click! " + this.state.value);
-    },
-
     _gainedFocus: function() {
       SheetActions.storeChordRefAsSelected(this.props.id, this.props.parentIDs.toJS());
       this.setState({editing: true});
     },
 
-    _lostFocus: function() {
-      SheetActions.updateChordText(this.props.id, this.state.value);
-      this.setState({editing: false});
+    _lostFocus: function(e) {
+      var text = this.getDOMNode().innerHTML;
+      SheetActions.updateChordText(this.props.id, text);
+      this.setState({editing: false, value: text});
     },
 
 

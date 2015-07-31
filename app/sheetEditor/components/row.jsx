@@ -15,6 +15,15 @@
       return {bars: this.props.initialBars}
     },
 
+    renderSymbolsRow: function() {
+      return (
+        <div className="symbol-container">
+          <span className="segno">@</span>
+          <span className="coda">Ø</span>
+        </div>
+      )
+    },
+
     renderBar: function(bar) {
       return <Bar
              key={bar.id}
@@ -27,7 +36,12 @@
     render: function() {
       return (
         <div className="row" >
-          {this.props.bars.map(this.renderBar)}
+          <div className="symbols">
+            {this.props.bars.map(this.renderSymbolsRow)}
+          </div>
+          <div className="bars">
+            {this.props.bars.map(this.renderBar)}
+          </div>
         </div>
       );
     },

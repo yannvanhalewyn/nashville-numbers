@@ -49,19 +49,3 @@ $pad: 10px;
     width: inherit;
     margin: inherit;
 }
-
-// .grid {
-//     background: orange;
-//     @include grid;
-// }
-
-// $baseline: 40px;
-
-// .col {
-//     @include col(1);
-//     background: red;
-//     font-size: $baseline;
-//     line-height: $baseline*3;
-//     margin-bottom: $baseline;
-//     margin-top: $baseline;
-// }
