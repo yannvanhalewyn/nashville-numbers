@@ -45,11 +45,7 @@
 
     // PUT#update
     update: function(req, res) {
-      req.target_sheet.update({
-        title: req.body.main.title,
-        artist: req.body.main.artist,
-        data: JSON.stringify(req.body),
-      }).then(function(updatedSheet) {
+      req.target_sheet.update(req.body.properties).then(function(updatedSheet) {
         res.json(updatedSheet);
       });
     },

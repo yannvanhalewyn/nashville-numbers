@@ -102,19 +102,15 @@ describe('SheetsController', function() {
         SHEET = entities.sheet;
         sinon.stub(SHEET, 'update').returns(Q({dummySheet: true}));
         req.target_sheet = SHEET;
-        req.body = dummySheetData();
+        req.body = dummyUpdateBody();
         Controller.update(req, res);
         res.on('end', done);
       });
     });
 
-    it("calls target_sheet.update with the stringified data and sets the title and artist attributes", function() {
-      var data = dummySheetData();
-      expect(SHEET.update).to.have.been.calledWith({
-        title: data.main.title,
-        artist: data.main.artist,
-        data: JSON.stringify(dummySheetData())
-      });
+    it("calls target_sheet.update with the new properties in req.body.properties", function() {
+      var data = dummyUpdateBody();
+      expect(SHEET.update).to.have.been.calledWith(dummyUpdateBody().properties);
     });
 
     it("sends along the updated (resulting) data as json", function() {
@@ -144,18 +140,25 @@ describe('SheetsController', function() {
   }); // End of describe 'DELETE/destroy'
 }); // End of describe 'SheetsController'
 
-function dummySheetData() {
+function dummyUpdateBody() {
   return {
-    main: {
-      title: "The Title",
-      artist: "The Artist",
-      sections: ["section1"]
-    },
-    sections: {
-      "section1": {
-        id: "section1",
-        rows: []
-      }
+    _id: 123,
+    properties: {
+      title: "The title",
+      artist: "The artist",
+      data: JSON.stringify({
+        main: {
+          title: "The Title",
+          artist: "The Artist",
+          sections: ["section1"]
+        },
+        sections: {
+          "section1": {
+            id: "section1",
+            rows: []
+          }
+        }
+      })
     }
   }
 }
