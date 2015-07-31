@@ -85,6 +85,14 @@ describe('Sheet', function() {
         });
       });
     });
+
+    it("returns the new sheet properties", function() {
+      return SHEET.update({title: "foo", artist: "bar"}).then(function(returned) {
+        expect(returned._id).to.eql(SHEET._id);
+        expect(returned.properties.title).to.eql("foo");
+        expect(returned.properties.artist).to.eql("bar");
+      });
+    });
   }); // End of describe '#update()'
 
   describe('#destroy()', function() {

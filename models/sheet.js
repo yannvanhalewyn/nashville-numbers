@@ -30,7 +30,7 @@
    * Updates the sheet in the database with the new params.
    *
    * @param {object} params The new params that want to be updated.
-   * @return {Sheet} An updated instance of the Sheet
+   * @return {object} An object representing the updated sheet.
    */
   Sheet.prototype.update = function(params) {
     var setTemplate = "s.{key} = '{val}'"
@@ -42,7 +42,9 @@
     var setString = "SET " + queries.join(',');
     return db.query(
       "MATCH (s:Sheet) WHERE id(s) = {sid} " + setString + " RETURN s", {sid: this._id}
-    );
+    ).then(function(result) {
+      return result[0].s;
+    });
   }
 
   /**
