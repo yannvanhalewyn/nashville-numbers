@@ -29,16 +29,6 @@
       }
     },
 
-    // clearAndFocusInput: function() {
-    //   this.setState({userInput: ''}, function() {
-    //     React.findDOMNode(this.refs.textInput).focus();
-    //   });
-    // },
-    //
-    componentDidMount: function() {
-      this.getDOMNode().focus();
-    },
-
     render: function() {
       var classes = {
         'chord': true,

@@ -51,6 +51,10 @@
         chordID: chordID,
         parentIDs: parentIDs
       })
+    },
+
+    saveSheet: function() {
+      SheetDispatcher.dispatch({ actionType: SheetConstants.SAVE_SHEET });
     }
 
   };

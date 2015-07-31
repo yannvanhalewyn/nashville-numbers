@@ -6,26 +6,23 @@
   var React = require('react');
   var SheetControlPanel = require('./sheetControlPanel.jsx');
   var Sheet = require('./sheet.jsx');
-  var SheetStore = require('../stores/sheetStore');
 
   var SheetEditor = React.createClass({
 
     propTypes: {
-      title: React.PropTypes.string,
-      artist: React.PropTypes.string,
-      dbid: React.PropTypes.string.isRequired
+      store: React.PropTypes.object.isRequired
     },
 
     getInitialState: function() {
-      return SheetStore.getState();
+      return this.props.store.getState();
     },
 
     componentDidMount: function() {
-      SheetStore.addEventListener(this._onChange)
+      this.props.store.on('change', this._update);
     },
 
     compnentWillUnmount: function() {
-      SheetStore.removeEventListener(this._onChange);
+      this.props.store.off('change', this._update)
     },
 
     render: function() {
@@ -40,8 +37,8 @@
       )
     },
 
-    _onChange: function() {
-      this.setState(SheetStore.getState());
+    _update: function() {
+      this.setState(this.props.store.getState());
     },
 
   });

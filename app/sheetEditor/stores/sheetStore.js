@@ -1,41 +1,26 @@
 (function() {
 
-  var assign = require('lodash').assign;
-  var $ = require('jquery');
-
-  var EventEmitter = require('events').EventEmitter;
-  var SheetConstants = require('../sheetConstants');
-  var SheetStoreDataManager = require('./sheetStoreDataManager');
-  var deNormalize = require('../../helpers/deNormalize');
+  var Backbone = require('backbone')
+    , Constants = require('../sheetConstants')
+    , SheetStoreDataManager = require('./sheetStoreDataManager')
+    , deNormalize = require('../../helpers/deNormalize')
+    , Dispatcher = require('../dispatcher/sheetDispatcher')
+    , _ = require('lodash')
 
   var CHANGE_EVENT = 'change';
 
-  var SheetStore = assign({}, EventEmitter.prototype, {
+  var SheetStore = Backbone.Model.extend({
+
+    idAttribute: "_id",
+    urlRoot: "/sheets/",
+
+    initialize: function(data) {
+      SheetStoreDataManager.setData(JSON.parse(data.properties.data));
+      this.dispatchToken = Dispatcher.register(this.dispatchCallback.bind(this));
+    },
 
     getState: function() {
-      return deNormalize(SheetStoreDataManager.getData().toJS());
-    },
-
-    setInitialData: function(sheet) {
-      this.dbid = sheet._id;
-      SheetStoreDataManager.setData(JSON.parse(sheet.properties.data));
-    },
-
-    setDefaultData: function() {
-      var defaultData = {main: {title: "title", artist: "artist"}};
-      SheetStoreDataManager.setData(defaultData);
-    },
-
-    emitChange: function() {
-      this.emit(CHANGE_EVENT);
-    },
-
-    addEventListener: function(callback) {
-      this.on(CHANGE_EVENT, callback);
-    },
-
-    removeEventListener: function(callback) {
-      this.removeListene(CHANGE_EVENT, callback);
+      return deNormalize(SheetStoreDataManager.getData());
     },
 
     storeRefToSelectedChord: function(chordID, parentIDs) {
@@ -51,37 +36,73 @@
       return this.selectedChordRef ? this.selectedChordRef : {};
     },
 
-    // Networking
-    saveSheet: function() {
-      var data = SheetStoreDataManager.getData();
-      $.ajax({
-        url: '/sheets/' + this.dbid,
-        method: "PUT",
-        contentType: 'application/json',
-        data: JSON.stringify(data.toJS())
-      }).done(function(res) {
-        alert("saved!");
-      }).error(function(err) {
-        alert("not saved. Check console.");
-        console.log(err);
-      });
-    },
+    dispatchCallback: function(payload) {
+      var selected = this.getRefToSelectedChord();
 
-    // Not used right now, using a hidden form in control panel.
-    deleteSheet: function() {
-      var data = SheetStoreDataManager.getData();
-      var dbid = data.getIn(['main', 'dbid']);
-      $.ajax({
-        url: '/sheets/' + dbid,
-        method: "DELETE",
-        headers: {Accept: "text/html"}
-      }).done(function(res) {
-        console.log(res);
-      }).error(function(err) {
-        console.error(err);
-      });
+      switch(payload.actionType) {
+        case Constants.UPDATE_CHORD_TEXT:
+          SheetStoreDataManager.updateChordText(payload.id, payload.text);
+          break;
+
+        case Constants.APPEND_NEW_CHORD:
+          SheetStoreDataManager.addChord(selected.barID, selected.chordID);
+          this.trigger(CHANGE_EVENT);
+          break;
+
+        case Constants.APPEND_NEW_BAR:
+          SheetStoreDataManager.addBar(selected.rowID, selected.barID);
+          this.trigger(CHANGE_EVENT);
+          break;
+
+        case Constants.APPEND_NEW_ROW:
+          SheetStoreDataManager.addRow(selected.sectionID, selected.rowID);
+          this.trigger(CHANGE_EVENT);
+          break;
+
+        case Constants.APPEND_NEW_SECTION:
+          SheetStoreDataManager.addSection(selected.sectionID);
+          this.trigger(CHANGE_EVENT);
+          break;
+
+        case Constants.DELETE_SELECTED_CHORD:
+          SheetStoreDataManager.deleteChord(selected.chordID, selected.barID);
+          this.trigger(CHANGE_EVENT);
+          break;
+
+        case Constants.DELETE_SELECTED_BAR:
+          SheetStoreDataManager.deleteBar(selected.barID, selected.rowID);
+          this.trigger(CHANGE_EVENT);
+          break;
+
+        case Constants.DELETE_SELECTED_ROW:
+          SheetStoreDataManager.deleteRow(selected.rowID, selected.sectionID);
+          this.trigger(CHANGE_EVENT);
+          break;
+
+        case Constants.DELETE_SELECTED_SECTION:
+          SheetStoreDataManager.deleteSection(selected.sectionID);
+          this.trigger(CHANGE_EVENT);
+          break;
+
+        case Constants.STORE_CHORD_REF_AS_SELECTED:
+          this.storeRefToSelectedChord(payload.chordID, payload.parentIDs);
+          break;
+
+        case Constants.SAVE_SHEET:
+          // Manually set the nested data through an annoying trick because
+          // backbone can't set nested data. TODO improve this + do I need to
+          // stringify here or on the server?
+          var properties = this.get("properties");
+          properties.data = JSON.stringify(SheetStoreDataManager.getData());
+          this.set("properties", properties);
+          this.save();
+          break;
+
+        default:
+          console.error("No such task - " + payload.actionType);
+          break;
+      }
     }
-
   });
 
   module.exports = SheetStore;

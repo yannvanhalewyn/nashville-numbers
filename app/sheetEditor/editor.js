@@ -4,16 +4,16 @@ var React = require('react');
 var SheetEditor = require('./components/sheetEditor.jsx');
 var SheetStore = require('./stores/sheetStore');
 
-var data;
+var store;
 try {
-  data = JSON.parse(document.getElementById('initial-state').innerHTML);
-  SheetStore.setInitialData(data);
+  var data = JSON.parse(document.getElementById('initial-state').innerHTML);
+  store = new SheetStore(data);
 } catch(e) {
-  SheetStore.setDefaultData();
+  console.log("error on parse", e);
 }
 
 React.render(
-  <SheetEditor dbid={data._id}/>,
+  <SheetEditor store={store}/>,
   document.getElementById('sheet-container')
 );
 

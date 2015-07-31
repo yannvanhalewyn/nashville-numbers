@@ -4,7 +4,7 @@
   /** @jsx React.DOM */
 
   var React = require('react');
-  var NetworkActions = require('../actions/networkActions');
+  var Actions = require('../actions/sheetActions');
   var SheetControlEditActions = require('./sheetControlEditActions.jsx');
   var Modal = require('../../utility_react_components/modal.jsx');
 
@@ -44,7 +44,7 @@
     },
 
     _handleSave: function(e) {
-      NetworkActions.save();
+      Actions.saveSheet();
     },
 
     _deleteClicked: function() {

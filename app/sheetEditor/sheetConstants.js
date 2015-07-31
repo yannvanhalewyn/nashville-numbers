@@ -16,8 +16,7 @@
     STORE_CHORD_REF_AS_SELECTED: null,
 
     // NETWORK
-    SAVE: null,
-    DELETE: null
+    SAVE_SHEET: null
   });
 
   module.exports = SheetConstants;
