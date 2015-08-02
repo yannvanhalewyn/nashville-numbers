@@ -88,4 +88,18 @@ describe('CYPHER', function() {
       });
     }); // End of context 'when many params are given'
   }); // End of describe '#create()'
+
+  describe('#return()', function() {
+    context("when a string is given", function() {
+      it("returns a valid RETURN string", function() {
+        expect(Cypher.return('s')).to.eql("RETURN s");
+      });
+    }); // End of context 'when a string is given'
+
+    context("when an array of strings is given", function() {
+      it("returns a RETURN string containing all varnames", function() {
+        expect(Cypher.return(['a', 'b', 'c'])).to.eql("RETURN a, b, c");
+      }); 
+    }); // End of context ''
+  }); // End of describe '#return()'
 }); // End of describe 'CYPHER'

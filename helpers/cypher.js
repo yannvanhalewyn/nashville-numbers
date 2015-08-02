@@ -81,6 +81,21 @@
      */
     create: function(varname, label, params) {
       return "CREATE (" + varname + ":" + label + _paramsToMatchString(params) + ") ";
+    },
+
+    /**
+     * Return.
+     * Called with a string => RETURN x
+     * Called with an array of strings => RETURN x, y, z
+     *
+     * @param {string/array} param The varname or array of varnames wished to be returned.
+     * @return {string} The Cypher for returning variables.
+     */
+    return: function(param) {
+      if (_.isArray(param)) {
+        return "RETURN " + param.join(", ");
+      }
+      return "RETURN " + param;
     }
   }
 
