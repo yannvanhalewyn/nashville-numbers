@@ -35,8 +35,9 @@
 
   var _ = require('lodash');
 
-  // TODO dbid shouldn't be here.
   module.exports = function(data) {
+    if (!data.main) return {};
+
     var ret = {
       sections: []
     };

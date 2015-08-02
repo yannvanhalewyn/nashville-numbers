@@ -34,6 +34,16 @@ describe('#denormalize()', function() {
       expect(denormalize.bind(this, input)).not.to.throw();
     });
   }); // End of context 'when the sheet has no sections'
+
+  context("when the data is empty", function() {
+    it("doesn't throw an error", function() {
+      expect(denormalize.bind(this, {})).not.to.throw();
+    });
+
+    it("returns an empty object", function() {
+      expect(denormalize({})).to.eql({});
+    });
+  }); // End of context 'when the data is empty'
 });
 
 function _normalizedWithMissingSectionsInMain() {
