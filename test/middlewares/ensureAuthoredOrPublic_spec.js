@@ -17,7 +17,7 @@ describe('ensureAuthoredOrPublic', function() {
 
   context("when targetSheet is public", function() {
     it("calls next (1)", function() {
-      req.target_sheet = { properties: { public: true }};
+      req.target_sheet = { properties: { private: false }};
       var next = sinon.spy();
       middleware(req, res, next);
       expect(next).to.have.been.called;
@@ -26,7 +26,7 @@ describe('ensureAuthoredOrPublic', function() {
 
   context("when targetSheet is private", function() {
     beforeEach(function() {
-      req.target_sheet = { properties: { public: false } };
+      req.target_sheet = { properties: { private: true } };
     });
 
     context("when logged in user is author", function() {

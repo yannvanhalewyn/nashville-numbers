@@ -27,6 +27,11 @@ chai.use(sinonChai);
  * We need to stub all this out before require the controller, because
  * React.createFactory is called at 'require' time. I would love to stub this in
  * the test itself.
+ *
+ * TODO a problem occurs when this test runs with the entire test suite,
+ * specifically when before tests occur that have already required the helper
+ * file because the when React.createFactory runs, that method wasn't stubbed
+ * yet. Solve it!
  */
 
 var stubbedReactFactory = sinon.stub().returns("Stubbed React Element");
