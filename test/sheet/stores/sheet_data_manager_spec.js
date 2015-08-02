@@ -532,6 +532,82 @@ describe('SheetStoreDataManager', function() {
       });
     }); // End of #deleteSection()
   }); // End of 'data management'
+
+  describe('#toggleSegno()', function() {
+    context("when called with valid barID", function() {
+      context("when no flag has been set", function() {
+        it("sets the segno flag to true", function() {
+          DataManager.setData(originalData());
+          DataManager.toggleSegno('bar1');
+          expect(DataManager.getData().bars['bar1'].segno).to.eql(true);
+        });
+      }); // End of context 'when no flag has been set'
+
+      context("when a flag was set to false", function() {
+        it("sets the segno flag to true", function() {
+          var data = originalData();
+          data.bars.bar1.segno = false;
+          DataManager.setData(data);
+          DataManager.toggleSegno('bar1');
+          expect(DataManager.getData().bars['bar1'].segno).to.eql(true);
+        });
+      }); // End of context 'when a flag was set to false'
+
+      context("when the flag was set to true", function() {
+        it("sets the segno flag to false", function() {
+          var data = originalData();
+          data.bars.bar1.segno = true;
+          DataManager.setData(data);
+          DataManager.toggleSegno('bar1');
+          expect(DataManager.getData().bars['bar1'].segno).to.eql(false);
+        });
+      }); // End of context 'when the flag was set to true'
+    }); // End of context 'when called with valid barID'
+
+    context("when called with unexisting barID", function() {
+      it("throws an error", function() {
+        expect(DataManager.toggleSegno.bind(null, 'invalid')).to.throw("Could not toggle segno on bar invalid.");
+      });
+    }); // End of context 'when called with unexisting barID'
+  }); // End of describe '#toggleSegno()'
+
+  describe('#toggleCoda()', function() {
+    context("when called with valid barID", function() {
+      context("when no flag has been set", function() {
+        it("sets the coda flag to true", function() {
+          DataManager.setData(originalData());
+          DataManager.toggleCoda('bar1');
+          expect(DataManager.getData().bars['bar1'].coda).to.eql(true);
+        });
+      }); // End of context 'when no flag has been set'
+
+      context("when a flag was set to false", function() {
+        it("sets the coda flag to true", function() {
+          var data = originalData();
+          data.bars.bar1.coda = false;
+          DataManager.setData(data);
+          DataManager.toggleCoda('bar1');
+          expect(DataManager.getData().bars['bar1'].coda).to.eql(true);
+        });
+      }); // End of context 'when a flag was set to false'
+
+      context("when the flag was set to true", function() {
+        it("sets the coda flag to false", function() {
+          var data = originalData();
+          data.bars.bar1.coda = true;
+          DataManager.setData(data);
+          DataManager.toggleCoda('bar1');
+          expect(DataManager.getData().bars['bar1'].coda).to.eql(false);
+        });
+      }); // End of context 'when the flag was set to true'
+    }); // End of context 'when called with valid barID'
+
+    context("when called with unexisting barID", function() {
+      it("throws an error", function() {
+        expect(DataManager.toggleCoda.bind(null, 'invalid')).to.throw("Could not toggle coda on bar invalid.");
+      });
+    }); // End of context 'when called with unexisting barID'
+  }); // End of describe '#toggleSegno()'
 }); // End of specs in this file
 
 function data() {

@@ -125,7 +125,25 @@
             return list.splice(list.indexOf(sectionID), 1);
           });
       })
+    },
+/*
+ * =======
+ * SYMBOLS
+ * =======
+ */
+
+  toggleSegno: function(barID) {
+    if (!_toggleSymbolOnBar('segno', barID)) {
+      throw "Could not toggle segno on bar " + barID + ".";
     }
+  },
+
+  toggleCoda: function(barID) {
+    if (!_toggleSymbolOnBar('coda', barID)) {
+      throw "Could not toggle coda on bar " + barID + ".";
+    }
+  }
+
 
   };
 
@@ -193,6 +211,13 @@
 
   function _randomID() {
     return (+new Date() + Math.floor(Math.random() * 999999).toString(36));
+  }
+
+  function _toggleSymbolOnBar(symbolName, barID) {
+    if (!SHEET_DATA.getIn(['bars', barID])) { return false; }
+    var previousFlag = SHEET_DATA.getIn(['bars', barID, symbolName]);
+    SHEET_DATA = SHEET_DATA.setIn(['bars', barID, symbolName], !previousFlag);
+    return true;
   }
 
 }())
