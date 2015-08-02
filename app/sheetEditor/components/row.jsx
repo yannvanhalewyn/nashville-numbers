@@ -15,22 +15,22 @@
       return {bars: this.props.initialBars}
     },
 
-    renderSymbolsRow: function() {
+    renderSymbolsRow: function(bar) {
       return (
         <div className="symbol-container">
-          <span className="segno">@</span>
-          <span className="coda">Ø</span>
+          {bar.segno ? <span className="segno">@</span> : null }
+          {bar.coda ? <span className="coda">Ø</span> : null }
         </div>
       )
     },
 
     renderBar: function(bar) {
       return <Bar
-             key={bar.id}
-             chords={bar.chords}
-             id={bar.id}
-             parentIDs={this.props.parentIDs.set('rowID', this.props.id)}
-           />;
+               key={bar.id}
+               chords={bar.chords}
+               id={bar.id}
+               parentIDs={this.props.parentIDs.set('rowID', this.props.id)}
+             />
     },
 
     render: function() {

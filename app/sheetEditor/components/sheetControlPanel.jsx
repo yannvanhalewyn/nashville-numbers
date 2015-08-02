@@ -35,6 +35,8 @@
           </div>
           <div className="btn" id="save-button" onClick={this._handleSave}>Save!</div>
           <span className="fa fa-expand" id="play-mode-toggle"></span>
+          <button onClick={this._segnoClicked}>Segno</button>
+          <button onClick={this._codaClicked}>Coda</button>
         </div>
       )
     },
@@ -53,6 +55,14 @@
 
     _handleDelete: function() {
       this.refs.deleteForm.getDOMNode().submit();
+    },
+
+    _segnoClicked: function() {
+      Actions.toggleSegno();
+    },
+
+    _codaClicked: function() {
+      Actions.toggleCoda();
     }
 
   });

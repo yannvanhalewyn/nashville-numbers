@@ -55,6 +55,14 @@
 
     saveSheet: function() {
       SheetDispatcher.dispatch({ actionType: SheetConstants.SAVE_SHEET });
+    },
+
+    toggleSegno: function() {
+      SheetDispatcher.dispatch({actionType: SheetConstants.TOGGLE_SEGNO});
+    },
+
+    toggleCoda: function() {
+      SheetDispatcher.dispatch({actionType: SheetConstants.TOGGLE_CODA});
     }
 
   };

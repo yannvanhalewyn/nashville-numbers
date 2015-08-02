@@ -15,6 +15,10 @@
     DELETE_CHORD: null,
     STORE_CHORD_REF_AS_SELECTED: null,
 
+    //Symbols
+    TOGGLE_SEGNO: null,
+    TOGGLE_CODA: null,
+
     // NETWORK
     SAVE_SHEET: null
   });

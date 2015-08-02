@@ -104,6 +104,16 @@
           this.save();
           break;
 
+        case Constants.TOGGLE_SEGNO:
+          SheetStoreDataManager.toggleSegno(selected.barID);
+          this.trigger(CHANGE_EVENT);
+          break;
+
+        case Constants.TOGGLE_CODA:
+          SheetStoreDataManager.toggleCoda(selected.barID);
+          this.trigger(CHANGE_EVENT);
+          break;
+
         default:
           console.error("No such task - " + payload.actionType);
           break;
