@@ -27,9 +27,7 @@
    * @return {Sheet} An instance of Sheet containing the properties of the newly created sheet.
    */
   User.prototype.createSheet = function(params) {
-    var defaults = {title: "title", artist: "artist", visibility: "public"};
-    params = _.assign({}, defaults, {uid: this._id}, params);
-    return Sheet.create(params);
+    return Sheet.create(params, this._id);
   };
 
   /**

@@ -66,7 +66,6 @@ describe('User', function() {
     context("with missing params", function() {
       it("sets those params to the default", function() {
         return this.user.createSheet({}).then(function(sheet) {
-          expect(sheet.properties.visibility).to.eql("public");
           expect(sheet.properties.title).to.eql("title");
           expect(sheet.properties.artist).to.eql("artist");
         });

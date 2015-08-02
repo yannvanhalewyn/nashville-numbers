@@ -3,11 +3,9 @@ var expect      = require('chai').expect;
 var denormalize = include('/app/helpers/denormalize');
 
 describe('#denormalize()', function() {
-  context("when there are no missing fields", function() {
-    it('hands back the expected data', function() {
-      expect(denormalize(_normalizedData())).to.eql(_deNormalizedData());
-    });
-  }); // End of context 'when there are no missing fields'
+  it('hands back the expected normalized data', function() {
+    expect(denormalize(_normalizedData())).to.eql(_deNormalizedData());
+  });
 
   context("when a bar has no chords property", function() {
     it("doesnt throw an error", function() {
@@ -39,14 +37,12 @@ describe('#denormalize()', function() {
 });
 
 function _normalizedWithMissingSectionsInMain() {
-  return {main: {title: "theTitle", artist: "theArtist"}};
+  return {main: {}};
 }
 
 function _normalizedWithMissingChordsArrayInBar() {
   return {
     main: {
-      title: "theTitle",
-      artist: "theArtist",
       sections: [ "section1" ]
     },
     sections: {
@@ -64,8 +60,6 @@ function _normalizedWithMissingChordsArrayInBar() {
 function _normalizedWithMissingBarsArrayInRow() {
   return {
     main: {
-      title: "theTitle",
-      artist: "theArtist",
       sections: [ "section1" ]
     },
     sections: {
@@ -88,9 +82,6 @@ function _normalizedWithMissingRowsArrayInSection() {
 
 function _deNormalizedData() {
   return {
-    title: "theTitle",
-    artist: "theArtist",
-    dbid: "THEDBID",
     sections: [
       {
         id: "section1",
@@ -149,9 +140,6 @@ function _deNormalizedData() {
 function _normalizedData() {
   return {
     main: {
-      title: "theTitle",
-      artist: "theArtist",
-      dbid: "THEDBID",
       sections: [ "section1", "section2" ]
     },
     sections: {

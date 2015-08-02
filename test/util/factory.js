@@ -42,11 +42,11 @@
 
       case 'sheet':
         if (params && params.uid) {
-          return Sheet.create(_.assign(chance.sheet(), params));
+          return Sheet.create(_.assign(chance.sheet(), params), params.uid);
         } else {
           return Factory('user').then(function(params, user) {
-            var params = _.assign(chance.sheet(), {uid: user._id}, params)
-            return Sheet.create(params)
+            var params = _.assign(chance.sheet(), params)
+            return Sheet.create(params, user._id)
             .then(function(sheet) {
               return {user: user, sheet: sheet}; // The awesome final touch!!
             });

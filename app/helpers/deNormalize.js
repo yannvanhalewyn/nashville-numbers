@@ -1,30 +1,25 @@
 (function() {
 
  /*
-  * The store is usefull with normalized data, e.g.:
+  * The store is more perfomant operating on normalized data, e.g.:
   *
-  * result:
-  *   title: "Baby"
-  *   artist: "Justin Bieber"
+  * main:
   *   sections: [array of sectionIDS]
   *
-  * entities:
-  *   sections:
-  *     {someId}:
-  *       id: {sameID}
-  *       name: "intro"
-  *       rows: [array of row IDS]
-  *   rows:
-  *     {someID}:
-  *       id: {sameID}
-  *       bars: [array of bar IDS]
+  * sections:
+  *   {someId}:
+  *     id: {sameID}
+  *     name: "intro"
+  *     rows: [array of row IDS]
+  * rows:
+  *   {someID}:
+  *     id: {sameID}
+  *     bars: [array of bar IDS]
   *
   *  etc..
   *
   *  While my react tree works great with nested objects, like so:
   *
-  *  title: "baby"
-  *  artist: "Justin Bieber"
   *  sections: [
   *    {
   *      name: "intro"
@@ -43,9 +38,6 @@
   // TODO dbid shouldn't be here.
   module.exports = function(data) {
     var ret = {
-      title: data.main.title,
-      artist: data.main.artist,
-      dbid: data.main.dbid,
       sections: []
     };
 

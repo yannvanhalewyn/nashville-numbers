@@ -14,12 +14,6 @@
     , Cypher  = include('/helpers/cypher')
     , User    = include('/models/user')
 
-  var DEFAULT = {
-    title: "title",
-    artist: "artist",
-    visibility: "public"
-  };
-
 /*
  * ========
  * INSTANCE
@@ -78,21 +72,31 @@
  * ======
  */
 
+  var DEFAULT = {
+    title: "title",
+    artist: "artist",
+    data: {}
+  };
+
   /**
    * Creates a new sheet in the database.
    *
    * @param {object} params The params with which the new sheet will be created.
+   * in the params object, an author_id property is required. This tells the
+   * sheet to which user a AUTHERED relationship has to be created.
    * @return {Sheet} The newly create instance of Sheet.
+   * @throws {error} when no author_id is provided.
    */
-  Sheet.create = function(params) {
-    params = _.assign({}, DEFAULT, params);
-    params.data = JSON.stringify({main: {title: params.title, artist: params.artist}});
-    var query = Cypher.match('p', 'Person');
-    query += Cypher.whereIdIs('p', 'uid');
-    query += Cypher.create('s', 'Sheet', _.omit(params, 'uid'));
-    query += ",(p)-[:AUTHORED]->(s) RETURN s";
-    return db.query(query, params).then(function(res) {
-      return new Sheet(res[0].s);
+  Sheet.create = function(params, author_id) {
+    if (!author_id) throw "Cannot create a sheet without a valid author ID.";
+    params = _.defaults(params, DEFAULT);
+    params.data = JSON.stringify(params.data);
+    var query = Cypher.match('author', 'Person');
+    query += Cypher.whereIdIs('author', 'author_id');
+    query += Cypher.create('sheet', 'Sheet', params);
+    query += ",(author)-[:AUTHORED]->(sheet) RETURN sheet";
+    return db.query(query, _.merge(params, {author_id: parseInt(author_id)})).then(function(res) {
+      return new Sheet(res[0].sheet);
     });
   }
 

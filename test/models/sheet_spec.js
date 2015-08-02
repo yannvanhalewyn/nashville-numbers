@@ -14,33 +14,29 @@ describe('Sheet', function() {
         VALID_PARAMS = {
           title: "theTitle",
           artist: "theArtist",
-          visibility: 'public',
-          uid: user._id,
-          data: "FOOBAR"
+          data: {dummyData: true}
         };
       });
     });
 
     it("stores the information", function() {
-      return Sheet.create(VALID_PARAMS)
+      return Sheet.create(VALID_PARAMS, USER._id)
       .then(function(sheet) {
-        expect(sheet._id).to.be.above(0);
+        expect(sheet._id).not.to.be.undefined;
         expect(sheet.properties.title).to.eql("theTitle");
         expect(sheet.properties.artist).to.eql("theArtist");
-        expect(sheet.properties.visibility).to.eql("public");
       });
     });
 
-    it("stores JSON data with correct main values", function() {
-      return Sheet.create(VALID_PARAMS).then(function(sheet) {
+    it("stringifies the data as JSON", function() {
+      return Sheet.create(VALID_PARAMS, USER._id).then(function(sheet) {
         var data = JSON.parse(sheet.properties.data);
-        expect(data.main.title).to.eql("theTitle");
-        expect(data.main.artist).to.eql("theArtist");
+        expect(data).to.eql({dummyData: true})
       });
     });
 
-    it("stores a relationship to the user", function() {
-      return Sheet.create(VALID_PARAMS).then(function(sheet) {
+    it("creates a relationship to the user", function() {
+      return Sheet.create(VALID_PARAMS, USER._id).then(function(sheet) {
         return db.query(
           "MATCH (p:Person)-[:AUTHORED]->(s:Sheet) WHERE id(s) = {sid} RETURN p",
           {sid: sheet._id}
@@ -51,19 +47,16 @@ describe('Sheet', function() {
     });
 
     context("with missing params", function() {
-      it("sets the default title, artist and visibility", function() {
-        return Sheet.create({uid: USER._id})
-        .then(function(sheet) {
+      it("sets the default title, artist and empty data object", function() {
+        return Sheet.create({}, USER._id).then(function(sheet) {
           expect(sheet.properties.title).to.eql("title");
           expect(sheet.properties.artist).to.eql("artist");
-          expect(sheet.properties.visibility).to.eql("public");
+          expect(sheet.properties.data).to.eql("{}");
         });
       });
 
-      it("throws when uid is missing", function(done) {
-        return Sheet.create().then(done, function(err) {
-          done(); // This done will pass, if the first on is called it will throw because params
-        });
+      it("throws when author_id is missing", function() {
+        expect(Sheet.create.bind(null, VALID_PARAMS)).to.throw("Cannot create a sheet without a valid author ID.");
       });
     }); // End of context 'with missing params'
   }); // End of describe 'instantiation'
