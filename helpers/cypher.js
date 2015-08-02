@@ -6,25 +6,19 @@
 
   function _paramsToMatchString(params) {
     if (!params) return "";
-    var queries = [];
-    _.forEach(params, function(val, key) {
-      queries.push(key + ":{" + key + "}");
-    });
+    var queries = _.map(params, function(val, key) {
+      return key + ":{" + key + "}";
+    })
     return "{" + queries.join(',') + "}";
   }
 
   function _paramsToSetString(varname, params) {
-    var template = varname + ".{key} = '{val}'";
-    var queries = [];
-    _.forEach(params, function(val, key) {
-      var tmp = template.replace("{key}", key);
-      if (_.isNumber(val)) {
-        queries.push(tmp.replace("'{val}'", val));
-      } else {
-        queries.push(tmp.replace("{val}", val));
-      }
+    var filtered = _.pick(params, function(val, key) {
+      return val !== undefined;
     });
-    return queries.join(',');
+    return _.map(filtered, function(val, key) {
+      return varname + "." + key + " = " + "{" + key + "}";
+    }).join(", ");
   }
 
   var Cypher = {

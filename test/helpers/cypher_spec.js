@@ -34,19 +34,17 @@ describe('CYPHER', function() {
   }); // End of describe 'when'
 
   describe('#set()', function() {
-    it("returns SET s.xx = yy ", function() {
+    it("returns SET s.xx = {xx} ", function() {
       expect(Cypher.set('x', {title: "newTitle", artist: "newArtist"})).to.eql(
-        "SET x.title = 'newTitle',x.artist = 'newArtist' "
+        "SET x.title = {title}, x.artist = {artist} "
       );
     });
 
-    context("when a param is a number", function() {
-      it("doesn't surround the value with quotes", function() {
-        expect(Cypher.set('p', {name: "Fred", age: 23})).to.eql(
-          "SET p.name = 'Fred',p.age = 23 "
-        );
-      });
-    }); // End of context 'when a param is a number'
+    it("doesn't take an undefined param into account", function() {
+      expect(Cypher.set('x', {foo: "bar", bax: undefined})).to.eql(
+        "SET x.foo = {foo} "
+      );
+    });
 
     it("returns an empty string when no params are given", function() {
       expect(Cypher.set('x')).to.eql("");

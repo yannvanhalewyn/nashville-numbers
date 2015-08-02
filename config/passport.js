@@ -36,10 +36,12 @@
           displayName: profile.name.displayName,
           userName: profile.username,
           thumb: profile.photos ? profile.photos[0].value : '/img/faces/unknown-user.png',
+          // TODO store the actual image link, this actually publishes the users
+          // accesstoken in the markup later!
           picture: "https://graph.facebook.com/" + profile.id +
                    "/picture?width=100&height=100&access_token=" + accessToken,
           provider: 'facebook',
-          providerData: providerData
+          providerData: JSON.stringify(providerData)
         }).then(function(newUser) {done(null, newUser)}).catch(done);
       }
     ));
