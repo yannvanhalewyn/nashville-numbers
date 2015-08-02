@@ -86,6 +86,12 @@ describe('Sheet', function() {
         expect(returned.properties.artist).to.eql("bar");
       });
     });
+
+    it("keeps boolean attributes as boolean", function() {
+      return SHEET.update({booleanAttribute: false}).then(function(sheet) {
+        expect(sheet.properties.booleanAttribute).to.be.a("boolean");
+      })
+    });
   }); // End of describe '#update()'
 
   describe('#destroy()', function() {

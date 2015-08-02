@@ -27,17 +27,12 @@
    * @return {object} An object representing the updated sheet.
    */
   Sheet.prototype.update = function(params) {
-    var setTemplate = "s.{key} = '{val}'"
-    var queries = [];
-    _.forEach(params, function(val, key) {
-      var tmp = setTemplate.replace("{key}", key);
-      queries.push(tmp.replace("{val}", val));
-    });
-    var setString = "SET " + queries.join(',');
-    return db.query(
-      "MATCH (s:Sheet) WHERE id(s) = {sid} " + setString + " RETURN s", {sid: this._id}
-    ).then(function(result) {
-      return result[0].s;
+    var query = Cypher.match('sheet', 'Sheet');
+    query += Cypher.whereIdIs('sheet', 'sid');
+    query += Cypher.set('sheet', params);
+    query += Cypher.return("sheet");
+    return db.query(query, _.assign(params, {sid: this._id})).then(function(result) {
+      return result[0].sheet;
     });
   }
 
