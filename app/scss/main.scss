@@ -25,8 +25,9 @@ ul {
 
 // Move away from dock when on left side
 .main-content {
+    padding-bottom: 20px;
     @include desktop {
-        position: fixed;
+        position: absolute;
         left: $dock-left-width;
         width: calc(100% - #{$dock-left-width});
     }
