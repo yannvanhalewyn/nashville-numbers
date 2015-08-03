@@ -34,10 +34,20 @@
         bar: true,
         "multi-chords": this.props.chords.length > 1
       });
+      var repetitionLeft = "<use xlink:href='#repetition-left' />";
+      var repetitionRight = "<use xlink:href='#repetition-right' />";
       return (
-        <div className={classes}>
-          {this.props.chords.map(this.renderChord)}
-        </div>
+          <span className={classes}>
+            <div className="repeat-left">
+              <svg viewbox="0 0 100 100" dangerouslySetInnerHTML={{__html: repetitionLeft}} />
+            </div>
+            <div className="chords">
+              {this.props.chords.map(this.renderChord)}
+            </div>
+            <div className="repeat-right">
+              <svg viewbox="0 0 100 100" dangerouslySetInnerHTML={{__html: repetitionRight}} />
+            </div>
+          </span>
       );
     }
 

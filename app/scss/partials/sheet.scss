@@ -132,9 +132,9 @@
 .bar {
     flex: 1;
     display: flex;
-    &.multi-chords {
-        border-bottom: 3px solid black;
-    }
+    margin-left: 5px;
+    &:first-child { margin-left: 0; }
+    &.multi-chords .chords { border-bottom: 3px solid black; }
 }
 
 // Coda and segno
@@ -144,10 +144,22 @@
     font-size: 2.5em;
 }
 
-.coda { 
-    margin-left: auto; 
+.coda {
+    margin-left: auto;
     float: right;
-} // Come back from the right border 
+}
+
+.repeat-left,
+.repeat-right {
+  width: 6%;
+  height: 50px;
+  svg { width: 100%; height: 100%; }
+}
+
+.chords {
+  flex: 1;
+  display: inline-flex;
+}
 
 // /* CHORD
 // ------------------*/

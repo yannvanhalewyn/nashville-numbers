@@ -10,6 +10,8 @@ gulp.task('watchify', getTask('bundle').watchify);
 gulp.task('livereload', getTask('livereload'));
 gulp.task('sass', getTask('sass'));
 gulp.task('sass:watch', getTask('sass').watch);
+gulp.task('svg', getTask('svg'));
+gulp.task('svg:watch', ['svg'], getTask('svg').watch);
 
 // Util
 gulp.task('seed', getTask('util').seed);
@@ -17,6 +19,6 @@ gulp.task('routes', getTask('util').routes);
 
 // Task groups
 gulp.task('code', ['watchify', 'server']);
-gulp.task('design', ['sass:watch', 'livereload']);
+gulp.task('design', ['sass:watch', 'livereload', 'svg:watch']);
 gulp.task('heroku:production', ['sass', 'bundle'])
 gulp.task('default', ['design', 'code']);
