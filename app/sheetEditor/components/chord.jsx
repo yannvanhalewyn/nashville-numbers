@@ -19,7 +19,8 @@
     propTypes: {
       rawString: React.PropTypes.string,
       id: React.PropTypes.string.isRequired,
-      parentIDs: React.PropTypes.object.isRequired
+      parentIDs: React.PropTypes.object.isRequired,
+      locked: React.PropTypes.bool
     },
 
     getInitialState: function() {
@@ -30,6 +31,9 @@
     },
 
     render: function() {
+      if (this.props.locked) {
+        return <div className="chord">{this._musicNotationString()}</div>
+      }
       var classes = {
         'chord': true,
         'chord-editing': this.state.editing,

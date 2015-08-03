@@ -43,7 +43,11 @@ describe('reactRender', function() {
     var RESULT;
     beforeEach(function() {
       sinon.stub(React, "renderToString").returns("The Markup");
-      target_sheet = {properties: {data: JSON.stringify(dummySheetData())}};
+      target_sheet = {
+        properties: {
+          artist: "the artist", title: "the title", data: JSON.stringify(dummySheetData())
+        }
+      };
       RESULT = reactRender.sheet(target_sheet);
     });
 
@@ -53,7 +57,9 @@ describe('reactRender', function() {
 
     it("generates a Sheet component with the denormalized data", function() {
       var denormalizedData = denormalize(dummySheetData());
-      expect(stubbedReactFactory).to.have.been.calledWith({sheetData: denormalizedData});
+      expect(stubbedReactFactory).to.have.been.calledWith({
+        artist: "the artist", title: "the title", sheetData: denormalizedData
+      });
     });
 
     it("renders the sheet component to string", function() {

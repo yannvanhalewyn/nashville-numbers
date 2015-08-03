@@ -11,7 +11,11 @@
   var ReactRender = {
     sheet: function(targetSheet) {
       var data = JSON.parse(targetSheet.properties.data);
-      var reactElement = Sheet({sheetData: denormalize(data)});
+      var reactElement = Sheet({
+        sheetData: denormalize(data),
+        title: targetSheet.properties.title,
+        artist: targetSheet.properties.artist
+      });
       return React.renderToString(reactElement);
     }
   }

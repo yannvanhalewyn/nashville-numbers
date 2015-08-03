@@ -11,7 +11,8 @@
     propTypes: {
       section: React.PropTypes.array,
       name: React.PropTypes.string,
-      id: React.PropTypes.string.isRequired
+      id: React.PropTypes.string,
+      locked: React.PropTypes.bool
     },
 
     renderRow: function(row) {
@@ -20,6 +21,7 @@
                 bars={row.bars}
                 id={row.id}
                 parentIDs={Immutable.Map({ sectionID: this.props.id })}
+                locked={this.props.locked}
               />
     },
 

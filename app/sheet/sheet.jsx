@@ -4,7 +4,7 @@
 
   var React = require('react')
     , Header = require('./header.jsx')
-    , Section = require('./section.jsx')
+    , Section = require('../sheetEditor/components/section.jsx')
 
   var Sheet = React.createClass({
     propTypes: {
@@ -12,17 +12,17 @@
     },
 
     renderSection: function(section) {
-      return <Section key={section.id} name={section.name} rows={section.rows} />
+      return <Section key={section.id} name={section.name} rows={section.rows} locked={true} />
     },
 
     render: function() {
       return (
         <div>
           <Header
-            title={this.props.sheetData.title}
-            artist={this.props.sheetData.artist}
+            title={this.props.title}
+            artist={this.props.artist}
           />
-          {this.props.sheetData.sections.map(this.renderSection)}
+          {this.props.sheetData.sections ? this.props.sheetData.sections.map(this.renderSection) : "No content"}
         </div>
       )
     }

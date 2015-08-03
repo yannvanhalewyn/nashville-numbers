@@ -19,8 +19,9 @@
 
     propTypes: {
       chords: React.PropTypes.array,
-      id: React.PropTypes.string.isRequired,
-      parentIDs: React.PropTypes.object.isRequired
+      id: React.PropTypes.string,
+      parentIDs: React.PropTypes.object,
+      locked: React.PropTypes.bool
     },
 
     renderChord: function(chord) {
@@ -30,19 +31,20 @@
           rawString={chord.raw}
           id={chord.id}
           parentIDs={this.props.parentIDs.set('barID', this.props.id)}
+          locked={this.props.locked}
         />
       )
     },
 
     renderRepeatLeft: function() {
       return <div className="repeat-left">
-        <svg viewbox="0 0 100 100" dangerouslySetInnerHTML={{__html: REPEAT_LEFT_HTML}} />
+        <svg dangerouslySetInnerHTML={{__html: REPEAT_LEFT_HTML}} />
       </div>
     },
 
     renderRepeatRight: function() {
       return <div className="repeat-right">
-        <svg viewbox="0 0 100 100" dangerouslySetInnerHTML={{__html: REPEAT_RIGHT_HTML}} />
+        <svg dangerouslySetInnerHTML={{__html: REPEAT_RIGHT_HTML}} />
       </div>
     },
 

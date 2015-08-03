@@ -17,7 +17,7 @@
 
     renderSymbolsRow: function(bar) {
       return (
-        <div className="symbol-container">
+        <div key={bar.id + "s"} className="symbol-container">
           {bar.segno ? <span className="segno">@</span> : null }
           {bar.coda ? <span className="coda">Ø</span> : null }
         </div>
@@ -33,6 +33,7 @@
           parentIDs={this.props.parentIDs.set('rowID', this.props.id)}
           repeatLeft={bar.repeatLeft}
           repeatRight={bar.repeatRight}
+          locked={this.props.locked}
         />
       )
     },
