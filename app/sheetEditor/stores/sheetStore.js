@@ -114,6 +114,16 @@
           this.trigger(CHANGE_EVENT);
           break;
 
+        case Constants.TOGGLE_REPEAT_LEFT:
+          SheetStoreDataManager.toggleRepeatLeft(selected.barID);
+          this.trigger(CHANGE_EVENT);
+          break;
+
+        case Constants.TOGGLE_REPEAT_RIGHT:
+          SheetStoreDataManager.toggleRepeatRight(selected.barID);
+          this.trigger(CHANGE_EVENT);
+          break;
+
         default:
           console.error("No such task - " + payload.actionType);
           break;

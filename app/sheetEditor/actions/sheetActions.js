@@ -63,8 +63,15 @@
 
     toggleCoda: function() {
       SheetDispatcher.dispatch({actionType: SheetConstants.TOGGLE_CODA});
-    }
+    },
 
+    toggleRepeatLeft: function() {
+      SheetDispatcher.dispatch({actionType: SheetConstants.TOGGLE_REPEAT_LEFT});
+    },
+
+    toggleRepeatRight: function() {
+      SheetDispatcher.dispatch({actionType: SheetConstants.TOGGLE_REPEAT_RIGHT});
+    }
   };
 
   module.exports = SheetActions;

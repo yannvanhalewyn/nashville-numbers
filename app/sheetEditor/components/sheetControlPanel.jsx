@@ -37,6 +37,8 @@
           <span className="fa fa-expand" id="play-mode-toggle"></span>
           <button onClick={this._segnoClicked}>Segno</button>
           <button onClick={this._codaClicked}>Coda</button>
+          <button onClick={this._repeatLeftClicked}>Start Repeat</button>
+          <button onClick={this._repeatRightClicked}>End Repeat</button>
         </div>
       )
     },
@@ -63,8 +65,15 @@
 
     _codaClicked: function() {
       Actions.toggleCoda();
-    }
+    },
 
+    _repeatRightClicked: function() {
+      Actions.toggleRepeatRight();
+    },
+
+    _repeatLeftClicked: function() {
+      Actions.toggleRepeatLeft();
+    },
   });
 
   module.exports = SheetControlPanel;

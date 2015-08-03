@@ -25,12 +25,16 @@
     },
 
     renderBar: function(bar) {
-      return <Bar
-               key={bar.id}
-               chords={bar.chords}
-               id={bar.id}
-               parentIDs={this.props.parentIDs.set('rowID', this.props.id)}
-             />
+      return (
+        <Bar
+          key={bar.id}
+          chords={bar.chords}
+          id={bar.id}
+          parentIDs={this.props.parentIDs.set('rowID', this.props.id)}
+          repeatLeft={bar.repeatLeft}
+          repeatRight={bar.repeatRight}
+        />
+      )
     },
 
     render: function() {

@@ -18,6 +18,8 @@
     //Symbols
     TOGGLE_SEGNO: null,
     TOGGLE_CODA: null,
+    TOGGLE_REPEAT_LEFT: null,
+    TOGGLE_REPEAT_RIGHT: null,
 
     // NETWORK
     SAVE_SHEET: null
