@@ -607,7 +607,83 @@ describe('SheetStoreDataManager', function() {
         expect(DataManager.toggleCoda.bind(null, 'invalid')).to.throw("Could not toggle coda on bar invalid.");
       });
     }); // End of context 'when called with unexisting barID'
-  }); // End of describe '#toggleSegno()'
+  }); // End of describe '#toggleCoda()'
+
+  describe('#toggleRepeatLeft()', function() {
+    context("when called with valid barID", function() {
+      context("when no flag has been set", function() {
+        it("sets the repeat-left flag to true", function() {
+          DataManager.setData(originalData());
+          DataManager.toggleRepeatLeft('bar1');
+          expect(DataManager.getData().bars['bar1'].repeatLeft).to.eql(true);
+        });
+      }); // End of context 'when no flag has been set'
+
+      context("when a flag was set to false", function() {
+        it("sets the repeatLeft flag to true", function() {
+          var data = originalData();
+          data.bars.bar1.repeatLeft = false;
+          DataManager.setData(data);
+          DataManager.toggleRepeatLeft('bar1');
+          expect(DataManager.getData().bars['bar1'].repeatLeft).to.eql(true);
+        });
+      }); // End of context 'when a flag was set to false'
+
+      context("when the flag was set to true", function() {
+        it("sets the repeatLeft flag to false", function() {
+          var data = originalData();
+          data.bars.bar1.repeatLeft = true;
+          DataManager.setData(data);
+          DataManager.toggleRepeatLeft('bar1');
+          expect(DataManager.getData().bars['bar1'].repeatLeft).to.eql(false);
+        });
+      }); // End of context 'when the flag was set to true'
+    }); // End of context 'when called with valid barID'
+
+    context("when called with unexisting barID", function() {
+      it("throws an error", function() {
+        expect(DataManager.toggleRepeatLeft.bind(null, 'invalid')).to.throw("Could not toggle repeat-left on bar invalid.");
+      });
+    }); // End of context 'when called with unexisting barID'
+  }); // End of describe '#toggleRepeatLeft()'
+
+  describe('#toggleRepeatRight()', function() {
+    context("when called with valid barID", function() {
+      context("when no flag has been set", function() {
+        it("sets the repeat-right flag to true", function() {
+          DataManager.setData(originalData());
+          DataManager.toggleRepeatRight('bar1');
+          expect(DataManager.getData().bars['bar1'].repeatRight).to.eql(true);
+        });
+      }); // End of context 'when no flag has been set'
+
+      context("when a flag was set to false", function() {
+        it("sets the repeatRight flag to true", function() {
+          var data = originalData();
+          data.bars.bar1.repeatRight = false;
+          DataManager.setData(data);
+          DataManager.toggleRepeatRight('bar1');
+          expect(DataManager.getData().bars['bar1'].repeatRight).to.eql(true);
+        });
+      }); // End of context 'when a flag was set to false'
+
+      context("when the flag was set to true", function() {
+        it("sets the repeatRight flag to false", function() {
+          var data = originalData();
+          data.bars.bar1.repeatRight = true;
+          DataManager.setData(data);
+          DataManager.toggleRepeatRight('bar1');
+          expect(DataManager.getData().bars['bar1'].repeatRight).to.eql(false);
+        });
+      }); // End of context 'when the flag was set to true'
+    }); // End of context 'when called with valid barID'
+
+    context("when called with unexisting barID", function() {
+      it("throws an error", function() {
+        expect(DataManager.toggleRepeatRight.bind(null, 'invalid')).to.throw("Could not toggle repeat-right on bar invalid.");
+      });
+    }); // End of context 'when called with unexisting barID'
+  }); // End of describe '#toggleRepeatLeft()'
 }); // End of specs in this file
 
 function data() {

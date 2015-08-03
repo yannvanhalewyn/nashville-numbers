@@ -142,6 +142,18 @@
     if (!_toggleSymbolOnBar('coda', barID)) {
       throw "Could not toggle coda on bar " + barID + ".";
     }
+  },
+
+  toggleRepeatLeft: function(barID) {
+    if (!_toggleSymbolOnBar('repeatLeft', barID)) {
+      throw "Could not toggle repeat-left on bar " + barID + ".";
+    }
+  },
+
+  toggleRepeatRight: function(barID) {
+    if (!_toggleSymbolOnBar('repeatRight', barID)) {
+      throw "Could not toggle repeat-right on bar " + barID + ".";
+    }
   }
 
 
