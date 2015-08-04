@@ -100,7 +100,6 @@
           var properties = this.get("properties");
           properties.data = JSON.stringify(SheetStoreDataManager.getData());
           this.set("properties", properties);
-          console.log(this);
           this.save();
           break;
 

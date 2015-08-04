@@ -30,33 +30,45 @@
       }
     },
 
+    renderDisplayChord: function() {
+      return <div className="chord-display" onClick={this._onClick}>{this._musicNotationString()}</div>
+    },
+
+    renderInputBox: function() {
+      return (
+        <input
+          className="chord-input"
+          type="text"
+          ref="inputBox"
+          onChange={this._onChange}
+          onFocus={this._gainedFocus}
+          onBlur={this._lostFocus}
+          onKeyDown={this._onKeyDown}
+          value={this.state.value}
+        />
+      )
+    },
+
     render: function() {
-      if (this.props.locked) {
-        return <div className="chord">{this._musicNotationString()}</div>
-      }
       var classes = {
         'chord': true,
         'chord-editing': this.state.editing,
         'chord-empty': !this.state.value
       };
-      // TODO before production: check security of innerHTML. Maybe I don't need
-      // any superscript, I could just have the font do the work and go back to
-      // simple input boxes.
       return (
-        <div
-          contentEditable="true"
-          className={classNames(classes)}
-          onFocus={this._gainedFocus}
-          onBlur={this._lostFocus}
-          onKeyDown={this._onKeyDown}
-          dangerouslySetInnerHTML={{__html: this.state.editing ? this.state.value :
-            this._musicNotationString()}}
-        />
+        <div className={classNames(classes)}>
+          {!this.props.locked ? this.renderInputBox() : null}
+          {!this.state.editing ? this.renderDisplayChord() : null}
+        </div>
       )
     },
 
     _musicNotationString: function() {
       return new Chord(this.state.value).musicNotationString();
+    },
+
+    _onChange: function(e) {
+      this.setState({value: e.target.value});
     },
 
     _onKeyDown: function(e) {
@@ -106,10 +118,13 @@
     },
 
     _lostFocus: function(e) {
-      var text = this.getDOMNode().innerHTML;
-      SheetActions.updateChordText(this.props.id, text);
-      this.setState({editing: false, value: text});
+      SheetActions.updateChordText(this.props.id, e.target.value);
+      this.setState({editing: false});
     },
+
+    _onClick: function(e) {
+      this.refs.inputBox.getDOMNode().focus();
+    }
 
 
   });

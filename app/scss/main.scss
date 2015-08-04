@@ -27,6 +27,7 @@ ul {
 .main-content {
     padding-bottom: 20px;
     @include desktop {
+        overflow: scroll;
         position: absolute;
         left: $dock-left-width;
         width: calc(100% - #{$dock-left-width});

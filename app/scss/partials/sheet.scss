@@ -165,21 +165,37 @@
 // ------------------*/
 .chord {
     flex: 1;
-    height: 50px;
-    margin: auto;
-    text-align: center;
     border-radius: 5px;
-    font-family: NashvillechordSymbols;
-    font-size: 2em;
+    height: 50px;
 
-    &:focus {outline: none; }
-    &.chord-empty {box-shadow: 0px 0px 7px #999; }
-    &.chord-editing {
-        background: $CHORD-EDITING;
-        font-family: inherit;
-        cursor: auto;
-        transition: background 300ms;
+    // The input box
+    .chord-input {
+      position: absolute; // Hide it, but make it focusable
+      top: -1000px;
+      font-size: 2em;
+      background: $CHORD-EDITING;
+      border-radius: 5px;
+      border: none;
+      width: 100%;
+      height: 100%;
+      padding-left: 5%;
+      &:focus {outline: none; }
     }
+
+    // The displayed chord
+    .chord-display {
+      text-align: center;
+      font-family: NashvillechordSymbols;
+      font-size: 2em;
+      cursor: pointer;
+      height: 100%;
+    }
+
+    &.chord-editing {
+        .chord-input { position: static; }
+        .chord-display { display: none; }
+    }
+    &.chord-empty { box-shadow: 0px 0px 7px #999; }
 }
 
 // // ======
