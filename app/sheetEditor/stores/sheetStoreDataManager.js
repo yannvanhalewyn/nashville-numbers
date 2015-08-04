@@ -40,25 +40,27 @@
     addChord: function(barID, chordID) {
       if (SHEET_DATA.getIn(['bars', barID])) {
         var chordIndex = _getIndexOfChildInParent('chords', 'bars', chordID, barID);
-        _insertNewChildInParentAtIndex("chords", "bars", barID, chordIndex+1);
+        return _insertNewChildInParentAtIndex("chords", "bars", barID, chordIndex+1);
       }
     },
 
     addBar: function(rowID, barID) {
       if (SHEET_DATA.getIn(['rows', rowID])) {
         var barIndex = _getIndexOfChildInParent('bars', 'rows', barID, rowID);
-        var newID = _insertNewChildInParentAtIndex('bars', 'rows', rowID, barIndex+1);
-        this.addChord(newID);
+        var newBarID = _insertNewChildInParentAtIndex('bars', 'rows', rowID, barIndex+1);
+        this.addChord(newBarID);
+        return newBarID;
       }
     },
 
     addRow: function(sectionID, rowID) {
       if (SHEET_DATA.getIn(['sections', sectionID])) {
         var rowIndex = _getIndexOfChildInParent('rows', 'sections', rowID, sectionID);
-        var newID = _insertNewChildInParentAtIndex('rows', 'sections', sectionID, rowIndex + 1);
+        var newRowID = _insertNewChildInParentAtIndex('rows', 'sections', sectionID, rowIndex + 1);
         for (var i = 0; i < DEFAULT_NUM_BARS_IN_ROW; i++) {
-          this.addBar(newID);
+          this.addBar(newRowID);
         }
+        return newRowID;
       }
     },
 
@@ -84,6 +86,7 @@
           });
       });
       this.addRow(newID);
+      return newID;
     },
 
 /*
@@ -132,31 +135,29 @@
  * =======
  */
 
-  toggleSegno: function(barID) {
-    if (!_toggleSymbolOnBar('segno', barID)) {
-      throw "Could not toggle segno on bar " + barID + ".";
+    toggleSegno: function(barID) {
+      if (!_toggleSymbolOnBar('segno', barID)) {
+        throw "Could not toggle segno on bar " + barID + ".";
+      }
+    },
+
+    toggleCoda: function(barID) {
+      if (!_toggleSymbolOnBar('coda', barID)) {
+        throw "Could not toggle coda on bar " + barID + ".";
+      }
+    },
+
+    toggleRepeatLeft: function(barID) {
+      if (!_toggleSymbolOnBar('repeatLeft', barID)) {
+        throw "Could not toggle repeat-left on bar " + barID + ".";
+      }
+    },
+
+    toggleRepeatRight: function(barID) {
+      if (!_toggleSymbolOnBar('repeatRight', barID)) {
+        throw "Could not toggle repeat-right on bar " + barID + ".";
+      }
     }
-  },
-
-  toggleCoda: function(barID) {
-    if (!_toggleSymbolOnBar('coda', barID)) {
-      throw "Could not toggle coda on bar " + barID + ".";
-    }
-  },
-
-  toggleRepeatLeft: function(barID) {
-    if (!_toggleSymbolOnBar('repeatLeft', barID)) {
-      throw "Could not toggle repeat-left on bar " + barID + ".";
-    }
-  },
-
-  toggleRepeatRight: function(barID) {
-    if (!_toggleSymbolOnBar('repeatRight', barID)) {
-      throw "Could not toggle repeat-right on bar " + barID + ".";
-    }
-  }
-
-
   };
 
   module.exports = SheetStoreDataManager;

@@ -67,8 +67,9 @@ describe('SheetStoreDataManager', function() {
     describe('#addChord()', function() {
       context('when existing barID is given', function() {
         context('when no chordID is given', function() {
+          var RETURNED;
           beforeEach(function() {
-            DataManager.addChord('bar2');
+            RETURNED = DataManager.addChord('bar2');
           });
 
           it ('adds a chord to the entities', function() {
@@ -85,6 +86,11 @@ describe('SheetStoreDataManager', function() {
           it('sets the ID param on the chord entity', function() {
             var newID = _.last(_.keys(data().chords));
             expect(data().chords[newID].id).to.eql(newID);
+          });
+
+          it("returns the ID of the newly created chord", function() {
+            var newID = _.last(_.keys(data().chords));
+            expect(RETURNED).to.eql(newID);
           });
         });
 
@@ -135,8 +141,9 @@ describe('SheetStoreDataManager', function() {
     describe('#addBar()', function() {
       context('when existing rowID is given', function() {
         context('when no barID is given', function() {
+          var RETURNED;
           beforeEach(function() {
-            DataManager.addBar('row1');
+            RETURNED = DataManager.addBar('row1');
           });
 
           it ('adds a bar to the entities', function() {
@@ -165,6 +172,11 @@ describe('SheetStoreDataManager', function() {
           it('adds that chord to the new bar', function() {
             newID = _.last(data().rows['row1'].bars);
             expect(data().bars[newID].chords.length).to.eql(1);
+          });
+
+          it("returns the ID of the new bar", function() {
+            var newBarID = _.last(data().rows['row1'].bars);
+            expect(RETURNED).to.eql(newBarID);
           });
         });
 
@@ -213,8 +225,9 @@ describe('SheetStoreDataManager', function() {
     describe('#addRow()', function() {
       context('when existing sectionID is given', function() {
         context('when no rowID is given', function() {
+          var RETURNED;
           beforeEach(function() {
-            DataManager.addRow('section1');
+            RETURNED = DataManager.addRow('section1');
           });
 
           it ('adds a row to the entities', function() {
@@ -242,6 +255,11 @@ describe('SheetStoreDataManager', function() {
           it('adds those bars to the row', function() {
             newID = _.last(data().sections['section1'].rows);
             expect(data().rows[newID].bars.length).to.eql(DEFAULT_NUM_BARS_IN_ROW);
+          });
+
+          it("returns the ID of the new row", function() {
+            var newRowID = _.last(data().sections['section1'].rows);
+            expect(RETURNED).to.eql(newRowID);
           });
         });
 
@@ -322,7 +340,6 @@ describe('SheetStoreDataManager', function() {
           expect(data().sections[newSectionID].rows.indexOf(lastRowID))
             .to.not.be.undefined;
         });
-
       });
 
       context('when sectionID is given', function() {
@@ -332,6 +349,12 @@ describe('SheetStoreDataManager', function() {
             var addedSectionID = _.last(_.keys(data().sections));
             var index = data().main.sections.indexOf(addedSectionID);
             expect(index).to.eql(1);
+          });
+
+          it("returns the ID of the new section", function() {
+            var RETURNED = DataManager.addSection('section1');
+            var newSectionID = _.last(_.keys(data().sections));
+            expect(RETURNED).to.eql(newSectionID);
           });
         });
 
