@@ -9,11 +9,20 @@
   var Sheet = React.createClass({
 
     propTypes: {
-      sections: React.PropTypes.array
+      sections: React.PropTypes.array,
+      focusTargetID: React.PropTypes.string
     },
 
     renderSection: function(section) {
-      return <Section key={section.id} rows={section.rows} name={section.name} id={section.id} />
+      return (
+        <Section
+          key={section.id}
+          rows={section.rows}
+          name={section.name}
+          id={section.id}
+          focusTargetID={this.props.focusTargetID}
+        />
+      )
     },
 
     render: function() {

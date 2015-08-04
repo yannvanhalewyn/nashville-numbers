@@ -8,7 +8,8 @@
     propTypes: {
       bars: React.PropTypes.array,
       id: React.PropTypes.string.isRequired,
-      parentIDs: React.PropTypes.object.isRequired
+      parentIDs: React.PropTypes.object.isRequired,
+      focusTargetID: React.PropTypes.string
     },
 
     getInitialState: function() {
@@ -34,6 +35,7 @@
           repeatLeft={bar.repeatLeft}
           repeatRight={bar.repeatRight}
           locked={this.props.locked}
+          focusTargetID={this.props.focusTargetID}
         />
       )
     },

@@ -50,23 +50,26 @@
           break;
 
         case Constants.APPEND_NEW_CHORD:
-          SheetStoreDataManager.addChord(selected.barID, selected.chordID);
-          this.trigger(CHANGE_EVENT);
+          var newChordID = SheetStoreDataManager.addChord(selected.barID, selected.chordID);
+          this.trigger(CHANGE_EVENT, {focus: newChordID});
           break;
 
         case Constants.APPEND_NEW_BAR:
-          SheetStoreDataManager.addBar(selected.rowID, selected.barID);
-          this.trigger(CHANGE_EVENT);
+          var newBarID = SheetStoreDataManager.addBar(selected.rowID, selected.barID);
+          var chordToFocus = SheetStoreDataManager.getIDOfFirstChordInBar(newBarID);
+          this.trigger(CHANGE_EVENT, {focus: chordToFocus});
           break;
 
         case Constants.APPEND_NEW_ROW:
-          SheetStoreDataManager.addRow(selected.sectionID, selected.rowID);
-          this.trigger(CHANGE_EVENT);
+          var newRowID = SheetStoreDataManager.addRow(selected.sectionID, selected.rowID);
+          var chordToFocus = SheetStoreDataManager.getIDOfFirstChordInRow(newRowID);
+          this.trigger(CHANGE_EVENT, {focus: chordToFocus});
           break;
 
         case Constants.APPEND_NEW_SECTION:
-          SheetStoreDataManager.addSection(selected.sectionID);
-          this.trigger(CHANGE_EVENT);
+          var newSectionID = SheetStoreDataManager.addSection(selected.sectionID);
+          var chordToFocus = SheetStoreDataManager.getIDOfFirstChordInSection(newSectionID);
+          this.trigger(CHANGE_EVENT, {focus: chordToFocus});
           break;
 
         case Constants.DELETE_SELECTED_CHORD:
@@ -105,17 +108,17 @@
 
         case Constants.TOGGLE_SEGNO:
           SheetStoreDataManager.toggleSegno(selected.barID);
-          this.trigger(CHANGE_EVENT);
+          this.trigger(CHANGE_EVENT, {focus: selected.chordID});
           break;
 
         case Constants.TOGGLE_CODA:
           SheetStoreDataManager.toggleCoda(selected.barID);
-          this.trigger(CHANGE_EVENT);
+          this.trigger(CHANGE_EVENT, {focus: selected.chordID});
           break;
 
         case Constants.TOGGLE_REPEAT_LEFT:
           SheetStoreDataManager.toggleRepeatLeft(selected.barID);
-          this.trigger(CHANGE_EVENT);
+          this.trigger(CHANGE_EVENT, {focus: selected.chordID});
           break;
 
         case Constants.TOGGLE_REPEAT_RIGHT:

@@ -21,7 +21,8 @@
       chords: React.PropTypes.array,
       id: React.PropTypes.string,
       parentIDs: React.PropTypes.object,
-      locked: React.PropTypes.bool
+      locked: React.PropTypes.bool,
+      focusTargetID: React.PropTypes.string
     },
 
     renderChord: function(chord) {
@@ -32,6 +33,7 @@
           id={chord.id}
           parentIDs={this.props.parentIDs.set('barID', this.props.id)}
           locked={this.props.locked}
+          autoFocus={chord.id === this.props.focusTargetID}
         />
       )
     },

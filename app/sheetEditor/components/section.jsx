@@ -12,17 +12,21 @@
       section: React.PropTypes.array,
       name: React.PropTypes.string,
       id: React.PropTypes.string,
-      locked: React.PropTypes.bool
+      locked: React.PropTypes.bool,
+      focusTargetID: React.PropTypes.string
     },
 
     renderRow: function(row) {
-      return <Row
-                key={row.id}
-                bars={row.bars}
-                id={row.id}
-                parentIDs={Immutable.Map({ sectionID: this.props.id })}
-                locked={this.props.locked}
-              />
+      return  (
+        <Row
+          key={row.id}
+          bars={row.bars}
+          id={row.id}
+          parentIDs={Immutable.Map({ sectionID: this.props.id })}
+          locked={this.props.locked}
+          focusTargetID={this.props.focusTargetID}
+        />
+      )
     },
 
     render: function() {

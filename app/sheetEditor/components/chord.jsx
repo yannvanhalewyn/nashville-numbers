@@ -20,7 +20,8 @@
       rawString: React.PropTypes.string,
       id: React.PropTypes.string.isRequired,
       parentIDs: React.PropTypes.object.isRequired,
-      locked: React.PropTypes.bool
+      locked: React.PropTypes.bool,
+      autoFocus: React.PropTypes.bool
     },
 
     getInitialState: function() {
@@ -31,7 +32,7 @@
     },
 
     renderDisplayChord: function() {
-      return <div className="chord-display" onClick={this._onClick}>{this._musicNotationString()}</div>
+      return <div className="chord-display" onClick={this._focus}>{this._musicNotationString()}</div>
     },
 
     renderInputBox: function() {
@@ -47,6 +48,19 @@
           value={this.state.value}
         />
       )
+    },
+
+    componentDidMount: function() { this.focusIfNeeded(); },
+
+    componentDidUpdate: function() { this.focusIfNeeded(); },
+
+    focusIfNeeded: function() {
+      if (this.props.autoFocus) {
+        // TODO is it bad to reset the flag directly on the props?
+        // Should I have another flag?
+        this.props.autoFocus = false;
+        this._focus();
+      }
     },
 
     render: function() {
@@ -122,10 +136,18 @@
       this.setState({editing: false});
     },
 
-    _onClick: function(e) {
-      this.refs.inputBox.getDOMNode().focus();
-    }
+    _focus: function() {
+      this._inputBox().focus();
+      this._inputBox().select();
+    },
 
+    // Lazy caching of the input box
+    _inputBox: function() {
+      if (!this.inputBox) {
+        this.inputBox = this.refs.inputBox.getDOMNode();
+      }
+      return this.inputBox;
+    }
 
   });
 

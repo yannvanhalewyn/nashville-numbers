@@ -33,13 +33,18 @@
           <h1 className="sheet-title">
             {this.state.title} <small className="artist">{this.state.artist}</small>
           </h1>
-          <Sheet sections={this.state.sheetData.sections}/>
+          <Sheet sections={this.state.sheetData.sections} focusTargetID={this.state.focusTargetID}/>
         </div>
       )
     },
 
-    _update: function() {
+    _update: function(params) {
       this.setState(this.props.store.getState());
+      if (params && params.focus) {
+        this.setState({focusTargetID: params.focus});
+      } else {
+        this.setState({focusTargetID: null});
+      }
     },
 
   });
