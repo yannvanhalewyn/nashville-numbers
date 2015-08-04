@@ -157,6 +157,30 @@
       if (!_toggleSymbolOnBar('repeatRight', barID)) {
         throw "Could not toggle repeat-right on bar " + barID + ".";
       }
+    },
+
+/*
+ * ============
+ * Getting ID's
+ * ============
+ */
+
+    getIDOfFirstChordInBar: function(barID) {
+      var chordIDs = SHEET_DATA.getIn(['bars', barID, 'chords']);
+      if (!chordIDs) return null;
+      return chordIDs.first();
+    },
+
+    getIDOfFirstChordInRow: function(rowID) {
+      var barIDs = SHEET_DATA.getIn(['rows', rowID, 'bars']);
+      if (!barIDs) return null;
+      return this.getIDOfFirstChordInBar(barIDs.first());
+    },
+
+    getIDOfFirstChordInSection: function(sectionID) {
+      var rowIDs = SHEET_DATA.getIn(['sections', sectionID, 'rows']);
+      if (!rowIDs) return null;
+      return this.getIDOfFirstChordInRow(rowIDs.first());
     }
   };
 

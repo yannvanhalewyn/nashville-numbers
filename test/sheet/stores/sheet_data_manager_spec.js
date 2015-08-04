@@ -707,6 +707,83 @@ describe('SheetStoreDataManager', function() {
       });
     }); // End of context 'when called with unexisting barID'
   }); // End of describe '#toggleRepeatLeft()'
+
+/*
+ * ==========
+ * gettingIDs
+ * ==========
+ */
+  describe('getIDOfFirstChordInBar()', function() {
+    beforeEach(function() {
+      DataManager.setData(originalData());
+    });
+
+    context("when existing bar", function() {
+      it("returns the ID of the first chord in that bar", function() {
+        var returned = DataManager.getIDOfFirstChordInBar('bar3');
+        expect(returned).to.eql('chord5');
+      });
+    }); // End of context 'when existing bar'
+
+    context("when bar doesn't exist", function() {
+      it("throws an error-", function() {
+        var f = DataManager.getIDOfFirstChordInBar.bind(null, 'invalid');
+        expect(f).not.to.throw();
+      });
+
+      it("returns null", function() {
+        expect(DataManager.getIDOfFirstChordInBar('invalid')).to.be.null;
+      });
+    }); // End of context 'when bar doesn't exist'
+  }); // End of describe 'getIDOfFirstChordInBar()'
+
+  describe('getIDOfFirstChordInRow', function() {
+    beforeEach(function() {
+      DataManager.setData(originalData());
+    });
+
+    context("when existing row", function() {
+      it("returns the ID of the first chord in the first bar of the row", function() {
+        var returned = DataManager.getIDOfFirstChordInRow('row3');
+        expect(returned).to.eql('chord6');
+      });
+    }); // End of context 'when existing bar'
+
+    context("when row doesn't exist", function() {
+      it("throws an error-", function() {
+        var f = DataManager.getIDOfFirstChordInRow.bind(DataManager, 'invalid');
+        expect(f).not.to.throw();
+      });
+
+      it("returns null", function() {
+        expect(DataManager.getIDOfFirstChordInRow('invalid')).to.be.null;
+      });
+    }); // End of context 'when bar doesn't exist'
+  }); // End of describe 'getIDOfFirstChordInRow'
+
+  describe('getIDOfFirstChordInSection', function() {
+    beforeEach(function() {
+      DataManager.setData(originalData());
+    });
+
+    context("when existing section", function() {
+      it("returns the ID of the first chord in the first bar of the first row", function() {
+        var returned = DataManager.getIDOfFirstChordInSection('section2');
+        expect(returned).to.eql('chord6');
+      });
+    }); // End of context 'when existing bar'
+
+    context("when row doesn't exist", function() {
+      it("doesn't throw", function() {
+        var f = DataManager.getIDOfFirstChordInSection.bind(DataManager, 'invalid');
+        expect(f).not.to.throw();
+      });
+
+      it("returns null", function() {
+        expect(DataManager.getIDOfFirstChordInSection('invalid')).to.be.null;
+      });
+    }); // End of context 'when bar doesn't exist'
+  }); // End of describe 'getIDOfFirstChordInRow'
 }); // End of specs in this file
 
 function data() {
