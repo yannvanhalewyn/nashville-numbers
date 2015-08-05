@@ -784,6 +784,118 @@ describe('SheetStoreDataManager', function() {
       });
     }); // End of context 'when bar doesn't exist'
   }); // End of describe 'getIDOfFirstChordInRow'
+
+  describe('getIDOfRowBefore', function() {
+    beforeEach(function() {
+      DataManager.setData(originalData());
+    });
+
+    context("when the chord is not the first chord in bar", function() {
+      it("returns the chordID of the previous chord in that bar", function() {
+        var ids = {chordID: 'chord2', barID: 'bar1'};
+        expect(DataManager.getIDOfChordBefore(ids)).to.eql('chord1');
+      });
+    }); // End of context 'when the chord is not the first chord in bar'
+
+    context("when the chord is the first chord in the bar", function() {
+      context("when the bar is not the first bar in the row", function() {
+        it("returns the last chord of the previous bar", function() {
+          var ids = {chordID: 'chord3', barID: 'bar2', rowID: 'row1'};
+          expect(DataManager.getIDOfChordBefore(ids)).to.eql('chord2');
+        });
+      }); // End of context 'when the bar is not the first bar in the row'
+
+      context("when the bar is the first bar in the row", function() {
+        context("when the bar is not in the first row", function() {
+          it("returns the last chord of the last bar in the previous row", function() {
+            var ids = {chordID: 'chord5', barID: 'bar3', rowID: 'row2', sectionID: 'section1'};
+            expect(DataManager.getIDOfChordBefore(ids)).to.eql('chord4');
+          });
+        }); // End of context 'when the bar is not in the first row'
+
+        context("when the bar is in the first row", function() {
+          it("returns null", function() {
+            var ids = {chordID: 'chord1', barID: 'bar1', rowID: 'row1', sectionID: 'section1'}
+            expect(DataManager.getIDOfChordBefore(ids)).to.be.null;
+          });
+        }); // End of context 'when the bar is in the first row'
+      }); // End of context 'when the bar is the first bar in the row'
+    }); // End of context 'when the chord is the first chord in the bar'
+  }); // End of describe 'getIDOfRowBefore'
+
+  describe('getIDofBarBefore', function() {
+    beforeEach(function() {
+      DataManager.setData(originalData());
+    });
+
+    context("when bar is not the first in the parent row", function() {
+      it("returns the barID of the bar before the given one", function() {
+        var ids ={barID: 'bar2', rowID: 'row1', sectionID: 'section1'};
+        expect(DataManager.getIDOfBarBefore(ids)).to.eql('bar1');
+      });
+    }); // End of context 'when bar is not the first in the parent row'
+
+    context("when bar is the first in the parent row", function() {
+      context("when there is a previous row", function() {
+        it("returns the last bar of the previous row", function() {
+          var ids = {barID: 'bar3', rowID: 'row2', sectionID: 'section1'};
+          expect(DataManager.getIDOfBarBefore(ids)).to.eql('bar2');
+        });
+      }); // End of context 'when there is a previous row'
+
+      context("when there is no previous row", function() {
+        it("returns null", function() {
+          var ids = {barID: 'bar1', rowID: 'row1', sectionID: 'section1'}
+          expect(DataManager.getIDOfBarBefore(ids)).to.be.null;
+        });
+      }); // End of context 'when there is no previous row'
+    }); // End of context 'when bar is the first in the parent row'
+  }); // End of describe 'getIDofBarBefore'
+
+  describe('getIDOfRowBefore', function() {
+    beforeEach(function() {
+      DataManager.setData(originalData());
+    });
+
+    context("when the row is not the first one in the parent section", function() {
+      it("returns the preceding row", function() {
+        expect(DataManager.getIDOfRowBefore({rowID: 'row2', sectionID: 'section1'})).to.eql('row1');
+      });
+    }); // End of context 'when the row is not the first one in the parent section'
+
+    context("when the row is the first row in the section", function() {
+      context("when the row is not in the first section", function() {
+        it("returns the last row of the previous section", function() {
+          var ids = {rowID: 'row3', sectionID: 'section2'};
+          expect(DataManager.getIDOfRowBefore(ids)).to.eql('row2');
+        });
+      }); // End of context 'when the row is not in the first section'
+
+      context("when the row is in the first section", function() {
+        it("returns null", function() {
+          expect(DataManager.getIDOfRowBefore({rowID: 'row1', sectionID: 'section1'})).to.be.null;
+        });
+      }); // End of context 'when the row is in the first section'
+    }); // End of context 'when the row is the first row in the section'
+  }); // End of describe 'getIDOfRowBefore'
+
+  describe('getIDOfSectionBefore', function() {
+    beforeEach(function() {
+      DataManager.setData(originalData());
+    });
+
+    context("when the section is not the first one", function() {
+      it("returns the id of the previous section", function() {
+        expect(DataManager.getIDOfSectionBefore({sectionID: 'section2'})).to.eql('section1');
+      });
+    }); // End of context 'when the section is not the first one'
+
+    context("when the section is the first one", function() {
+      it("returns null", function() {
+        expect(DataManager.getIDOfSectionBefore({sectionID: 'section1'})).to.be.null;
+      });
+    }); // End of context 'when the section is the first one'
+  }); // End of describe 'getIDOfSectionBefore'
 }); // End of specs in this file
 
 function data() {

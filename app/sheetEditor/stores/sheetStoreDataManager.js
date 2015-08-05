@@ -181,6 +181,50 @@
       var rowIDs = SHEET_DATA.getIn(['sections', sectionID, 'rows']);
       if (!rowIDs) return null;
       return this.getIDOfFirstChordInRow(rowIDs.first());
+    },
+
+    getIDOfChordBefore: function(ids) {
+      var chordIndexInParent = _getIndexOfChildInParent('chords', 'bars', ids.chordID, ids.barID);
+      if (chordIndexInParent > 0) {
+        return SHEET_DATA.getIn(['bars', ids.barID, 'chords', chordIndexInParent - 1]);
+      }
+      var previousBarID = this.getIDOfBarBefore(ids);
+      if (previousBarID) {
+        return SHEET_DATA.getIn(['bars', previousBarID, 'chords']).last();
+      }
+      return null;
+    },
+
+    getIDOfBarBefore: function(ids) {
+      var barIndexInParent = _getIndexOfChildInParent('bars', 'rows', ids.barID, ids.rowID);
+      if (barIndexInParent > 0) {
+        return SHEET_DATA.getIn(['rows', ids.rowID, 'bars', barIndexInParent - 1]);
+      }
+      var previousRowID = this.getIDOfRowBefore(ids);
+      if (previousRowID) {
+        return SHEET_DATA.getIn(['rows', previousRowID, 'bars']).last();
+      }
+      return null;
+    },
+
+    getIDOfRowBefore: function(ids) {
+      var rowIndexInParent = _getIndexOfChildInParent('rows', 'sections', ids.rowID, ids.sectionID);
+      if (rowIndexInParent > 0) {
+        return SHEET_DATA.getIn(['sections', ids.sectionID, 'rows', rowIndexInParent - 1]);
+      }
+      var previousSectionID = this.getIDOfSectionBefore(ids);
+      if (previousSectionID) {
+        return SHEET_DATA.getIn(['sections', previousSectionID, 'rows']).last();
+      }
+      return null;
+    },
+
+    getIDOfSectionBefore: function(ids) {
+      var sectionIndexInMain = SHEET_DATA.getIn(['main', 'sections']).indexOf(ids.sectionID);
+      if (sectionIndexInMain > 0) {
+        return SHEET_DATA.getIn(['main', 'sections', sectionIndexInMain - 1]);
+      }
+      return null;
     }
   };
 
