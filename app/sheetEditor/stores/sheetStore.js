@@ -73,23 +73,30 @@
           break;
 
         case Constants.DELETE_SELECTED_CHORD:
+          var previousChordID = SheetStoreDataManager.getIDOfChordBefore(selected);
           SheetStoreDataManager.deleteChord(selected.chordID, selected.barID);
-          this.trigger(CHANGE_EVENT);
+          this.trigger(CHANGE_EVENT, {focus: previousChordID});
           break;
 
         case Constants.DELETE_SELECTED_BAR:
+          var previousBarID = SheetStoreDataManager.getIDOfBarBefore(selected);
+          var chordToFocus = SheetStoreDataManager.getIDOfFirstChordInBar(previousBarID);
           SheetStoreDataManager.deleteBar(selected.barID, selected.rowID);
-          this.trigger(CHANGE_EVENT);
+          this.trigger(CHANGE_EVENT, {focus: chordToFocus});
           break;
 
         case Constants.DELETE_SELECTED_ROW:
+          var previousRowID = SheetStoreDataManager.getIDOfRowBefore(selected);
+          var chordToFocus = SheetStoreDataManager.getIDOfFirstChordInRow(previousRowID);
           SheetStoreDataManager.deleteRow(selected.rowID, selected.sectionID);
-          this.trigger(CHANGE_EVENT);
+          this.trigger(CHANGE_EVENT, {focus: chordToFocus});
           break;
 
         case Constants.DELETE_SELECTED_SECTION:
+          var previousSectionID = SheetStoreDataManager.getIDOfSectionBefore(selected);
+          var chordToFocus = SheetStoreDataManager.getIDOfFirstChordInSection(previousSectionID);
           SheetStoreDataManager.deleteSection(selected.sectionID);
-          this.trigger(CHANGE_EVENT);
+          this.trigger(CHANGE_EVENT, {focus: chordToFocus});
           break;
 
         case Constants.STORE_CHORD_REF_AS_SELECTED:
