@@ -15,6 +15,7 @@
 
 .sheet {
     padding: 0 20px;
+    overflow-x: scroll;
 }
 
 // TODO A lot of pixel nudging here!
@@ -96,13 +97,29 @@
 /* TITLE
 ------------------*/
 .sheet-title {
+  .title,
+  .artist {
+    display: block;
+    width: 100%;
     text-align: center;
+    background: inherit;
+    border: none;
+    font-family: inherit;
+    &:focus { outline: none; }
+  }
+
+  .title {
     text-transform: uppercase;
-    .artist {
-        color: darken(white, 30);
-        font-size: 0.7em;
-        text-transform: none;
-    }
+    color: $HEADER;
+    font-size: 1.9em;
+    margin-bottom: 8px;
+    font-weight: 300;
+  }
+
+  .artist {
+      color: darken(white, 30);
+      font-size: 1.5em;
+  }
 }
 
 /* SECTION
@@ -110,27 +127,36 @@
 .section-name {
     color: #999;
     text-transform: uppercase;
-    margin-bottom: 5px;
+    font-family: inherit;
+    font-size: 1.6em;
+    background: inherit;
+    border: none;
+    margin-top: 30px;
+    margin-bottom: -100px;
+    &:focus { outline: none; }
 }
 
+$BAR_WIDTH: 20vw;
 .symbols {
-    display: flex;
+    display: inline-flex;
     // Dirty way to provide spacing between rows when there are no symbols
     // Not good.. ?
     min-height: 10px;
     .symbol-container {
         flex: 1;
+        width: $BAR_WIDTH;
     }
 }
 
 .bars {
-    display: flex;
+    display: inline-flex;
 }
 
 // * BAR
 // ------------------*/
 .bar {
     flex: 1;
+    width: $BAR_WIDTH;
     display: flex;
     margin-left: 5px;
     &:first-child { margin-left: 0; }
@@ -145,7 +171,6 @@
 }
 
 .coda {
-    margin-left: auto;
     float: right;
 }
 
