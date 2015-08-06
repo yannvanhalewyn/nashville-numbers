@@ -6,6 +6,7 @@
   var React = require('react');
   var SheetControlPanel = require('./sheetControlPanel.jsx');
   var Sheet = require('./sheet.jsx');
+  var Title = require('./title.jsx');
 
   var SheetEditor = React.createClass({
 
@@ -30,9 +31,7 @@
       return (
         <div className="sheet-editor">
           <SheetControlPanel dbid={this.props.dbid}/>
-          <h1 className="sheet-title">
-            {this.state.title} <small className="artist">{this.state.artist}</small>
-          </h1>
+          <Title title={this.state.title} artist={this.state.artist} />
           <Sheet sections={this.state.sheetData.sections} focusTargetID={this.state.focusTargetID}/>
         </div>
       )

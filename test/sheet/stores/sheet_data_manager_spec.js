@@ -896,6 +896,26 @@ describe('SheetStoreDataManager', function() {
       });
     }); // End of context 'when the section is the first one'
   }); // End of describe 'getIDOfSectionBefore'
+
+  describe('#renameSection()', function() {
+    beforeEach(function() {
+      DataManager.setData(originalData());
+    });
+
+    context("when the targeted section exists", function() {
+      it("renames the section", function() {
+        DataManager.renameSection('section1', 'new section name');
+        expect(data().sections['section1'].name).to.eql('new section name');
+      });
+    }); // End of context 'when the targeted section exists'
+
+    context("when the targeted section doesn't exist", function() {
+      it("doesn't create a new section", function() {
+        DataManager.renameSection('invalid', 'new section name');
+        expect(data().sections['invalid']).to.be.undefined;
+      });
+    }); // End of context 'when the targeted section doesn't exist'
+  }); // End of describe '#renameSection()'
 }); // End of specs in this file
 
 function data() {

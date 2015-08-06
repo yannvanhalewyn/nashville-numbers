@@ -15,11 +15,16 @@
     DELETE_CHORD: null,
     STORE_CHORD_REF_AS_SELECTED: null,
 
-    //Symbols
+    // Symbols
     TOGGLE_SEGNO: null,
     TOGGLE_CODA: null,
     TOGGLE_REPEAT_LEFT: null,
     TOGGLE_REPEAT_RIGHT: null,
+
+    // RENAMING
+    RENAME_SECTION: null,
+    SET_TITLE: null,
+    SET_ARTIST: null,
 
     // NETWORK
     SAVE_SHEET: null

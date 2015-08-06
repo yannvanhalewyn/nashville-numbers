@@ -133,6 +133,22 @@
           this.trigger(CHANGE_EVENT);
           break;
 
+        case Constants.RENAME_SECTION:
+          SheetStoreDataManager.renameSection(payload.sectionID, payload.newName);
+          break;
+
+        case Constants.SET_TITLE:
+          var properties = this.get("properties");
+          properties.title = payload.newTitle;
+          this.set("properties", properties);
+          break;
+
+        case Constants.SET_ARTIST:
+          var properties = this.get("properties");
+          properties.artist = payload.newArtist;
+          this.set("properties", properties);
+          break;
+
         default:
           console.error("No such task - " + payload.actionType);
           break;

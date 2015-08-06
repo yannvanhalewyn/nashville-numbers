@@ -225,7 +225,18 @@
         return SHEET_DATA.getIn(['main', 'sections', sectionIndexInMain - 1]);
       }
       return null;
-    }
+    },
+
+/*
+ * ========
+ * RENAMING
+ * ========
+ */
+    renameSection: function(sectionID, newName) {
+      if (SHEET_DATA.getIn(['sections', sectionID])) {
+        SHEET_DATA = SHEET_DATA.setIn(['sections', sectionID, 'name'], newName);
+      }
+    },
   };
 
   module.exports = SheetStoreDataManager;

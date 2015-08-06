@@ -71,7 +71,29 @@
 
     toggleRepeatRight: function() {
       SheetDispatcher.dispatch({actionType: SheetConstants.TOGGLE_REPEAT_RIGHT});
-    }
+    },
+
+    renameSection: function(sectionID, newName) {
+      SheetDispatcher.dispatch({
+        actionType: SheetConstants.RENAME_SECTION,
+        sectionID: sectionID,
+        newName: newName
+      });
+    },
+
+    setTitle: function(newTitle) {
+      SheetDispatcher.dispatch({
+        actionType: SheetConstants.SET_TITLE,
+        newTitle: newTitle
+      });
+    },
+
+    setArtist: function(newArtist) {
+      SheetDispatcher.dispatch({
+        actionType: SheetConstants.SET_ARTIST,
+        newArtist: newArtist
+      });
+    },
   };
 
   module.exports = SheetActions;
