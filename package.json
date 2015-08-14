@@ -59,7 +59,10 @@
   },
   "browserify-shim": {
     "react": "global:React",
-    "lodash": "global:_"
+    "lodash": "global:_",
+    "backbone": "global:Backbone",
+    "immutable": "global:Immutable",
+    "jquery": "global:$"
   },
   "engines": {
     "node": "0.12.6"
