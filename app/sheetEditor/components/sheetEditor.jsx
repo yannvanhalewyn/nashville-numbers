@@ -3,28 +3,29 @@
   "use strict";
   /** @jsx React.DOM */
 
-  var React = require('react');
-  var SheetControlPanel = require('./sheetControlPanel.jsx');
-  var Sheet = require('./sheet.jsx');
-  var Title = require('./title.jsx');
+  var React = require('react')
+    , SheetControlPanel = require('./sheetControlPanel.jsx')
+    , Sheet = require('./sheet.jsx')
+    , Title = require('./title.jsx')
 
   var SheetEditor = React.createClass({
 
     propTypes: {
-      store: React.PropTypes.object.isRequired,
+      sheetStore: React.PropTypes.object.isRequired,
+      dragAndDropStore: React.PropTypes.object,
       dbid: React.PropTypes.number.isRequired
     },
 
     getInitialState: function() {
-      return this.props.store.getState();
+      return this.props.sheetStore.getState();
     },
 
     componentDidMount: function() {
-      this.props.store.on('change', this._update);
+      this.props.sheetStore.on('change', this._update);
     },
 
     compnentWillUnmount: function() {
-      this.props.store.off('change', this._update)
+      this.props.sheetStore.off('change', this._update)
     },
 
     render: function() {
@@ -32,13 +33,17 @@
         <div className="sheet-editor">
           <SheetControlPanel dbid={this.props.dbid}/>
           <Title title={this.state.title} artist={this.state.artist} />
-          <Sheet sections={this.state.sheetData.sections} focusTargetID={this.state.focusTargetID}/>
+          <Sheet
+            sections={this.state.sheetData.sections}
+            focusTargetID={this.state.focusTargetID}
+            dndStore={this.props.dragAndDropStore}
+          />
         </div>
       )
     },
 
     _update: function(params) {
-      this.setState(this.props.store.getState());
+      this.setState(this.props.sheetStore.getState());
       if (params && params.focus) {
         this.setState({focusTargetID: params.focus});
       } else {

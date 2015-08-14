@@ -6,6 +6,7 @@
     , Row = require('./row.jsx')
     , Immutable = require('immutable')
     , Actions = require('../actions/sheetActions')
+    , DragableTextArea = require('./dragableTextArea.jsx')
 
   var Section = React.createClass({
     propTypes: {
@@ -13,7 +14,8 @@
       name: React.PropTypes.string,
       id: React.PropTypes.string,
       locked: React.PropTypes.bool,
-      focusTargetID: React.PropTypes.string
+      focusTargetID: React.PropTypes.string,
+      currentlyDragging: React.PropTypes.bool
     },
 
     getInitialState: function() {
@@ -29,13 +31,14 @@
           parentIDs={Immutable.Map({ sectionID: this.props.id })}
           locked={this.props.locked}
           focusTargetID={this.props.focusTargetID}
+          currentlyDragging={this.props.currentlyDragging}
         />
       )
     },
 
     render: function() {
       return (
-        <div className="section">
+        <div className="section" >
           <input
             type="text"
             onChange={this._onChange}
@@ -44,6 +47,7 @@
             placeholder="Section"
           />
           {this.props.rows.map(this.renderRow)}
+          <DragableTextArea />
         </div>
       );
     },
@@ -53,6 +57,7 @@
       this.setState({name: text});
       Actions.renameSection(this.props.id, text);
     }
+
   });
 
   module.exports = Section;

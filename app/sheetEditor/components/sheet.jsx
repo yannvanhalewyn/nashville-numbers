@@ -10,7 +10,26 @@
 
     propTypes: {
       sections: React.PropTypes.array,
-      focusTargetID: React.PropTypes.string
+      focusTargetID: React.PropTypes.string,
+      dndStore: React.PropTypes.object
+    },
+
+    componentWillMount: function() {
+      this.props.dndStore.on('dragStart', this._onDragStart);
+      this.props.dndStore.on('drop', this._onDrop);
+    },
+
+    componentWillUnMount: function() {
+      this.props.dndStore.off('dragStart', this._onDragStart);
+      this.props.dndStore.off('drop', this._onDrop);
+    },
+
+    _onDragStart: function() {
+      this.setState({currentlyDragging: true});
+    },
+
+    _onDrop: function() {
+      this.setState({currentlyDragging: false});
     },
 
     renderSection: function(section) {
@@ -21,6 +40,7 @@
           name={section.name}
           id={section.id}
           focusTargetID={this.props.focusTargetID}
+          currentlyDragging={this.state && this.state.currentlyDragging}
         />
       )
     },

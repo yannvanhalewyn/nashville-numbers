@@ -1,19 +1,22 @@
 /** @jsx React.DOM */
 
-var React = require('react');
-var SheetEditor = require('./components/sheetEditor.jsx');
-var SheetStore = require('./stores/sheetStore');
+var React = require('react')
+  , SheetEditor = require('./components/sheetEditor.jsx')
+  , SheetStore = require('./stores/sheetStore')
+  , DragAndDropStore = require('./stores/dragAndDropStore')
 
-var store;
+var sheetStore;
 try {
   var data = JSON.parse(document.getElementById('initial-state').innerHTML);
-  store = new SheetStore(data);
+  sheetStore = new SheetStore(data);
 } catch(e) {
   console.log("error on parse", e);
 }
 
+var dragAndDropStore = new DragAndDropStore();
+
 React.render(
-  <SheetEditor store={store} dbid={data._id}/>,
+  <SheetEditor sheetStore={sheetStore} dragAndDropStore={dragAndDropStore} dbid={data._id}/>,
   document.getElementById('sheet-container')
 );
 

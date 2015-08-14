@@ -148,6 +148,19 @@ $BAR_WIDTH: 20vw;
     }
 }
 
+.dropzones {
+  display: inline-flex;
+}
+
+.dropzone {
+  width: $BAR_WIDTH;
+  text-align: center;
+  border: 2px dashed $GREY-5;
+  margin-left: 5px;
+  padding: 5px 0;
+  color: $GREY-5;
+}
+
 .bars {
     display: inline-flex;
 }
