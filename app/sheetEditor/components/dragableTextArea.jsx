@@ -10,7 +10,7 @@
     render: function() {
       return (
         <Dragable onDragStart={this._onDragStart} onDrop={this._onDrop}>
-          <textArea>Text</textArea>
+          <textArea placeholder="Text"></textArea>
         </Dragable>
       );
     },

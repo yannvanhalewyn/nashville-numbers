@@ -148,17 +148,31 @@ $BAR_WIDTH: 20vw;
     }
 }
 
-.dropzones {
-  display: inline-flex;
+.dropzone {
+  display: flex;
+  width: $BAR_WIDTH;
+  border: 2px dashed $GREY-5;
+  border-radius: 5px;
+  margin-left: 5px;
+  padding: 30px 3px;
+  position: relative; // For link text
+  .link-text {
+    color: $GREY-2;
+    position: absolute;
+    left: 10%;
+    top: 10%;
+    font-size: 7vw;
+    z-index: -10;
+  }
 }
 
-.dropzone {
-  width: $BAR_WIDTH;
-  text-align: center;
-  border: 2px dashed $GREY-5;
-  margin-left: 5px;
-  padding: 5px 0;
-  color: $GREY-5;
+textarea {
+  font-size: 1.5em;
+  font-family: inherit;
+  min-width: 10px;
+  width: 200px;
+  background: none;
+  border: none;
 }
 
 .bars {

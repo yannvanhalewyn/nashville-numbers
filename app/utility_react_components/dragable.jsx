@@ -17,14 +17,14 @@
     },
 
     style: function() {
-      if (this.state && this.state.dragging) {
-        return {
+      if (this.state && this.state.left) {
+        var style = {
           position: "absolute",
           left: this.state.left,
-          top: this.state.top,
-          "pointer-events": "none",
-          opacity: 0.5
+          top: this.state.top
         }
+        if (this.state.dragging) { style["pointer-events"] = "none"; }
+        return style;
       }
       return {};
     },

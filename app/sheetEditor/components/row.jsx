@@ -2,10 +2,8 @@
 
   var React = require('react')
     , Bar = require('./bar.jsx')
-    , DropZone = require('./dropZone.jsx')
 
   var Row = React.createClass({
-
     propTypes: {
       bars: React.PropTypes.array,
       id: React.PropTypes.string.isRequired,
@@ -38,22 +36,9 @@
           repeatRight={bar.repeatRight}
           locked={this.props.locked}
           focusTargetID={this.props.focusTargetID}
+          showDropZone={this._shouldDropZoneDisplay()}
         />
       )
-    },
-
-    renderDropZonesAbove: function(bar) {
-      var dropZones = this.props.bars.map(function(bar) {
-        return <DropZone target={{barID: bar.id, position: "above"}}/>
-      });
-      return <div className="dropzones"> {dropZones} </div>
-    },
-
-    renderDropZonesBelow: function(bar) {
-      var dropZones = this.props.bars.map(function(bar) {
-        return <DropZone target={{barID: bar.id, position: "below"}}/>
-      });
-      return <div className="dropzones"> {dropZones} </div>
     },
 
     render: function() {
@@ -62,11 +47,9 @@
           <div className="symbols">
             {this.props.bars.map(this.renderSymbolsRow)}
           </div>
-          {this._shouldDropZonesDisplay() ? this.renderDropZonesAbove() : null}
           <div className="bars">
             {this.props.bars.map(this.renderBar)}
           </div>
-          {this._shouldDropZonesDisplay() ? this.renderDropZonesBelow() : null}
         </div>
       );
     },
@@ -82,7 +65,7 @@
         this.setState({hover: false})
     },
 
-    _shouldDropZonesDisplay: function() {
+    _shouldDropZoneDisplay: function() {
       return this.props.currentlyDragging && this.state.hover;
     }
 

@@ -11,6 +11,8 @@
     , ChordModel = require('../chord.js')
     , SheetActions = require('../actions/sheetActions')
     , classNames = require('classnames')
+    , Dropable = require('../../utility_react_components/dropable.jsx')
+    , dndActions = require('../actions/dragAndDropActions').actions;
 
   var REPEAT_LEFT_HTML = "<use xlink:href='#repetition-left' />";
   var REPEAT_RIGHT_HTML = "<use xlink:href='#repetition-right' />";
@@ -21,8 +23,11 @@
       chords: React.PropTypes.array,
       id: React.PropTypes.string,
       parentIDs: React.PropTypes.object,
+      repeatLeft: React.PropTypes.bool,
+      repeatRight: React.PropTypes.bool,
       locked: React.PropTypes.bool,
-      focusTargetID: React.PropTypes.string
+      focusTargetID: React.PropTypes.string,
+      showDropZone: React.PropTypes.bool
     },
 
     renderChord: function(chord) {
@@ -55,6 +60,20 @@
         bar: true,
         "multi-chords": this.props.chords.length > 1
       });
+
+      if (this.props.showDropZone) {
+        return (
+          <Dropable className={classes} onActivate={this._onActivateDropZone}>
+            {this.props.repeatLeft ? this.renderRepeatLeft() : null}
+            <div className="chords">
+              {this.props.chords.map(this.renderChord)}
+            </div>
+            {this.props.repeatRight ? this.renderRepeatRight() : null}
+            <span className="link-text">LINK</span>
+          </Dropable>
+        )
+      }
+
       return (
           <span className={classes}>
             {this.props.repeatLeft ? this.renderRepeatLeft() : null}
