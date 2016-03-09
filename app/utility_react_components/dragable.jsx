@@ -10,7 +10,7 @@
   var Dragable = React.createClass({
     render: function() {
       return (
-        <span style={this.style()} onMouseDown={this._onMouseDown} >
+        <span draggable style={this.style()} onDrag={this._onMouseDown} >
           {this.props.children}
         </span>
       )
@@ -31,12 +31,12 @@
 
     _onMouseDown: function(e) {
       var pageOffset = this.getDOMNode().getBoundingClientRect();
-      this.setState({
-        dragStart: {x: event.pageX, y: event.pageY},
-        element: {x: pageOffset.left, y: pageOffset.top}
-      });
-      if (typeof this.props.onDragStart === "function") this.props.onDragStart();
-      this._addEvents();
+      // this.setState({
+      //   dragStart: {x: event.pageX, y: event.pageY},
+      //   element: {x: pageOffset.left, y: pageOffset.top}
+      // });
+      if (typeof this.props.onDragStart === "function") this.props.onDragStart(this.getDOMNode());
+      // this._addEvents();
     },
 
     _onMouseMove: function(e) {

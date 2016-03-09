@@ -12,9 +12,10 @@
   });
 
   var Actions = {
-    dragStart: function() {
+    dragStart: function(dragItem) {
       Dispatcher.dispatch({
-        actionType: Constants.DRAG_START
+        actionType: Constants.DRAG_START,
+        dragItem: dragItem
       });
     },
 

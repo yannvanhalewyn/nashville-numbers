@@ -36,7 +36,7 @@
           repeatRight={bar.repeatRight}
           locked={this.props.locked}
           focusTargetID={this.props.focusTargetID}
-          showDropZone={this._shouldDropZoneDisplay()}
+          dragItem={this.props.dragItem}
         />
       )
     },

@@ -24,8 +24,8 @@
       this.props.dndStore.off('drop', this._onDrop);
     },
 
-    _onDragStart: function() {
-      this.setState({currentlyDragging: true});
+    _onDragStart: function(dragItem) {
+      this.setState({currentlyDragging: true, dragItem: dragItem});
     },
 
     _onDrop: function() {
@@ -41,6 +41,7 @@
           id={section.id}
           focusTargetID={this.props.focusTargetID}
           currentlyDragging={this.state && this.state.currentlyDragging}
+          dragItem={this.state ? this.state.dragItem : null}
         />
       )
     },

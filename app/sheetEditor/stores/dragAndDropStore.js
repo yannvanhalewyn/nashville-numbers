@@ -13,7 +13,7 @@
     Dispatcher.register(function(payload) {
       switch (payload.actionType) {
         case Constants.DRAG_START:
-          this.trigger('dragStart');
+          this.trigger('dragStart', payload.dragItem);
           break;
 
         case Constants.DROPPED:

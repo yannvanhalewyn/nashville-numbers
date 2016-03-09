@@ -27,7 +27,7 @@
       repeatRight: React.PropTypes.bool,
       locked: React.PropTypes.bool,
       focusTargetID: React.PropTypes.string,
-      showDropZone: React.PropTypes.bool
+      dragItem: React.PropTypes.object
     },
 
     renderChord: function(chord) {
@@ -61,21 +61,13 @@
         "multi-chords": this.props.chords.length > 1
       });
 
-      if (this.props.showDropZone) {
-        return (
-          <Dropable className={classes} onActivate={this._onActivateDropZone}>
-            {this.props.repeatLeft ? this.renderRepeatLeft() : null}
-            <div className="chords">
-              {this.props.chords.map(this.renderChord)}
-            </div>
-            {this.props.repeatRight ? this.renderRepeatRight() : null}
-            <span className="link-text">LINK</span>
-          </Dropable>
-        )
+      var style = {
+        "margin-top": this.state && this.state.gutterTop ? "40px" : "0",
+        "margin-bottom": this.state && this.state.gutterBottom ? "40px" : "0",
       }
 
       return (
-          <span className={classes}>
+          <span style={style} onMouseMove={this._onMouseOver} onMouseLeave={this._onMouseLeave} className={classes}>
             {this.props.repeatLeft ? this.renderRepeatLeft() : null}
             <div className="chords">
               {this.props.chords.map(this.renderChord)}
@@ -83,6 +75,33 @@
             {this.props.repeatRight ? this.renderRepeatRight() : null}
           </span>
       );
+    },
+
+    _onMouseOver: function() {
+      if (this.props.dragItem) {
+        var dragItemRect = this.props.dragItem.getBoundingClientRect();
+        var barRect = this._getCachedDomNode().getBoundingClientRect();
+        if (dragItemRect.top < barRect.top) {
+          console.log("Setting gutter top");
+          this.setState({gutterTop: true, gutterBottom: false})
+        } else {
+          console.log("Setting gutter bottom");
+          this.setState({gutterBottom: true, gutterTop: false})
+        }
+      }
+    },
+
+    _onMouseLeave: function() {
+      console.log("Mouse leave");
+      if (this.state && (this.state.gutterTop || this.state.gutterBottom)) {
+        this.setState({gutterBottom: false, gutterTop: false})
+      }
+    },
+
+    _getCachedDomNode: function() {
+      if (this.domNode) return this.domNode;
+      this.domNode = this.getDOMNode();
+      return this.domNode;
     }
 
   });

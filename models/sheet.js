@@ -83,6 +83,7 @@
    * @throws {error} when no author_id is provided.
    */
   Sheet.create = function(params, author_id) {
+    // TODO if user_id = 0, valid neo4j id.
     if (!author_id) throw "Cannot create a sheet without a valid author ID.";
     params = _.defaults(params, DEFAULT);
     params.data = JSON.stringify(params.data);

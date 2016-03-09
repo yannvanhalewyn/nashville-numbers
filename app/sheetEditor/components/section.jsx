@@ -32,6 +32,7 @@
           locked={this.props.locked}
           focusTargetID={this.props.focusTargetID}
           currentlyDragging={this.props.currentlyDragging}
+          dragItem={this.props.dragItem}
         />
       )
     },

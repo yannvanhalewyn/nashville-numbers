@@ -15,8 +15,8 @@
       );
     },
 
-    _onDragStart: function() {
-      Actions.dragStart();
+    _onDragStart: function(dragItem) {
+      Actions.dragStart(dragItem);
     },
 
     _onDrop: function() {
